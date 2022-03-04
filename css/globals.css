@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Source+Sans+Pro:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  @apply text-4xl text-black dark:text-slate-400 font-serif font-bold;
+}
+
+h2 {
+  @apply text-2xl font-serif text-black font-bold;
+}
+
+h3,
+h4,
+h5 {
+  @apply text-xl font-serif text-black font-medium;
+}
+
+p {
+  @apply text-lg font-sans text-gray-600 font-medium;
+}

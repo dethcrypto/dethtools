@@ -1,0 +1,9 @@
+process.env.NODE_ENV = 'test'
+
+module.exports = {
+  require: ['ts-node/register/transpile-only', 'earljs/mocha'],
+  extension: ['ts'],
+  watchExtensions: ['ts'],
+  spec: ['./lib/*.test.ts'],
+  timeout: 5000,
+}
