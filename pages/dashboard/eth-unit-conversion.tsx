@@ -28,46 +28,16 @@ export default function EthUnitConversion() {
     }
   }
 
-  interface UnitTypeExtended {
-    name: UnitType
-    value: number
-  }
-
   const units: UnitTypeExtended[] = [
     { name: 'wei', value: wei },
     { name: 'gwei', value: gwei },
     { name: 'eth', value: eth },
   ]
 
-  function UnitElements(): JSX.Element {
-    return (
-      <Fragment>
-        {units.map((unit) => {
-          const { name, value } = unit
-          return (
-            <div className="flex flex-col gap-4 items-center">
-              <p className="text-lg"> {name} </p>
-              <input
-                placeholder={value ? value.toString() : '0'}
-                value={value}
-                type="number"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  console.log(event.target.value)
-                  handleChangeEvent(event.target.value, name)
-                }}
-                className="p-2 border border-dashed border-black"
-              />
-            </div>
-          )
-        })}
-      </Fragment>
-    )
-  }
-
   return (
     <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
       <form className="flex flex-col gap-10 mx-auto">
-        <UnitElements />
+        <UnitElements onChange={handleChangeEvent} units={units} />
         {/* <div className="flex flex-col gap-4 items-center">
           <p className="text-xl"> wei </p>
           <input
@@ -104,4 +74,37 @@ export default function EthUnitConversion() {
       </form>
     </div>
   )
+}
+
+interface UnitElementsProps {
+  units: UnitTypeExtended[]
+  onChange: (value: string, unitType: UnitType) => void
+}
+function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
+  return (
+    <Fragment>
+      {units.map((unit) => {
+        const { name, value } = unit
+        return (
+          <div className="flex flex-col gap-4 items-center">
+            <p className="text-lg"> {name} </p>
+            <input
+              placeholder={value ? value.toString() : '0'}
+              value={value}
+              type="number"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                onChange(event.target.value, name)
+              }}
+              className="p-2 border border-dashed border-black"
+            />
+          </div>
+        )
+      })}
+    </Fragment>
+  )
+}
+
+interface UnitTypeExtended {
+  name: UnitType
+  value: number
 }
