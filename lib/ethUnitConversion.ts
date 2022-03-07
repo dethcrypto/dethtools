@@ -1,60 +1,42 @@
 import { BigNumber } from 'bignumber.js'
-import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber'
-
-export type UnitType = 'wei' | 'gwei' | 'eth'
 
 BigNumber.set({ EXPONENTIAL_AT: 1000 })
 
-export interface Unit {
-  type: UnitType
-  value: string
+export type UnitType = 'wei' | 'gwei' | 'eth'
+
+// @todo handle hex value 0x.. input
+
+const unitPrecision: { [key in UnitType]: number } = {
+  wei: 1,
+  gwei: 9,
+  eth: 18,
 }
 
-export type AnyNumber = BigNumber | EthersBigNumber | number
-export type MyBigNumber = BigNumber
-
-export type ConversionResult = {
-  [key in UnitType]: string
+export function unitTypeToPrecision(unitType: UnitType): string | undefined {
+  switch (unitType) {
+    case 'eth':
+      return unitPrecision.eth.toString()
+    case 'gwei':
+      return unitPrecision.gwei.toString()
+    case 'wei':
+      return unitPrecision.wei.toString()
+    default:
+      break
+  }
 }
 
-// paste hex value 0x..
-
-export function toMyBigNumber(n: AnyNumber): MyBigNumber {
-  return new BigNumber(n.toString())
+export function unitPrecisionToValue(precision: string): string {
+  if (parseInt(precision) === 1) return '1'
+  return ['1'].concat('0'.repeat(parseInt(precision))).join('')
 }
 
-const units: { [key: string]: string } = {
-  wei: '1',
-  gwei: '1000000000',
-  eth: '1000000000000000000',
-}
+export function convertUnit(value: string, fromUnit: UnitType, toUnit: UnitType): string | undefined {
+  const parsedFromUnit = unitTypeToPrecision(fromUnit)
+  const parsedToUnit = unitTypeToPrecision(toUnit)
 
-function toWei(value: string, fromUnit: UnitType) {
-  return new BigNumber(value).times(units[fromUnit]).div(units['wei']).toString()
-}
-
-function toGwei(value: string, fromUnit: UnitType) {
-  return new BigNumber(value).times(units[fromUnit]).div(units['gwei']).toString()
-}
-
-function toEth(value: string, fromUnit: UnitType) {
-  return new BigNumber(value).times(units[fromUnit]).div(units['eth']).toString()
-}
-
-export function convertUnit(value: string, fromUnit: UnitType, toUnit?: UnitType) {
-  try {
-    if (!toUnit) {
-      if (fromUnit === 'eth') {
-        return { wei: toWei(value, 'eth'), gwei: toGwei(value, 'eth') }
-      } else if (fromUnit === 'gwei') {
-        return { wei: toWei(value, 'gwei'), eth: toEth(value, 'gwei') }
-      } else if (fromUnit === 'wei') {
-        return { gwei: toGwei(value, 'wei'), eth: toEth(value, 'wei') }
-      }
-    } else {
-      return new BigNumber(value).times(units[fromUnit]).div(units[toUnit]).toString()
-    }
-  } catch (e) {
-    return undefined
+  if (parsedFromUnit && parsedToUnit) {
+    const toValue = unitPrecisionToValue(parsedFromUnit)
+    const fromValue = unitPrecisionToValue(parsedToUnit)
+    return new BigNumber(value).times(toValue).div(fromValue).toString()
   }
 }
