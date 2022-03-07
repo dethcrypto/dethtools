@@ -1,9 +1,10 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 
-import '/css/globals.css'
 import MyLink from '../components/MyLink'
 import Navigation from '../components/Navigation'
+
+import '/css/globals.css'
 
 interface Tool {
   title: string
@@ -22,7 +23,7 @@ function ToolList() {
       <div className="flex flex-col">
         {tools.map((t) => {
           return (
-            <div className="flex mb-4 border-b rounded-lg border-gray-200 dark:border-gray-700">
+            <div key={t.title} className="flex mb-4 border-b rounded-lg border-gray-200 dark:border-gray-700">
               <MyLink href={`/dashboard/${t.pageHref}`} as={`/dashboard/${t.pageHref}`}>
                 <button
                   className="flex items-center h-12 px-2 py-2 gap-3 text-center
@@ -45,11 +46,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <main className="max-w-4xl mx-auto">
       <ThemeProvider attribute="class" defaultTheme="light">
         <Navigation />
-
         <div className="flex mx-auto max-w-6xl items-center gap-12">
           <ToolList />
         </div>
-
         <Component className="max-w-1/2" {...pageProps} />
       </ThemeProvider>
     </main>

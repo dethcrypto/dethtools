@@ -27,6 +27,7 @@ export default function Navigation() {
             Let's get started
           </button>
         </MyLink>
+
         <Image
           className="cursor-pointer hover:bg-blue-200 rounded-full"
           src="/static/svg/github.svg"

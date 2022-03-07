@@ -1,10 +1,6 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import MyLink from '../../components/MyLink'
-import Navigation from '../../components/Navigation'
 
-const Dashboard: NextPage = () => {
+function Dashboard() {
   return (
     <div>
       <Head>

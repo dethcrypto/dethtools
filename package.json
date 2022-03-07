@@ -9,10 +9,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "mocha -r ts-node/register ./**/*.test.ts"
+    "lint": "eslint --ext .ts src",
+    "test": "mocha -r ts-node/register ./**/*.test.ts",
+    "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.ts\"",
+    "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.ts\"",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/units": "^5.5.0",
     "bignumber.js": "^9.0.2",
     "next": "12.1.0",
     "react": "17.0.2",
