@@ -1,31 +1,16 @@
-import { ChangeEvent, useState, Fragment } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react'
 
 import { convertUnit, UnitType } from '../../lib/ethUnitConversion'
 
 export default function EthUnitConversion() {
-  const [wei, setWei] = useState(0)
-  const [gwei, setGwei] = useState(0)
-  const [eth, setEth] = useState(0)
-
-  function updateValue(result: any) {
-    setWei(result.wei)
-    setGwei(result.gwei)
-    setEth(result.eth)
-  }
+  const [wei, setWei] = useState('0')
+  const [gwei, setGwei] = useState('0')
+  const [eth, setEth] = useState('0')
 
   function resetValues() {
-    setWei(0)
-    setGwei(0)
-    setEth(0)
-  }
-
-  function handleChangeEvent(value: string, unitType: UnitType) {
-    const out = convertUnit(value, unitType)
-    if (!out) {
-      resetValues()
-    } else {
-      updateValue(out)
-    }
+    setWei('0')
+    setGwei('0')
+    setEth('0')
   }
 
   const units: UnitTypeExtended[] = [
@@ -34,43 +19,29 @@ export default function EthUnitConversion() {
     { name: 'eth', value: eth },
   ]
 
+  function handleChangeEvent(value: string, unitType: UnitType) {
+    let out
+
+    for (const unit of units) {
+      out = convertUnit(value, unitType, unit.name)
+
+      if (out) {
+        if (unit.name === 'eth') setEth(out)
+        if (unit.name === 'gwei') setGwei(out)
+        if (unit.name === 'wei') setWei(out)
+      }
+    }
+
+    if (!out) {
+      resetValues()
+    }
+  }
+
   return (
     <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
       <form className="flex flex-col gap-10 mx-auto">
+        <h1> Ethereum unit conversion </h1>
         <UnitElements onChange={handleChangeEvent} units={units} />
-        {/* <div className="flex flex-col gap-4 items-center">
-          <p className="text-xl"> wei </p>
-          <input
-            placeholder={wei ? wei.toString() : '0'}
-            value={wei}
-            type="number"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => handleChangeEvent(event.target.value, 'wei')}
-            className="p-2 border border-dashed border-black"
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 items-center">
-          <p className="text-xl"> gwei </p>
-          <input
-            id="gwei-input"
-            placeholder={gwei ? gwei.toString() : '0'}
-            value={gwei}
-            type="number"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => handleChangeEvent(event.target.value, 'gwei')}
-            className="p-2 border border-dashed border-black"
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 items-center">
-          <p className="text-2xl"> ether </p>
-          <input
-            placeholder={eth ? eth.toString() : '0'}
-            value={eth}
-            type="number"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => handleChangeEvent(event.target.value, 'eth')}
-            className="p-2 border border-dashed border-black"
-          />
-        </div> */}
       </form>
     </div>
   )
@@ -86,17 +57,34 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
       {units.map((unit) => {
         const { name, value } = unit
         return (
-          <div className="flex flex-col gap-4 items-center">
-            <p className="text-lg"> {name} </p>
-            <input
-              placeholder={value ? value.toString() : '0'}
-              value={value}
-              type="number"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                onChange(event.target.value, name)
-              }}
-              className="p-2 border border-dashed border-black"
-            />
+          <div>
+            <table className="min-w-full divide-y divide-gray-200 table-fixed">
+              <thead className="bg-gray-50 rounded-sm">
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                  >
+                    <p className="text-lg"> {name} </p>
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                  >
+                    <input
+                      placeholder={value ? value.toString() : '0'}
+                      value={value}
+                      type="number"
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        onChange(event.target.value, name)
+                      }}
+                      className="p-3 w-72 border border-dashed border-black rounded-sm"
+                    />
+                  </th>
+                </tr>
+              </thead>
+            </table>
           </div>
         )
       })}
@@ -106,5 +94,5 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
 
 interface UnitTypeExtended {
   name: UnitType
-  value: number
+  value: string
 }
