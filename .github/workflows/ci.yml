@@ -20,11 +20,6 @@ jobs:
           with:
             node-version: ${{ matrix.node }}
 
-        - run: yarn
-
-        - run: yarn build
-        - run: yarn lint
-
         - name: Cache Yarn dependencies
           uses: actions/cache@v2
           with:
@@ -36,6 +31,7 @@ jobs:
         - run: yarn --no-progress --non-interactive --frozen-lockfile
 
         - run: yarn build
+        - run: yarn format
         - run: yarn lint
 
   test:
@@ -59,8 +55,7 @@ jobs:
             key: ${{ runner.OS }}-${{ matrix.node }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
             restore-keys: ${{ runner.OS }}-${{ matrix.node }}-yarn-cache-
 
-        - run: yarn
+        - run: yarn --no-progress --non-interactive --frozen-lockfile
 
         - run: yarn build
         - run: yarn test
-        - run: yarn format
