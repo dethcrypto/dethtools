@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, Fragment } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react'
 
 import { convertUnit, UnitType } from '../../lib/ethUnitConversion'
 
@@ -40,6 +40,7 @@ export default function EthUnitConversion() {
   return (
     <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
       <form className="flex flex-col gap-10 mx-auto">
+        <h1> Ethereum unit conversion </h1>
         <UnitElements onChange={handleChangeEvent} units={units} />
       </form>
     </div>
@@ -56,17 +57,34 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
       {units.map((unit) => {
         const { name, value } = unit
         return (
-          <div className="flex flex-col gap-4 items-center">
-            <p className="text-lg"> {name} </p>
-            <input
-              placeholder={value ? value.toString() : '0'}
-              value={value}
-              type="number"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                onChange(event.target.value, name)
-              }}
-              className="p-2 border border-dashed border-black"
-            />
+          <div>
+            <table className="min-w-full divide-y divide-gray-200 table-fixed">
+              <thead className="bg-gray-50 rounded-sm">
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                  >
+                    <p className="text-lg"> {name} </p>
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                  >
+                    <input
+                      placeholder={value ? value.toString() : '0'}
+                      value={value}
+                      type="number"
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        onChange(event.target.value, name)
+                      }}
+                      className="p-3 w-72 border border-dashed border-black rounded-sm"
+                    />
+                  </th>
+                </tr>
+              </thead>
+            </table>
           </div>
         )
       })}
