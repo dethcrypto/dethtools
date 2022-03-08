@@ -1,10 +1,10 @@
+import '/css/globals.css'
+
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 
 import MyLink from '../components/MyLink'
 import Navigation from '../components/Navigation'
-
-import '/css/globals.css'
 
 interface Tool {
   title: string

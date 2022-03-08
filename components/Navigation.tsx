@@ -1,4 +1,5 @@
 import Image from 'next/image'
+
 import MyLink from './MyLink'
 
 export default function Navigation() {

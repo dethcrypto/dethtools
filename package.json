@@ -12,7 +12,7 @@
     "test": "mocha -r ts-node/register ./**/*.test.ts",
     "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.ts\"",
     "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.ts\"",
-    "lint": "eslint --ext .ts lib pages",
+    "lint": "eslint --ext .ts,.tsx lib pages --ext .tsx components",
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
