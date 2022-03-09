@@ -2,6 +2,7 @@ import { ChangeEvent, Fragment, useState } from 'react'
 
 import { UnitType } from '../lib/convertProperties'
 import { convertEthUnits } from '../lib/convertUnits'
+import { decodeHex } from '../lib/decodeHex'
 
 export default function EthUnitConversion() {
   const [wei, setWei] = useState('')
@@ -24,9 +25,7 @@ export default function EthUnitConversion() {
     let out
 
     // 'On paste' conversion from hexadecimal to decimal values
-    if (value.split('')[1] === 'x') {
-      value = parseInt(value, 16).toString()
-    }
+    value = decodeHex(value)
 
     for (const unit of units) {
       out = convertEthUnits(value, unitType, unit.name)

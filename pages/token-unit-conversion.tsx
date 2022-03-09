@@ -22,9 +22,7 @@ export default function TokenUnitConversion() {
     let out
 
     // 'On paste' conversion from hexadecimal to decimal values
-    if (value.split('')[1] === 'x') {
-      value = parseInt(value, 16).toString()
-    }
+    value = decodeHex(value)
 
     tokenPrecision.base = parseInt(decimal === '' ? tokenPrecision.base.toString() : '6')
 
