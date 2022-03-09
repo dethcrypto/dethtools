@@ -4,6 +4,17 @@ import { tokenPrecision, TokenUnitType, unitPrecision, UnitType } from './conver
 
 BigNumber.set({ EXPONENTIAL_AT: 1000 })
 
+export type PrecisionDict<T extends string> = { [key in T]: number }
+
+export function convertEthUnits(value: string, fromUnit: UnitType, toUnit: UnitType): string | undefined {
+  return convertUnit(value, fromUnit, toUnit, unitPrecision)
+}
+
+export function convertTokenUnits(value: string, fromUnit: TokenUnitType, toUnit: TokenUnitType): string | undefined {
+  return convertUnit(value, fromUnit, toUnit, tokenPrecision)
+}
+
+// @internal
 export function convertUnit<T extends string>(
   value: string,
   fromUnit: T,
@@ -16,16 +27,7 @@ export function convertUnit<T extends string>(
     .toString()
 }
 
-export function convertEthUnits(value: string, fromUnit: UnitType, toUnit: UnitType): string | undefined {
-  return convertUnit(value, fromUnit, toUnit, unitPrecision)
-}
-
-export function convertTokenUnits(value: string, fromUnit: TokenUnitType, toUnit: TokenUnitType): string | undefined {
-  return convertUnit(value, fromUnit, toUnit, tokenPrecision)
-}
-
-export type PrecisionDict<T extends string> = { [key in T]: number }
-
+// @internal
 export function unitPrecisionToValue(precision: number): string {
   if (precision === 1) return '1'
   return ['1'].concat('0'.repeat(precision)).join('')
