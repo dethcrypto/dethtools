@@ -12,8 +12,17 @@ module.exports = {
     project: './tsconfig.json',
     sourceType: 'module',
   },
+  overrides: [
+    {
+      files: ['pages/**.tsx', 'pages/**/*.tsx'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
+  ],
   rules: {
     'no-redeclare': 'off',
+    'import/no-default-export': 'error',
     '@typescript-eslint/no-redeclare': ['error'],
     'no-invalid-this': 'off',
     // this gets inlined into a package eslint, so it means: use current package's package.info or the one at the project root
