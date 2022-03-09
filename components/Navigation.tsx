@@ -20,7 +20,7 @@ export default function Navigation() {
       </section>
 
       <section className="flex gap-4 items-center">
-        <MyLink href={'/dashboard'} as={'/dashboard'}>
+        <MyLink href={'/'} as={'/'}>
           <button
             className="border-gray-900 border py-2 px-4
           hover:bg-black hover:text-white"
