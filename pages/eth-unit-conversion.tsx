@@ -1,6 +1,7 @@
 import { ChangeEvent, Fragment, useState } from 'react'
 
-import { convertUnit, UnitType } from '../lib/ethUnitConversion'
+import { UnitType } from '../lib/convertProperties'
+import { convertEthUnits } from '../lib/convertUnits'
 
 export default function EthUnitConversion() {
   const [wei, setWei] = useState('')
@@ -22,8 +23,13 @@ export default function EthUnitConversion() {
   function handleChangeEvent(value: string, unitType: UnitType) {
     let out
 
+    // 'On paste' conversion from hexadecimal to decimal values
+    if (value.split('')[1] === 'x') {
+      value = parseInt(value, 16).toString()
+    }
+
     for (const unit of units) {
-      out = convertUnit(value, unitType, unit.name)
+      out = convertEthUnits(value, unitType, unit.name)
 
       if (out) {
         if (isNaN(parseInt(out))) out = ''
