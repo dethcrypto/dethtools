@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-function Dashboard() {
+export function Dashboard() {
   return (
     <div>
       <Head>
@@ -18,5 +18,3 @@ function Dashboard() {
     </div>
   )
 }
-
-export default Dashboard

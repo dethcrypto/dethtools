@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
-import MyLink from './MyLink'
+import { MyLink } from './MyLink'
 
-export default function Navigation() {
+export function Navigation() {
   return (
     <nav
       className="flex items-center h-20 mx-auto

@@ -3,8 +3,8 @@ import '/css/globals.css'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 
-import MyLink from '../components/MyLink'
-import Navigation from '../components/Navigation'
+import { MyLink } from '../components/MyLink'
+import { Navigation } from '../components/Navigation'
 
 interface Tool {
   title: string
@@ -41,7 +41,7 @@ function ToolList() {
   )
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+export function MyApp({ Component, pageProps }: AppProps) {
   return (
     <main className="max-w-4xl mx-auto">
       <ThemeProvider attribute="class" defaultTheme="light">
@@ -54,5 +54,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </main>
   )
 }
-
-export default MyApp
