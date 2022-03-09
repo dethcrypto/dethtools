@@ -2,6 +2,7 @@ import { ChangeEvent, Fragment, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
+import { decodeHex } from '../lib/decodeHex'
 
 export default function TokenUnitConversion() {
   const [decimal, setDecimal] = useState('')
