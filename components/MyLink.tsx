@@ -8,10 +8,8 @@ interface MyLinkProps {
   children: React.ReactNode
 }
 
-const MyLink = ({ className, href, as, children }: MyLinkProps) => (
+export const MyLink = ({ className, href, as, children }: MyLinkProps) => (
   <Link href={href} as={as} passHref>
     <a className={className || ''}>{children}</a>
   </Link>
 )
-
-export default MyLink
