@@ -1,6 +1,6 @@
 import { ChangeEvent, Fragment, useState } from 'react'
 
-import { convertUnit, UnitType } from '../../lib/ethUnitConversion'
+import { convertUnit, UnitType } from '../lib/ethUnitConversion'
 
 export default function EthUnitConversion() {
   const [wei, setWei] = useState('0')
