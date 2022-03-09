@@ -1,6 +1,7 @@
 import { ChangeEvent, Fragment, useState } from 'react'
 
-import { convertUnit, UnitType } from '../lib/ethUnitConversion'
+import { UnitType } from '../lib/convertProperties'
+import { convertEthUnits } from '../lib/convertUnits'
 
 export default function EthUnitConversion() {
   const [wei, setWei] = useState('0')
@@ -23,7 +24,7 @@ export default function EthUnitConversion() {
     let out
 
     for (const unit of units) {
-      out = convertUnit(value, unitType, unit.name)
+      out = convertEthUnits(value, unitType, unit.name)
 
       if (out) {
         if (unit.name === 'eth') setEth(out)

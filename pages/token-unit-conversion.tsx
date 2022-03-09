@@ -1,34 +1,30 @@
 import { ChangeEvent, Fragment, useState } from 'react'
 
-import { convertUnit, UnitType } from '../lib/ethUnitConversion'
+import { convertTokenUnits } from '../lib/convertUnits'
 
-export default function EthUnitConversion() {
-  const [wei, setWei] = useState('0')
-  const [gwei, setGwei] = useState('0')
-  const [eth, setEth] = useState('0')
+export default function TokenUnitConversion() {
+  const [unit, setUnit] = useState('')
+  const [base, setBase] = useState('')
 
   function resetValues() {
-    setWei('0')
-    setGwei('0')
-    setEth('0')
+    setUnit('')
+    setBase('')
   }
 
   const units: UnitTypeExtended[] = [
-    { name: 'wei', value: wei },
-    { name: 'gwei', value: gwei },
-    { name: 'eth', value: eth },
+    { name: 'unit', value: unit },
+    { name: 'base', value: base },
   ]
 
-  function handleChangeEvent(value: string, unitType: UnitType) {
+  function handleChangeEvent(value: string, unitType: TokenUnitType) {
     let out
 
     for (const unit of units) {
-      out = convertUnit(value, unitType, unit.name)
+      out = convertTokenUnits(value, unitType, unit.name)
 
       if (out) {
-        if (unit.name === 'eth') setEth(out)
-        if (unit.name === 'gwei') setGwei(out)
-        if (unit.name === 'wei') setWei(out)
+        if (unit.name === 'unit') setUnit(out)
+        if (unit.name === 'base') setBase(out)
       }
     }
 
@@ -49,7 +45,7 @@ export default function EthUnitConversion() {
 
 interface UnitElementsProps {
   units: UnitTypeExtended[]
-  onChange: (value: string, unitType: UnitType) => void
+  onChange: (value: string, unitType: TokenUnitType) => void
 }
 function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
   return (
@@ -92,7 +88,9 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
   )
 }
 
+type TokenUnitType = 'base' | 'unit'
+
 interface UnitTypeExtended {
-  name: UnitType
+  name: TokenUnitType
   value: string
 }
