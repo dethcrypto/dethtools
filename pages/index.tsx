@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-export function Home() {
+export default function Home() {
   return (
     <div>
       <Head>

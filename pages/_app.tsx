@@ -41,7 +41,7 @@ function ToolList() {
   )
 }
 
-export function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <main className="max-w-4xl mx-auto">
       <ThemeProvider attribute="class" defaultTheme="light">
