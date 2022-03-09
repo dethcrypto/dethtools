@@ -3,14 +3,14 @@ import { ChangeEvent, Fragment, useState } from 'react'
 import { convertUnit, UnitType } from '../lib/ethUnitConversion'
 
 export default function EthUnitConversion() {
-  const [wei, setWei] = useState('0')
-  const [gwei, setGwei] = useState('0')
-  const [eth, setEth] = useState('0')
+  const [wei, setWei] = useState('')
+  const [gwei, setGwei] = useState('')
+  const [eth, setEth] = useState('')
 
   function resetValues() {
-    setWei('0')
-    setGwei('0')
-    setEth('0')
+    setWei('')
+    setGwei('')
+    setEth('')
   }
 
   const units: UnitTypeExtended[] = [
@@ -26,6 +26,8 @@ export default function EthUnitConversion() {
       out = convertUnit(value, unitType, unit.name)
 
       if (out) {
+        if (isNaN(parseInt(out))) out = ''
+
         if (unit.name === 'eth') setEth(out)
         if (unit.name === 'gwei') setGwei(out)
         if (unit.name === 'wei') setWei(out)
@@ -75,11 +77,11 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
                     <input
                       placeholder={value ? value.toString() : '0'}
                       value={value}
-                      type="number"
+                      type="string"
                       onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         onChange(event.target.value, name)
                       }}
-                      className="p-3 w-72 border border-dashed border-black rounded-sm"
+                      className="text-lg p-3 w-72 border border-dashed border-black rounded-sm"
                     />
                   </th>
                 </tr>
