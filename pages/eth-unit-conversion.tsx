@@ -23,6 +23,11 @@ export default function EthUnitConversion() {
   function handleChangeEvent(value: string, unitType: UnitType) {
     let out
 
+    // 'On paste' conversion from hexadecimal to decimal values
+    if (value.split('')[1] === 'x') {
+      value = parseInt(value, 16).toString()
+    }
+
     for (const unit of units) {
       out = convertEthUnits(value, unitType, unit.name)
 

@@ -21,6 +21,11 @@ export default function TokenUnitConversion() {
   function handleChangeEvent(value: string, unitType: TokenUnitType) {
     let out
 
+    // 'On paste' conversion from hexadecimal to decimal values
+    if (value.split('')[1] === 'x') {
+      value = parseInt(value, 16).toString()
+    }
+
     tokenPrecision.base = parseInt(decimal === '' ? tokenPrecision.base.toString() : '6')
 
     for (const unit of units) {
@@ -28,6 +33,7 @@ export default function TokenUnitConversion() {
 
       if (out) {
         if (isNaN(parseInt(out))) out = ''
+
         if (unit.name === 'unit') setUnit(out)
         if (unit.name === 'base') setBase(out)
       }
@@ -102,12 +108,12 @@ function UnitElements({ units, onChange, setDecimal }: UnitElementsProps): JSX.E
 
                   <th
                     scope="col"
-                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                    className="py-3 px-6 text-md font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
                   >
                     <input
                       placeholder={value ? value.toString() : '0'}
                       value={value}
-                      type="number"
+                      type="string"
                       onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         onChange(event.target.value, name)
                       }}
