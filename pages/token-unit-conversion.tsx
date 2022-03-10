@@ -3,6 +3,8 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 
+const DEFAULT_PRECISION = '18'
+
 export default function TokenUnitConversion() {
   const [lastType, setLastType] = useState<TokenUnitType>('base')
   const [lastValue, setLastValue] = useState('')
@@ -29,7 +31,7 @@ export default function TokenUnitConversion() {
       value = parseInt(value, 16).toString()
     }
 
-    tokenPrecision.base = parseInt(decimal || '18')
+    tokenPrecision.base = parseInt(decimal || DEFAULT_PRECISION)
 
     for (const unit of units) {
       out = convertTokenUnits(value, unitType, unit.name)
