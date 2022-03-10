@@ -5,7 +5,7 @@ module.exports = {
   env: {
     es6: true,
   },
-  extends: ['typestrict'],
+  extends: ['typestrict', 'react-app'],
   plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports', 'import'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -23,15 +23,18 @@ module.exports = {
   rules: {
     'no-redeclare': 'off',
     'import/no-default-export': 'error',
-    '@typescript-eslint/no-redeclare': ['error'],
     'no-invalid-this': 'off',
     // this gets inlined into a package eslint, so it means: use current package's package.info or the one at the project root
     'import/no-extraneous-dependencies': ['error', { packageDir: ['./', __dirname] }],
     'unused-imports/no-unused-imports-ts': inTextEditor ? 'off' : 'error',
+
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+
+    '@typescript-eslint/no-redeclare': ['error'],
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-useless-constructor': 'error',
+
     'accessor-pairs': 'error',
     'constructor-super': 'error',
     eqeqeq: [
@@ -153,6 +156,9 @@ module.exports = {
       },
     ],
     yoda: ['error', 'never'],
+
     'no-only-tests/no-only-tests': 'error',
+
+    'react/jsx-key': 'warn',
   },
 }
