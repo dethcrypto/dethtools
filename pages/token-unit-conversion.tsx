@@ -2,6 +2,7 @@ import { ChangeEvent, Fragment, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
+import { decodeHex } from '../lib/decodeHex'
 
 export default function TokenUnitConversion() {
   const [decimal, setDecimal] = useState('')
@@ -22,9 +23,7 @@ export default function TokenUnitConversion() {
     let out
 
     // 'On paste' conversion from hexadecimal to decimal values
-    if (value.split('')[1] === 'x') {
-      value = parseInt(value, 16).toString()
-    }
+    value = decodeHex(value)
 
     tokenPrecision.base = parseInt(decimal === '' ? tokenPrecision.base.toString() : '6')
 
