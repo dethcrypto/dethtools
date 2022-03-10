@@ -64,7 +64,7 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
       {units.map((unit) => {
         const { name, value } = unit
         return (
-          <div>
+          <div key={name}>
             <table className="min-w-full divide-y divide-gray-200 table-fixed">
               <thead className="bg-gray-50 rounded-sm">
                 <tr>
@@ -72,7 +72,9 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
                     scope="col"
                     className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
                   >
-                    <p className="text-lg"> {name} </p>
+                    <label htmlFor={name} className="text-lg">
+                      {name}
+                    </label>
                   </th>
 
                   <th
@@ -80,6 +82,7 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
                     className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
                   >
                     <input
+                      id={name}
                       placeholder={value ? value.toString() : '0'}
                       value={value}
                       type="string"
