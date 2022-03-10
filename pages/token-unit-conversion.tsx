@@ -1,9 +1,12 @@
-import { ChangeEvent, Fragment, useState } from 'react'
+import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 
 export default function TokenUnitConversion() {
+  const [lastType, setLastType] = useState<TokenUnitType>('base')
+  const [lastValue, setLastValue] = useState('')
+
   const [decimal, setDecimal] = useState('')
   const [unit, setUnit] = useState('')
   const [base, setBase] = useState('')
@@ -26,7 +29,7 @@ export default function TokenUnitConversion() {
       value = parseInt(value, 16).toString()
     }
 
-    tokenPrecision.base = parseInt(decimal === '' ? tokenPrecision.base.toString() : '6')
+    tokenPrecision.base = parseInt(decimal)
 
     for (const unit of units) {
       out = convertTokenUnits(value, unitType, unit.name)
@@ -39,6 +42,9 @@ export default function TokenUnitConversion() {
       }
     }
 
+    setLastType(unitType)
+    setLastValue(value)
+
     if (!out) {
       resetValues()
     }
@@ -48,7 +54,13 @@ export default function TokenUnitConversion() {
     <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
       <form className="flex flex-col gap-10 mx-auto">
         <h1> Token unit conversion </h1>
-        <UnitElements onChange={handleChangeEvent} units={units} setDecimal={setDecimal} />
+        <UnitElements
+          onChange={handleChangeEvent}
+          units={units}
+          setDecimal={setDecimal}
+          lastValue={lastValue}
+          lastType={lastType}
+        />
       </form>
     </div>
   )
@@ -58,9 +70,13 @@ interface UnitElementsProps {
   units: UnitTypeExtended[]
   onChange: (value: string, unitType: TokenUnitType) => void
   setDecimal: (value: string) => void
+  lastType: TokenUnitType
+  lastValue: string
 }
 
-function UnitElements({ units, onChange, setDecimal }: UnitElementsProps): JSX.Element {
+function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
+  useEffect(() => onChange(lastValue, lastType), [units, setDecimal])
+
   return (
     <Fragment>
       <section className="mb-6">
@@ -69,14 +85,16 @@ function UnitElements({ units, onChange, setDecimal }: UnitElementsProps): JSX.E
             <tr>
               <th
                 scope="col"
-                className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                className="py-1 px-6 text-xs font-medium tracking-wider text-left
+                text-gray-700 uppercase dark:text-gray-400"
               >
                 <p className="text-lg"> Decimals </p>
               </th>
 
               <th
                 scope="col"
-                className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                className="py-3 px-6 text-xs font-medium tracking-wider text-left
+                text-gray-700 uppercase dark:text-gray-400"
               >
                 <input
                   type="number"
@@ -101,14 +119,16 @@ function UnitElements({ units, onChange, setDecimal }: UnitElementsProps): JSX.E
                 <tr>
                   <th
                     scope="col"
-                    className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                    className="py-1 px-6 text-xs font-medium tracking-wider text-left
+                    text-gray-700 uppercase dark:text-gray-400"
                   >
                     <p className="text-lg"> {name} </p>
                   </th>
 
                   <th
                     scope="col"
-                    className="py-3 px-6 text-md font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                    className="py-3 px-6 text-md font-medium tracking-wider text-left
+                    text-gray-700 uppercase dark:text-gray-400"
                   >
                     <input
                       placeholder={value ? value.toString() : '0'}
