@@ -24,7 +24,7 @@ function ToolList() {
         {tools.map((t) => {
           return (
             <div key={t.title} className="flex mb-4 border-b rounded-lg border-gray-200 dark:border-gray-700">
-              <MyLink href={`/dashboard/${t.pageHref}`} as={`/${t.pageHref}`}>
+              <MyLink href={`/dashboard/${t.pageHref}`}>
                 <button
                   className="flex items-center h-12 px-2 py-2 gap-3 text-center
                 text-black whitespace-nowrap focus:outline-none
