@@ -74,6 +74,7 @@ interface UnitElementsProps {
 }
 
 function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
 
   return (
