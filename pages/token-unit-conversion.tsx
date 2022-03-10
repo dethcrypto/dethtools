@@ -29,7 +29,7 @@ export default function TokenUnitConversion() {
       value = parseInt(value, 16).toString()
     }
 
-    tokenPrecision.base = parseInt(decimal)
+    tokenPrecision.base = parseInt(decimal || '18')
 
     for (const unit of units) {
       out = convertTokenUnits(value, unitType, unit.name)
