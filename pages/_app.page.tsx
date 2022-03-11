@@ -24,14 +24,14 @@ function ToolList() {
         {tools.map((t) => {
           return (
             <div key={t.title} className="flex mb-4 border-b rounded-lg border-gray-200 dark:border-gray-700">
-              <MyLink href={`/dashboard/${t.pageHref}`}>
-                <button
+              <MyLink href={`/${t.pageHref}`}>
+                <div
                   className="flex items-center h-12 px-2 py-2 gap-3 text-center
                 text-black whitespace-nowrap focus:outline-none
-                hover:bg-black hover:text-gray-200 rounded-xl"
+                hover:bg-black hover:text-white rounded-xl"
                 >
-                  <p className="hover:text-white"> {t.title} </p>
-                </button>
+                  {t.title}
+                </div>
               </MyLink>
             </div>
           )

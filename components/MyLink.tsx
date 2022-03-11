@@ -3,13 +3,13 @@ import React from 'react'
 
 interface MyLinkProps {
   href: string
-  as: string
   className?: string
   children: React.ReactNode
 }
 
-export const MyLink = ({ className, href, as, children }: MyLinkProps) => (
-  <Link href={href} as={as} passHref>
+export const MyLink = ({ className, href, children }: MyLinkProps) => (
+  <Link href={href} passHref>
+    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a className={className || ''}>{children}</a>
   </Link>
 )
