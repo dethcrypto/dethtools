@@ -4,6 +4,8 @@ import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
 
+const DEFAULT_DECIMAL = '18'
+
 export default function TokenUnitConversion() {
   const [lastType, setLastType] = useState<TokenUnitType>('base')
   const [lastValue, setLastValue] = useState('')
@@ -28,7 +30,7 @@ export default function TokenUnitConversion() {
     // 'On paste' conversion from hexadecimal to decimal values
     value = decodeHex(value)
 
-    tokenPrecision.base = parseInt(decimal)
+    tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
 
     for (const unit of units) {
       out = convertTokenUnits(value, unitType, unit.name)
