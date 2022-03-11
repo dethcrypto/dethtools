@@ -2,6 +2,7 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
+import { decodeHex } from '../lib/decodeHex'
 
 const DEFAULT_PRECISION = '18'
 
@@ -27,9 +28,7 @@ export default function TokenUnitConversion() {
     let out
 
     // 'On paste' conversion from hexadecimal to decimal values
-    if (value.split('')[1] === 'x') {
-      value = parseInt(value, 16).toString()
-    }
+    value = decodeHex(value)
 
     tokenPrecision.base = parseInt(decimal || DEFAULT_PRECISION)
 
@@ -77,7 +76,8 @@ interface UnitElementsProps {
 }
 
 function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
-  useEffect(() => onChange(lastValue, lastType), [units, setDecimal])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
 
   return (
     <Fragment>
@@ -90,7 +90,9 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                 className="py-1 px-6 text-xs font-medium tracking-wider text-left
                 text-gray-700 uppercase dark:text-gray-400"
               >
-                <p className="text-lg"> Decimals </p>
+                <label htmlFor="decimals" className="text-lg">
+                  Decimals
+                </label>
               </th>
 
               <th
@@ -99,6 +101,7 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                 text-gray-700 uppercase dark:text-gray-400"
               >
                 <input
+                  id="decimals"
                   type="number"
                   placeholder={tokenPrecision.base.toString()}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -114,8 +117,9 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
 
       {units.map((unit) => {
         const { name, value } = unit
+
         return (
-          <div>
+          <div key={name}>
             <table className="min-w-full divide-y divide-gray-200 table-fixed">
               <thead className="bg-gray-50 rounded-sm">
                 <tr>
@@ -124,7 +128,9 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                     className="py-1 px-6 text-xs font-medium tracking-wider text-left
                     text-gray-700 uppercase dark:text-gray-400"
                   >
-                    <p className="text-lg"> {name} </p>
+                    <label htmlFor={name} className="text-lg">
+                      {name}
+                    </label>
                   </th>
 
                   <th
@@ -133,10 +139,11 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                     text-gray-700 uppercase dark:text-gray-400"
                   >
                     <input
+                      id={name}
                       placeholder={value ? value.toString() : '0'}
                       value={value}
                       type="string"
-                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      onChange={(event) => {
                         onChange(event.target.value, name)
                       }}
                       className="p-3 w-72 border border-dashed border-black rounded-sm"
