@@ -12,8 +12,8 @@ describe(TokenUnitConversion.name, () => {
     const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement
     fireEvent.change(unitField, { target: { value: '1' } })
 
-    expect(decimalsField.placeholder).not.toReferentiallyEqual(NaN.toString())
-    expect(decimalsField.value).not.toReferentiallyEqual(NaN.toString())
+    expect(decimalsField.placeholder).not.toEqual('NaN')
+    expect(decimalsField.value).not.toEqual('NaN')
   })
 
   it('sets decimals, changes base and gets a correct value in unit field', async () => {
