@@ -4,6 +4,18 @@ import { expect } from 'earljs'
 import TokenUnitConversion from './token-unit-conversion.page'
 
 describe(TokenUnitConversion.name, () => {
+  it.skip('sets defualt value, thus user can calculate values without getting NaN', async () => {
+    const root = render(<TokenUnitConversion />)
+
+    const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
+
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement
+    fireEvent.change(unitField, { target: { value: '1' } })
+
+    expect(decimalsField.placeholder).toReferentiallyEqual(NaN.toString())
+    expect(decimalsField.value).toReferentiallyEqual(NaN.toString())
+  })
+
   it('sets decimals, changes base and gets a correct value in unit field', async () => {
     const root = render(<TokenUnitConversion />)
     const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
