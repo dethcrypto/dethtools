@@ -16,6 +16,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.6.0",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "bignumber.js": "^9.0.2",
@@ -24,7 +25,6 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "global-jsdom": "^8.4.0",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.0",
     "@testing-library/react": "^12.1.4",
@@ -34,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "4.15.1",
     "autoprefixer": "^10.4.0",
-    "earljs": "^0.1.12",
+    "earljs": "0.2.2",
     "eslint": "8.10.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-config-typestrict": "^1.0.2",
@@ -44,6 +44,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-sonarjs": "^0.8.0-125",
     "eslint-plugin-unused-imports": "^1.1.1",
+    "global-jsdom": "^8.4.0",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^8.2.0",
