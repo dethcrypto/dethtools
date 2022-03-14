@@ -1,10 +1,5 @@
 import { Fragment, Interface } from '@ethersproject/abi'
 
-interface DecodeResult {
-  decoded: ReadonlyArray<unknown>
-  fragment: Fragment
-}
-
 export function decodeCalldata(iface: Interface, calldata: string): DecodeResult | undefined {
   const abi = iface.fragments
 
@@ -20,4 +15,9 @@ export function decodeCalldata(iface: Interface, calldata: string): DecodeResult
   if (decoded && fragment) {
     return { decoded, fragment }
   }
+}
+
+interface DecodeResult {
+  decoded: ReadonlyArray<unknown>
+  fragment: Fragment
 }
