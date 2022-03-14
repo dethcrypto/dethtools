@@ -3,8 +3,7 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
-
-const DEFAULT_DECIMAL = '18'
+import { boundDecimal, DEFAULT_DECIMAL } from '../lib/safeDecimal'
 
 export default function TokenUnitConversion() {
   const [lastType, setLastType] = useState<TokenUnitType>('base')
@@ -24,13 +23,18 @@ export default function TokenUnitConversion() {
     { name: 'base', value: base },
   ]
 
+  useEffect(() => {
+    setDecimal(boundDecimal(decimal))
+  }, [decimal])
+
   function handleChangeEvent(value: string, unitType: TokenUnitType) {
     let out
-
     // 'On paste' conversion from hexadecimal to decimal values
     value = decodeHex(value)
 
-    tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
+    const safeDecimal = boundDecimal(decimal)
+    setDecimal(safeDecimal)
+    tokenPrecision.base = parseInt(safeDecimal || DEFAULT_DECIMAL)
 
     for (const unit of units) {
       out = convertTokenUnits(value, unitType, unit.name)
@@ -42,7 +46,6 @@ export default function TokenUnitConversion() {
         if (unit.name === 'base') setBase(out)
       }
     }
-
     setLastType(unitType)
     setLastValue(value)
 
@@ -58,6 +61,7 @@ export default function TokenUnitConversion() {
         <UnitElements
           onChange={handleChangeEvent}
           units={units}
+          decimal={decimal}
           setDecimal={setDecimal}
           lastValue={lastValue}
           lastType={lastType}
@@ -69,13 +73,14 @@ export default function TokenUnitConversion() {
 
 interface UnitElementsProps {
   units: UnitTypeExtended[]
+  decimal: string
   onChange: (value: string, unitType: TokenUnitType) => void
   setDecimal: (value: string) => void
   lastType: TokenUnitType
   lastValue: string
 }
 
-function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
+function UnitElements({ units, onChange, setDecimal, lastValue, lastType, decimal }: UnitElementsProps): JSX.Element {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
 
@@ -104,6 +109,7 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                   id="decimals"
                   type="number"
                   placeholder={tokenPrecision.base.toString()}
+                  value={decimal}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setDecimal(event.target.value)
                   }}

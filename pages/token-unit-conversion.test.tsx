@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import { expect } from 'earljs'
 
+import { DECIMAL_BOUND } from '../lib/safeDecimal'
 import TokenUnitConversion from './token-unit-conversion.page'
 
 describe(TokenUnitConversion.name, () => {
@@ -43,5 +44,21 @@ describe(TokenUnitConversion.name, () => {
 
     fireEvent.change(unitField, { target: { value: String(15e5) } })
     expect(baseField.value).toEqual('15')
+  })
+
+  it('sets decimals above DECIMAL_BOUND and the decimal is set to DECIMAL_BOUND', async () => {
+    const root = render(<TokenUnitConversion />)
+    const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
+
+    fireEvent.change(decimalsField, { target: { value: DECIMAL_BOUND + 5 } })
+    expect(decimalsField.value).toEqual(DECIMAL_BOUND.toString())
+  })
+
+  it('sets decimals below 0 and the decimal is set to 0', async () => {
+    const root = render(<TokenUnitConversion />)
+    const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
+
+    fireEvent.change(decimalsField, { target: { value: -3 } })
+    expect(decimalsField.value).toEqual(String(0))
   })
 })
