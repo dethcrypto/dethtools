@@ -31,12 +31,12 @@ describe(CalldataDecoder.name, () => {
     userEvent.click(await root.findByRole('button'))
 
     const sigHash = await root.findByTestId('sigHash')
-    expect(sigHash.innerHTML.includes('0x23b872dd')).toBeTruthy()
+    expect(sigHash.innerHTML).toEqual(expect.stringMatching('0x23b872dd'))
 
     const correctTypes = ['address', 'address', 'uint256']
     const inputParam = await root.findAllByTestId('inputParam')
-    inputParam.forEach((e, i) => {
-      expect(e.innerHTML).toEqual(correctTypes[i])
+    correctTypes.forEach((e, i) => {
+      expect(e).toEqual(inputParam[i].innerHTML)
     })
 
     const correctDecoded = [
@@ -45,8 +45,8 @@ describe(CalldataDecoder.name, () => {
       '0x0de0b6b3a7640000',
     ]
     const decoded = await root.findAllByTestId('decoded')
-    decoded.forEach((e, i) => {
-      expect(e.innerHTML.trim()).toEqual(correctDecoded[i])
+    correctDecoded.forEach((e, i) => {
+      expect(e).toEqual(decoded[i].innerHTML.trim())
     })
   })
   // @todo - write tests regarding to validation (to be impl.)
