@@ -78,8 +78,8 @@ export default function CalldataDecoder() {
             {zip(decoded, fragment?.inputs).map((tupl, i) => {
               return (
                 <div key={i}>
-                  <div className="flex items-center gap-3 font-semibold"> {fmtInputParam(tupl[1] as any)} </div>
-                  <div> {fmtDecoded(tupl[0] as any)} </div>
+                  <div className="flex items-center gap-3 font-semibold"> {fmtInputParam(tupl[1] as ParamType)} </div>
+                  <div> {fmtDecoded(tupl[0] as Decoded)} </div>
                 </div>
               )
             })}
