@@ -54,7 +54,7 @@ export default function CalldataDecoder() {
         id="calldata"
         placeholder="e.g 0x23b8..3b2"
         className="h-36 border border-black border-dashed bg-gray-50 p-5 break-words"
-        onChange={(event: ChangeEvent<any>) => {
+        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value)
         }}
       />
@@ -66,7 +66,7 @@ export default function CalldataDecoder() {
         id="abi"
         placeholder="e.g function transferFrom(address, ..)"
         className="h-36 border border-black border-dashed bg-gray-100 p-5 break-words"
-        onChange={(event: ChangeEvent<any>) => {
+        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setRawAbi(event.target.value)
         }}
       />
