@@ -6,7 +6,7 @@ export function boundDecimal(str: string) {
 }
 
 // @internal
-export function boundStrInt<T extends string>(str: T, topBound: number, botBound: number = 0): string {
+function boundStrInt<T extends string>(str: T, topBound: number, botBound: number = 0): string {
   if (parseInt(str) >= topBound) {
     return topBound.toString()
   } else if (parseInt(str) <= 0) {
