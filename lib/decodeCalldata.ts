@@ -17,7 +17,7 @@ export function decodeCalldata(iface: Interface, calldata: string): DecodeResult
   }
 }
 
-interface DecodeResult {
+export interface DecodeResult {
   decoded: ReadonlyArray<unknown>
   fragment: Fragment
 }

@@ -15,6 +15,7 @@ interface Tool {
 const tools: Tool[] = [
   { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
   { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
+  { title: 'Calldata Decoder', pageHref: 'calldata-decoder' },
 ]
 
 function ToolList() {
