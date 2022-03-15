@@ -96,8 +96,7 @@ describe(parseAbi.name, () => {
     expect(fragments[2].name).toEqual('AccountLocked')
   })
 
-  it('fails on wrong abi format', () => {
-    /// "" not permitted, only ''
+  it('fails on wrong abi format (only "" format should be accepted)', () => {
     expect(() =>
       parseAbi(`
       "constructor(string symbol, string name)",

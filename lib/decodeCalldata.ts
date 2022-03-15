@@ -13,11 +13,12 @@ export function decodeCalldata(iface: Interface, calldata: string): DecodeResult
     } catch (e) {}
   }
   if (decoded && fragment) {
-    return { decoded, fragment }
+    return { decoded, fragment, sigHash: iface.getSighash(fragment) }
   }
 }
 
 export interface DecodeResult {
   decoded: ReadonlyArray<unknown>
   fragment: Fragment
+  sigHash: string
 }
