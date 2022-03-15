@@ -15,13 +15,10 @@ describe(decodeCalldata.name, () => {
     )!
 
     expect(decoded.fragment.format()).toEqual('transferFrom(address,address,uint256)')
-
     expect(decoded.decoded[0]).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
     expect(decoded.decoded[1]).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
-
     expect((decoded.decoded[2] as BigNumber).toString()).toEqual('1000000000000000000')
     expect(decoded.sigHash).toEqual('0x23b872dd')
-
     expect(decoded.fragment).toBeDefined()
   })
 
@@ -38,12 +35,9 @@ describe(decodeCalldata.name, () => {
     )!
 
     expect(decoded.fragment.format()).toEqual('transferFrom(address,address,uint256)')
-
     expect(decoded.decoded[0]).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
     expect(decoded.decoded[1]).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
-
     expect((decoded.decoded[2] as BigNumber).toString()).toEqual('1000000000000000000')
-
     expect(decoded.fragment).toBeDefined()
   })
 

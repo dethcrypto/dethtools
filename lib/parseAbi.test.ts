@@ -75,10 +75,8 @@ describe(parseAbi.name, () => {
     const fragments = iface.fragments
 
     expect(fragments[0].type).toEqual('constructor')
-
     expect(fragments[1].type).toEqual('event')
     expect(fragments[1].name).toEqual('Transfer')
-
     expect(fragments[2].type).toEqual('error')
     expect(fragments[2].name).toEqual('AccountLocked')
   })
@@ -94,10 +92,8 @@ describe(parseAbi.name, () => {
     const fragments = iface.fragments
 
     expect(fragments[0].type).toEqual('constructor')
-
     expect(fragments[1].type).toEqual('event')
     expect(fragments[1].name).toEqual('Transfer')
-
     expect(fragments[2].type).toEqual('error')
     expect(fragments[2].name).toEqual('AccountLocked')
   })
