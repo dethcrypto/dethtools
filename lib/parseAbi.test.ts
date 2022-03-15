@@ -34,7 +34,9 @@ describe(parseAbi.name, () => {
     const abi = `
       'function transferFrom(address from, address to, uint256 amount)',
     `
+
     const iface = parseAbi(abi)!
+
     expect(iface).toBeA(Interface)
   })
 
@@ -44,7 +46,9 @@ describe(parseAbi.name, () => {
       'event Transfer(address indexed from, address indexed to, uint256 amount)',
       'error AccountLocked(address owner, uint256 balance)',
     `
+
     const iface = parseAbi(abi)!
+
     expect(iface).toBeA(Interface)
   })
 
@@ -52,7 +56,9 @@ describe(parseAbi.name, () => {
     const abi = `
       'constructor(string symbol, string name)',
     `
+
     const iface = parseAbi(abi)!
+
     expect(iface).toBeA(Interface)
   })
 
