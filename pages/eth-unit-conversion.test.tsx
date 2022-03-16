@@ -68,4 +68,17 @@ describe(EthUnitConversion.name, () => {
     expect(weiField.value).toEqual('140005540000000')
     expect(ethField.value).toEqual('0.00014000554')
   })
+
+  it('types letters and special signs to one of the fields and error gets displayed', async () => {
+    const root = render(<EthUnitConversion />)
+    const errorField = (await root.findByTestId('error')) as HTMLElement
+    const gweiField = (await root.findByLabelText('gwei')) as HTMLInputElement
+
+    fireEvent.change(gweiField, { target: { value: '140fa,@' } })
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value mustn't contain letters/))
+    expect(gweiField.value).toEqual('140fa,@')
+
+    fireEvent.change(gweiField, { target: { value: '' } })
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be minimum 1 numbers long/))
+  })
 })

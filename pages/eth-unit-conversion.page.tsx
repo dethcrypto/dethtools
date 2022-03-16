@@ -3,8 +3,10 @@ import { ChangeEvent, Fragment, useState } from 'react'
 import { UnitType } from '../lib/convertProperties'
 import { convertEthUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
+import { unitSchema } from '../misc/unitSchema'
 
 export default function EthUnitConversion() {
+  const [error, setError] = useState<string | undefined>()
   const [wei, setWei] = useState('')
   const [gwei, setGwei] = useState('')
   const [eth, setEth] = useState('')
@@ -23,6 +25,14 @@ export default function EthUnitConversion() {
 
   function handleChangeValue(value: string, unitType: UnitType) {
     value = decodeHex(value)
+
+    const result = unitSchema.safeParse(value)
+    if (!result.success) {
+      setError(result.error.errors[0].message)
+    } else {
+      value = result.data
+      setError(undefined)
+    }
 
     for (const unit of units) {
       let out = convertEthUnits(value, unitType, unit.name)!
@@ -50,7 +60,7 @@ export default function EthUnitConversion() {
     <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
       <form className="mx-auto flex flex-col gap-10">
         <h1> Ethereum unit conversion </h1>
-        <UnitElements onChange={handleChangeValue} units={units} />
+        <UnitElements onChange={handleChangeValue} units={units} error={error} />
       </form>
     </div>
   )
@@ -58,11 +68,16 @@ export default function EthUnitConversion() {
 
 interface UnitElementsProps {
   units: UnitTypeExtended[]
+  error: string | undefined
   onChange: (value: string, unitType: UnitType) => void
 }
-function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
+function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
+      <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
+        {error}
+      </p>
+
       {units.map((unit) => {
         const { name, value } = unit
         return (

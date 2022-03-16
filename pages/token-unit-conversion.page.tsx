@@ -3,10 +3,12 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
+import { unitSchema } from '../misc/unitSchema'
 
 const DEFAULT_DECIMAL = '18'
 
 export default function TokenUnitConversion() {
+  const [error, setError] = useState<string | undefined>()
   const [lastType, setLastType] = useState<TokenUnitType>('base')
   const [lastValue, setLastValue] = useState('')
 
@@ -26,6 +28,14 @@ export default function TokenUnitConversion() {
 
   function handleChangeValue(value: string, unitType: TokenUnitType) {
     value = decodeHex(value)
+
+    const result = unitSchema.safeParse(value)
+    if (!result.success) {
+      setError(result.error.errors[0].message)
+    } else {
+      value = result.data
+      setError(undefined)
+    }
 
     for (const unit of units) {
       tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
@@ -59,8 +69,9 @@ export default function TokenUnitConversion() {
       <form className="mx-auto flex flex-col gap-10">
         <h1> Token unit conversion </h1>
         <UnitElements
-          onChange={handleChangeValue}
           units={units}
+          error={error}
+          onChange={handleChangeValue}
           setDecimal={setDecimal}
           lastValue={lastValue}
           lastType={lastType}
@@ -72,18 +83,23 @@ export default function TokenUnitConversion() {
 
 interface UnitElementsProps {
   units: UnitTypeExtended[]
+  error: string | undefined
   onChange: (value: string, unitType: TokenUnitType) => void
   setDecimal: (value: string) => void
   lastType: TokenUnitType
   lastValue: string
 }
 
-function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
+function UnitElements({ units, error, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
 
   return (
     <Fragment>
+      <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
+        {error}
+      </p>
+
       <section className="mb-6">
         <table className="min-w-full table-fixed divide-y divide-gray-200">
           <thead className="rounded-sm bg-gray-50">

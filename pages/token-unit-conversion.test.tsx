@@ -58,4 +58,16 @@ describe(TokenUnitConversion.name, () => {
     expect(unitField.value).toEqual('12444444000000000.55/fa')
     expect(baseField.value).toEqual('0.01244444400000000055')
   })
+
+  it('types letters and special signs to one of the fields and error gets displayed', async () => {
+    const root = render(<TokenUnitConversion />)
+    const errorField = (await root.findByTestId('error')) as HTMLElement
+    const baseField = (await root.findByLabelText('base')) as HTMLInputElement
+
+    fireEvent.change(baseField, { target: { value: '140fa,@' } })
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value mustn't contain letters/))
+
+    fireEvent.change(baseField, { target: { value: '' } })
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be minimum 1 numbers long/))
+  })
 })
