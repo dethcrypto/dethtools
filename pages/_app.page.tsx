@@ -20,16 +20,16 @@ const tools: Tool[] = [
 
 function ToolList() {
   return (
-    <section className="absolute top-52 left-1/6">
+    <section className="left-1/6 absolute top-52">
       <div className="flex flex-col">
         {tools.map((t) => {
           return (
-            <div key={t.title} className="flex mb-4 border-b rounded-lg border-gray-200 dark:border-gray-700">
+            <div key={t.title} className="mb-4 flex rounded-lg border-b border-gray-200 dark:border-gray-700">
               <MyLink href={`/${t.pageHref}`}>
                 <div
-                  className="flex items-center h-12 px-2 py-2 gap-3 text-center
-                text-black whitespace-nowrap focus:outline-none
-                hover:bg-black hover:text-white rounded-xl"
+                  className="flex h-12 items-center gap-3 whitespace-nowrap rounded-xl px-2
+                py-2 text-center text-black
+                hover:bg-black hover:text-white focus:outline-none"
                 >
                   {t.title}
                 </div>
@@ -44,10 +44,10 @@ function ToolList() {
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <main className="max-w-4xl mx-auto">
+    <main className="mx-auto max-w-4xl">
       <ThemeProvider attribute="class" defaultTheme="light">
         <Navigation />
-        <div className="flex mx-auto max-w-6xl items-center gap-12">
+        <div className="mx-auto flex max-w-6xl items-center gap-12">
           <ToolList />
         </div>
         <Component className="max-w-1/2" {...pageProps} />

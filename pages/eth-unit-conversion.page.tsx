@@ -47,8 +47,8 @@ export default function EthUnitConversion() {
   }
 
   return (
-    <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
-      <form className="flex flex-col gap-10 mx-auto">
+    <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
+      <form className="mx-auto flex flex-col gap-10">
         <h1> Ethereum unit conversion </h1>
         <UnitElements onChange={handleChangeValue} units={units} />
       </form>
@@ -67,12 +67,12 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
         const { name, value } = unit
         return (
           <div key={name}>
-            <table className="min-w-full divide-y divide-gray-200 table-fixed">
-              <thead className="bg-gray-50 rounded-sm">
+            <table className="min-w-full table-fixed divide-y divide-gray-200">
+              <thead className="rounded-sm bg-gray-50">
                 <tr>
                   <th
                     scope="col"
-                    className="py-1 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                    className="py-1 px-6 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400"
                   >
                     <label htmlFor={name} className="text-lg">
                       {name}
@@ -81,7 +81,7 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
 
                   <th
                     scope="col"
-                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
+                    className="py-3 px-6 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400"
                   >
                     <input
                       id={name}
@@ -91,7 +91,7 @@ function UnitElements({ units, onChange }: UnitElementsProps): JSX.Element {
                       onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         onChange(event.target.value, name)
                       }}
-                      className="text-lg p-3 w-72 border border-dashed border-black rounded-sm"
+                      className="w-72 rounded-sm border border-dashed border-black p-3 text-lg"
                     />
                   </th>
                 </tr>

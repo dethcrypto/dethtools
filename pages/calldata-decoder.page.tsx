@@ -44,41 +44,41 @@ export default function CalldataDecoder() {
   }
 
   return (
-    <div className="flex flex-col ml-64 mt-32 gap-10">
+    <div className="ml-64 mt-32 flex flex-col gap-10">
       <h1> Calldata decoder </h1>
 
-      <label htmlFor="calldata" className="font-bold text-lg">
+      <label htmlFor="calldata" className="text-lg font-bold">
         Calldata
       </label>
       <textarea
         id="calldata"
         placeholder="e.g 0x23b8..3b2"
-        className="h-36 border border-black border-dashed bg-gray-50 p-5 break-words"
+        className="h-36 break-words border border-dashed border-black bg-gray-50 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value)
         }}
       />
 
-      <label htmlFor="abi" className="font-bold text-lg">
+      <label htmlFor="abi" className="text-lg font-bold">
         Human-readable ABI
       </label>
       <textarea
         id="abi"
         placeholder="e.g function transferFrom(address, ..)"
-        className="h-36 border border-black border-dashed bg-gray-100 p-5 break-words"
+        className="h-36 break-words border border-dashed border-black bg-gray-100 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setRawAbi(event.target.value)
         }}
       />
 
-      <button className="text-md px-1 py-3  bg-black text-white rounded-md" onClick={handleDecodeCalldata}>
+      <button className="text-md rounded-md bg-black  px-1 py-3 text-white" onClick={handleDecodeCalldata}>
         Decode
       </button>
 
-      <label htmlFor="output" className="font-bold text-lg">
+      <label htmlFor="output" className="text-lg font-bold">
         Output
       </label>
-      <section className="border border-black border-dashed bg-gray-100 p-5 mb-24" placeholder="Output">
+      <section className="mb-24 border border-dashed border-black bg-gray-100 p-5" placeholder="Output">
         <section className="flex flex-col gap-4 break-words">
           <div data-testid="sigHash"> {sigHash && `Signature hash: ${sigHash}`} </div>
           {zip(decoded, fragment?.inputs).map((tupl, i) => {
