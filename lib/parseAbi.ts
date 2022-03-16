@@ -12,7 +12,7 @@ export function parseAbi(rawAbi: string): Interface | undefined {
     .map((str) => str.trim())
     // no empty
     .filter((str) => str)
-    // cut if ends with ', as it's sometimes happens for sm reason
+    // cut if ends with ', as sometimes it happens for sm reason
     .map((str) => {
       if (str.endsWith("'")) return str.slice(0, -1)
       else return str
