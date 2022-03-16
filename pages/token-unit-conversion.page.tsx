@@ -14,40 +14,43 @@ export default function TokenUnitConversion() {
   const [unit, setUnit] = useState('')
   const [base, setBase] = useState('')
 
-  function resetValues() {
-    setUnit('')
-    setBase('')
-  }
+  const unitStates = [
+    { name: 'unit', set: (out: string) => setUnit(out) },
+    { name: 'base', set: (out: string) => setBase(out) },
+  ]
 
   const units: UnitTypeExtended[] = [
     { name: 'unit', value: unit },
     { name: 'base', value: base },
   ]
 
-  function handleChangeEvent(value: string, unitType: TokenUnitType) {
-    let out
-
-    // 'On paste' conversion from hexadecimal to decimal values
+  function handleChangeValue(value: string, unitType: TokenUnitType) {
     value = decodeHex(value)
 
-    tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
-
     for (const unit of units) {
-      out = convertTokenUnits(value, unitType, unit.name)
+      tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
 
-      if (out) {
-        if (isNaN(parseInt(out))) out = ''
+      let out = convertTokenUnits(value, unitType, unit.name)!
 
-        if (unit.name === 'unit') setUnit(out)
-        if (unit.name === 'base') setBase(out)
+      for (const unitState of unitStates) {
+        if (unitType === unitState.name) {
+          continue
+        } else if (unitState.name === unit.name) {
+          if (isNaN(parseInt(out))) {
+            out = unit.value
+          }
+          unitState.set(out)
+        }
       }
     }
 
     setLastType(unitType)
     setLastValue(value)
 
-    if (!out) {
-      resetValues()
+    for (const unit of unitStates) {
+      if (unitType === unit.name) {
+        unit.set(value)
+      }
     }
   }
 
@@ -56,7 +59,7 @@ export default function TokenUnitConversion() {
       <form className="flex flex-col gap-10 mx-auto">
         <h1> Token unit conversion </h1>
         <UnitElements
-          onChange={handleChangeEvent}
+          onChange={handleChangeValue}
           units={units}
           setDecimal={setDecimal}
           lastValue={lastValue}

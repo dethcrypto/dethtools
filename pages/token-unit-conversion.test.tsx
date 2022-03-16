@@ -44,4 +44,18 @@ describe(TokenUnitConversion.name, () => {
     fireEvent.change(unitField, { target: { value: String(15e5) } })
     expect(baseField.value).toEqual('15')
   })
+
+  it('sets correct unit input, then adds chars, thus freezes calculation results in base field', async () => {
+    const root = render(<TokenUnitConversion />)
+    const unitField = (await root.findByLabelText('unit')) as HTMLInputElement
+    const baseField = (await root.findByLabelText('base')) as HTMLInputElement
+
+    fireEvent.change(unitField, { target: { value: '12444444000000000.55' } })
+    expect(unitField.value).toEqual('12444444000000000.55')
+    expect(baseField.value).toEqual('0.01244444400000000055')
+
+    fireEvent.change(unitField, { target: { value: '12444444000000000.55/fa' } })
+    expect(unitField.value).toEqual('12444444000000000.55/fa')
+    expect(baseField.value).toEqual('0.01244444400000000055')
+  })
 })

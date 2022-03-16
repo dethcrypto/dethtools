@@ -51,4 +51,21 @@ describe(EthUnitConversion.name, () => {
     expect(gweiField.value).toEqual('14000000')
     expect(weiField.value).toEqual('14000000000000000')
   })
+
+  it('sets correct gwei input, then adds chars, thus freezes calculation results in other fields', async () => {
+    const root = render(<EthUnitConversion />)
+    const gweiField = (await root.findByLabelText('gwei')) as HTMLInputElement
+    const weiField = (await root.findByLabelText('wei')) as HTMLInputElement
+    const ethField = (await root.findByLabelText('eth')) as HTMLInputElement
+
+    fireEvent.change(gweiField, { target: { value: '140005.54' } })
+    expect(gweiField.value).toEqual('140005.54')
+    expect(weiField.value).toEqual('140005540000000')
+    expect(ethField.value).toEqual('0.00014000554')
+
+    fireEvent.change(gweiField, { target: { value: '140005.54/fa' } })
+    expect(gweiField.value).toEqual('140005.54/fa')
+    expect(weiField.value).toEqual('140005540000000')
+    expect(ethField.value).toEqual('0.00014000554')
+  })
 })

@@ -9,11 +9,11 @@ export default function EthUnitConversion() {
   const [gwei, setGwei] = useState('')
   const [eth, setEth] = useState('')
 
-  function resetValues() {
-    setWei('')
-    setGwei('')
-    setEth('')
-  }
+  const unitStates = [
+    { name: 'wei', setFn: (out: string) => setWei(out) },
+    { name: 'gwei', setFn: (out: string) => setGwei(out) },
+    { name: 'eth', setFn: (out: string) => setEth(out) },
+  ]
 
   const units: UnitTypeExtended[] = [
     { name: 'wei', value: wei },
@@ -21,26 +21,28 @@ export default function EthUnitConversion() {
     { name: 'eth', value: eth },
   ]
 
-  function handleChangeEvent(value: string, unitType: UnitType) {
-    let out
-
-    // 'On paste' conversion from hexadecimal to decimal values
+  function handleChangeValue(value: string, unitType: UnitType) {
     value = decodeHex(value)
 
     for (const unit of units) {
-      out = convertEthUnits(value, unitType, unit.name)
+      let out = convertEthUnits(value, unitType, unit.name)!
 
-      if (out) {
-        if (isNaN(parseInt(out))) out = ''
-
-        if (unit.name === 'eth') setEth(out)
-        if (unit.name === 'gwei') setGwei(out)
-        if (unit.name === 'wei') setWei(out)
+      for (const unitState of unitStates) {
+        if (unitType === unitState.name) {
+          continue
+        } else if (unitState.name === unit.name) {
+          if (isNaN(parseInt(out))) {
+            out = unit.value
+          }
+          unitState.setFn(out)
+        }
       }
     }
 
-    if (!out) {
-      resetValues()
+    for (const unit of unitStates) {
+      if (unitType === unit.name) {
+        unit.setFn(value)
+      }
     }
   }
 
@@ -48,7 +50,7 @@ export default function EthUnitConversion() {
     <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
       <form className="flex flex-col gap-10 mx-auto">
         <h1> Ethereum unit conversion </h1>
-        <UnitElements onChange={handleChangeEvent} units={units} />
+        <UnitElements onChange={handleChangeValue} units={units} />
       </form>
     </div>
   )
