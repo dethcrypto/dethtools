@@ -34,7 +34,6 @@ export default function TokenUnitConversion() {
         const newState: State = { ...oldState, [currentType]: value }
 
         for (const [name, unitValue] of entries(newState)) {
-          // @todo fix this
           tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
 
           if (name === currentType) continue
