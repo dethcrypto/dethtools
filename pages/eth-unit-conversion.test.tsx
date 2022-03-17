@@ -79,6 +79,6 @@ describe(EthUnitConversion.name, () => {
     expect(gweiField.value).toEqual('140fa,@')
 
     fireEvent.change(gweiField, { target: { value: '' } })
-    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be minimum 1 numbers long/))
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be bigger or equal to 1/))
   })
 })

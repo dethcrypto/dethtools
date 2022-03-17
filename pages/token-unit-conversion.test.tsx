@@ -68,6 +68,6 @@ describe(TokenUnitConversion.name, () => {
     expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value mustn't contain letters/))
 
     fireEvent.change(baseField, { target: { value: '' } })
-    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be minimum 1 numbers long/))
+    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be bigger or equal to 1/))
   })
 })
