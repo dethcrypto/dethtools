@@ -61,7 +61,7 @@ describe(TokenUnitConversion.name, () => {
 
   it('types letters and special signs to one of the fields and error gets displayed', async () => {
     const root = render(<TokenUnitConversion />)
-    const errorField = (await root.findByTestId('error')) as HTMLElement
+    const errorField = await root.findByTestId('error')
     const baseField = (await root.findByLabelText('base')) as HTMLInputElement
 
     fireEvent.change(baseField, { target: { value: '140fa,@' } })

@@ -71,7 +71,7 @@ describe(EthUnitConversion.name, () => {
 
   it('types letters and special signs to one of the fields and error gets displayed', async () => {
     const root = render(<EthUnitConversion />)
-    const errorField = (await root.findByTestId('error')) as HTMLElement
+    const errorField = await root.findByTestId('error')
     const gweiField = (await root.findByLabelText('gwei')) as HTMLInputElement
 
     fireEvent.change(gweiField, { target: { value: '140fa,@' } })
