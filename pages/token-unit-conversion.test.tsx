@@ -70,4 +70,23 @@ describe(TokenUnitConversion.name, () => {
     fireEvent.change(baseField, { target: { value: '' } })
     expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be bigger or equal to 1/))
   })
+
+  it('recalculates values when decimals change', async () => {
+    const root = render(<TokenUnitConversion />)
+    const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
+
+    fireEvent.change(decimalsField, { target: { value: '10' } })
+
+    expect(decimalsField.value).toEqual('10')
+
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement
+
+    fireEvent.change(baseField, { target: { value: '9' } })
+    expect(unitField.value).toEqual('90000000000')
+
+    fireEvent.change(decimalsField, { target: { value: '15' } })
+
+    expect(unitField.value).toEqual('9000000000000000')
+  })
 })

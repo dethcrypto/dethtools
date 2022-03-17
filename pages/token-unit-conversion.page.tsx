@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useState } from 'react'
+import { ChangeEvent, Fragment, useEffect, useMemo, useRef, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
@@ -8,60 +8,63 @@ import { unitSchema } from '../misc/unitSchema'
 const DEFAULT_DECIMAL = '18'
 type State = { base: string; unit: string }
 
+const entries = Object.entries as <T>(obj: T) => [keyof T, T[keyof T]][]
+
 export default function TokenUnitConversion() {
-  const [error, setError] = useState<string | undefined>()
-  const [lastType, setLastType] = useState<TokenUnitType>('base')
-  const [lastValue, setLastValue] = useState('')
+  const [error, setError] = useState<string>()
+
+  const lastUpdate = useRef<UnitTypeExtended>()
 
   const [decimal, setDecimal] = useState('')
-  const [state, setState] = useState<State>({ unit: '', base: '' })
+  const [state, setState] = useState<State>({ base: '', unit: '' })
+
+  const handleChangeValue = useMemo(() => {
+    return (value: string, currentType: TokenUnitType) => {
+      value = decodeHex(value)
+
+      const result = unitSchema.safeParse(value)
+      if (!result.success) {
+        setError(result.error.errors[0].message)
+      } else {
+        value = result.data
+        setError(undefined)
+      }
+
+      setState((oldState) => {
+        const newState: State = { ...oldState, [currentType]: value }
+
+        for (const [name, unitValue] of entries(newState)) {
+          // @todo fix this
+          tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
+
+          if (name === currentType) continue
+          let out = convertTokenUnits(value, currentType, name)!
+
+          if (isNaN(parseInt(out))) out = unitValue
+          newState[name] = out
+        }
+        lastUpdate.current = { name: currentType, value }
+        return newState
+      })
+    }
+  }, [decimal])
+
+  useEffect(() => {
+    if (lastUpdate.current) {
+      handleChangeValue(lastUpdate.current.value, lastUpdate.current.name)
+    }
+  }, [handleChangeValue])
 
   const units: UnitTypeExtended[] = [
     { name: 'unit', value: state.unit },
     { name: 'base', value: state.base },
   ]
 
-  function handleChangeValue(value: string, currentType: TokenUnitType) {
-    value = decodeHex(value)
-
-    const result = unitSchema.safeParse(value)
-    if (!result.success) {
-      setError(result.error.errors[0].message)
-    } else {
-      value = result.data
-      setError(undefined)
-    }
-
-    setState((s) => ({ ...s, [currentType]: value }))
-
-    for (const unit of units) {
-      tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
-      if (unit.name === currentType) continue
-
-      let out = convertTokenUnits(value, currentType, unit.name)!
-
-      if (isNaN(parseInt(out))) {
-        out = unit.value
-      }
-      setState((s) => ({ ...s, [unit.name]: out }))
-    }
-
-    setLastType(currentType)
-    setLastValue(value)
-  }
-
   return (
     <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
       <form className="mx-auto flex flex-col gap-10">
         <h1> Token unit conversion </h1>
-        <UnitElements
-          units={units}
-          error={error}
-          onChange={handleChangeValue}
-          setDecimal={setDecimal}
-          lastValue={lastValue}
-          lastType={lastType}
-        />
+        <UnitElements units={units} error={error} onChange={handleChangeValue} setDecimal={setDecimal} />
       </form>
     </div>
   )
@@ -72,11 +75,9 @@ interface UnitElementsProps {
   error: string | undefined
   onChange: (value: string, unitType: TokenUnitType) => void
   setDecimal: (value: string) => void
-  lastType: TokenUnitType
-  lastValue: string
 }
 
-function UnitElements({ units, error, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
+function UnitElements({ units, error, onChange, setDecimal }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
       <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
@@ -105,10 +106,10 @@ function UnitElements({ units, error, onChange, setDecimal, lastValue, lastType 
                 <input
                   id="decimals"
                   type="number"
+                  min={0}
                   placeholder={tokenPrecision.base.toString()}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setDecimal(event.target.value)
-                    onChange(lastValue, lastType)
                   }}
                   className="w-36 rounded-sm border border-dashed border-black p-3"
                 />
