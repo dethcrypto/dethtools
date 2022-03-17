@@ -5,26 +5,19 @@ import { convertEthUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
 import { unitSchema } from '../misc/unitSchema'
 
+type State = { wei: string; gwei: string; eth: string }
+
 export default function EthUnitConversion() {
   const [error, setError] = useState<string | undefined>()
-
-  const [wei, setWei] = useState('')
-  const [gwei, setGwei] = useState('')
-  const [eth, setEth] = useState('')
-
-  const unitStates = [
-    { name: 'wei', setFn: (out: string) => setWei(out) },
-    { name: 'gwei', setFn: (out: string) => setGwei(out) },
-    { name: 'eth', setFn: (out: string) => setEth(out) },
-  ]
+  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' })
 
   const units: UnitTypeExtended[] = [
-    { name: 'wei', value: wei },
-    { name: 'gwei', value: gwei },
-    { name: 'eth', value: eth },
+    { name: 'wei', value: state.wei },
+    { name: 'gwei', value: state.gwei },
+    { name: 'eth', value: state.eth },
   ]
 
-  function handleChangeValue(value: string, unitType: UnitType) {
+  function handleChangeValue(value: string, currentType: UnitType) {
     value = decodeHex(value)
 
     const result = unitSchema.safeParse(value)
@@ -35,25 +28,16 @@ export default function EthUnitConversion() {
       setError(undefined)
     }
 
+    setState((s) => ({ ...s, [currentType]: value }))
+
     for (const unit of units) {
-      let out = convertEthUnits(value, unitType, unit.name)!
+      if (unit.name === currentType) continue
+      let out = convertEthUnits(value, currentType, unit.name)!
 
-      for (const unitState of unitStates) {
-        if (unitType === unitState.name) {
-          continue
-        } else if (unitState.name === unit.name) {
-          if (isNaN(parseInt(out))) {
-            out = unit.value
-          }
-          unitState.setFn(out)
-        }
+      if (isNaN(parseInt(out))) {
+        out = unit.value
       }
-    }
-
-    for (const unit of unitStates) {
-      if (unitType === unit.name) {
-        unit.setFn(value)
-      }
+      setState((s) => ({ ...s, [unit.name]: out }))
     }
   }
 

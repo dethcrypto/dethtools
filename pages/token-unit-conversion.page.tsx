@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useEffect, useState } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
@@ -6,6 +6,7 @@ import { decodeHex } from '../lib/decodeHex'
 import { unitSchema } from '../misc/unitSchema'
 
 const DEFAULT_DECIMAL = '18'
+type State = { base: string; unit: string }
 
 export default function TokenUnitConversion() {
   const [error, setError] = useState<string | undefined>()
@@ -13,20 +14,14 @@ export default function TokenUnitConversion() {
   const [lastValue, setLastValue] = useState('')
 
   const [decimal, setDecimal] = useState('')
-  const [unit, setUnit] = useState('')
-  const [base, setBase] = useState('')
-
-  const unitStates = [
-    { name: 'unit', set: (out: string) => setUnit(out) },
-    { name: 'base', set: (out: string) => setBase(out) },
-  ]
+  const [state, setState] = useState<State>({ unit: '', base: '' })
 
   const units: UnitTypeExtended[] = [
-    { name: 'unit', value: unit },
-    { name: 'base', value: base },
+    { name: 'unit', value: state.unit },
+    { name: 'base', value: state.base },
   ]
 
-  function handleChangeValue(value: string, unitType: TokenUnitType) {
+  function handleChangeValue(value: string, currentType: TokenUnitType) {
     value = decodeHex(value)
 
     const result = unitSchema.safeParse(value)
@@ -37,31 +32,22 @@ export default function TokenUnitConversion() {
       setError(undefined)
     }
 
+    setState((s) => ({ ...s, [currentType]: value }))
+
     for (const unit of units) {
       tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
+      if (unit.name === currentType) continue
 
-      let out = convertTokenUnits(value, unitType, unit.name)!
+      let out = convertTokenUnits(value, currentType, unit.name)!
 
-      for (const unitState of unitStates) {
-        if (unitType === unitState.name) {
-          continue
-        } else if (unitState.name === unit.name) {
-          if (isNaN(parseInt(out))) {
-            out = unit.value
-          }
-          unitState.set(out)
-        }
+      if (isNaN(parseInt(out))) {
+        out = unit.value
       }
+      setState((s) => ({ ...s, [unit.name]: out }))
     }
 
-    setLastType(unitType)
+    setLastType(currentType)
     setLastValue(value)
-
-    for (const unit of unitStates) {
-      if (unitType === unit.name) {
-        unit.set(value)
-      }
-    }
   }
 
   return (
@@ -91,9 +77,6 @@ interface UnitElementsProps {
 }
 
 function UnitElements({ units, error, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
-
   return (
     <Fragment>
       <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
@@ -125,6 +108,7 @@ function UnitElements({ units, error, onChange, setDecimal, lastValue, lastType 
                   placeholder={tokenPrecision.base.toString()}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setDecimal(event.target.value)
+                    onChange(lastValue, lastType)
                   }}
                   className="w-36 rounded-sm border border-dashed border-black p-3"
                 />
