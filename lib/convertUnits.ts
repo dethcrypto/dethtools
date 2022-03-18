@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 
 import { tokenPrecision, TokenUnitType, unitPrecision, UnitType } from './convertProperties'
 
-BigNumber.set({ EXPONENTIAL_AT: 1000 })
+BigNumber.set({ EXPONENTIAL_AT: 1000, DECIMAL_PLACES: 27 })
 
 export type PrecisionDict<T extends string> = { [key in T]: number }
 
