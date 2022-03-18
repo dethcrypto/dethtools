@@ -75,10 +75,27 @@ describe(EthUnitConversion.name, () => {
     const gweiField = (await root.findByLabelText('gwei')) as HTMLInputElement
 
     fireEvent.change(gweiField, { target: { value: '140fa,@' } })
-    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value mustn't contain letters/))
+    expect(errorField.innerHTML).toEqual(
+      expect.stringMatching("The value mustn't contain letters or any special signs except dot"),
+    )
     expect(gweiField.value).toEqual('140fa,@')
 
     fireEvent.change(gweiField, { target: { value: '' } })
-    expect(errorField.innerHTML).toEqual(expect.stringMatching(/The value must be bigger or equal to 1/))
+    expect(errorField.innerHTML).toEqual(expect.stringMatching('The value must be bigger or equal to 1'))
+  })
+
+  it('types negative number and error gets displayed', async () => {
+    const root = render(<EthUnitConversion />)
+    const errorField = await root.findByTestId('error')
+    const weiField = (await root.findByLabelText('wei')) as HTMLInputElement
+    const gweiField = (await root.findByLabelText('gwei')) as HTMLInputElement
+
+    fireEvent.change(gweiField, { target: { value: '-12' } })
+
+    expect(errorField.innerHTML).toEqual(
+      expect.stringMatching("The value mustn't contain letters or any special signs except dot"),
+    )
+    expect(gweiField.value).toEqual('-12')
+    expect(weiField.value).toEqual('')
   })
 })

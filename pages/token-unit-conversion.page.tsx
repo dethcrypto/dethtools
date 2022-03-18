@@ -3,6 +3,7 @@ import { ChangeEvent, Fragment, useEffect, useMemo, useRef, useState } from 'rea
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
+import { decimalSchema } from '../misc/decimalSchema'
 import { unitSchema } from '../misc/unitSchema'
 
 const DEFAULT_DECIMAL = '18'
@@ -22,12 +23,12 @@ export default function TokenUnitConversion() {
     return (value: string, currentType: TokenUnitType) => {
       value = decodeHex(value)
 
-      const result = unitSchema.safeParse(value)
-      if (!result.success) {
-        setError(result.error.errors[0].message)
-      } else {
-        value = result.data
-        setError(undefined)
+      setError(undefined)
+      try {
+        unitSchema.parse(value)
+        decimalSchema.parse(decimal || DEFAULT_DECIMAL)
+      } catch (e) {
+        setError(JSON.parse(e as string)[0].message)
       }
 
       setState((oldState) => {
@@ -35,10 +36,12 @@ export default function TokenUnitConversion() {
 
         for (const [name, unitValue] of entries(newState)) {
           tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
-
           if (name === currentType) continue
-          let out = convertTokenUnits(value, currentType, name)!
 
+          let out: string = ''
+          if (!error) {
+            out = convertTokenUnits(value, currentType, name)!
+          }
           if (isNaN(parseInt(out))) out = unitValue
           newState[name] = out
         }
@@ -46,7 +49,7 @@ export default function TokenUnitConversion() {
         return newState
       })
     }
-  }, [decimal])
+  }, [decimal, error])
 
   useEffect(() => {
     if (lastUpdate.current) {

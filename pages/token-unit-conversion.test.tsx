@@ -89,4 +89,19 @@ describe(TokenUnitConversion.name, () => {
 
     expect(unitField.value).toEqual('9000000000000000')
   })
+
+  it('types negative value to decimals, then tries to calculate values and error gets displayed', async () => {
+    const root = render(<TokenUnitConversion />)
+    const decimalsField = (await root.findByLabelText(/decimals/i)) as HTMLInputElement
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement
+    const errorField = await root.findByTestId('error')
+
+    fireEvent.change(decimalsField, { target: { value: '-3' } })
+    fireEvent.change(unitField, { target: { value: '15' } })
+
+    expect(decimalsField.value).toEqual('-3')
+    expect(errorField.innerHTML).toEqual(expect.stringMatching('The decimal value must be bigger or equal to 0'))
+    expect(baseField.value).toEqual('')
+  })
 })

@@ -32,11 +32,15 @@ export default function EthUnitConversion() {
 
     for (const unit of units) {
       if (unit.name === currentType) continue
-      let out = convertEthUnits(value, currentType, unit.name)!
 
+      let out: string = ''
+      if (parseFloat(value) >= 0) {
+        out = convertEthUnits(value, currentType, unit.name)!
+      }
       if (isNaN(parseInt(out))) {
         out = unit.value
       }
+
       setState((s) => ({ ...s, [unit.name]: out }))
     }
   }

@@ -29,6 +29,7 @@ export function convertUnit<T extends string>(
 
 // @internal
 export function unitPrecisionToValue(precision: number): string {
-  if (precision === 1) return '1'
+  if (precision < 0) return '0'
+  else if (precision === 1) return '1'
   return ['1'].concat('0'.repeat(precision)).join('')
 }
