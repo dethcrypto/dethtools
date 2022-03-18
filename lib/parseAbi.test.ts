@@ -22,8 +22,6 @@ describe(parseAbi.name, () => {
 
     const fragments = iface.fragments
 
-    /// @todo - make these expect more elegant by comparing whole obj. instead of single params
-
     expect(fragments[0]).toBeAnObjectWith({ type: 'constructor' })
 
     expect(fragments[1]).toBeAnObjectWith({ inputs: expect.defined() })

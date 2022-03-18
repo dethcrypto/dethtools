@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 
 import { tokenPrecision, TokenUnitType, unitPrecision, UnitType } from './convertProperties'
 
-BigNumber.set({ EXPONENTIAL_AT: 1000 })
+BigNumber.set({ EXPONENTIAL_AT: 1000, DECIMAL_PLACES: 27 })
 
 export type PrecisionDict<T extends string> = { [key in T]: number }
 
@@ -29,6 +29,7 @@ export function convertUnit<T extends string>(
 
 // @internal
 export function unitPrecisionToValue(precision: number): string {
-  if (precision === 1) return '1'
+  if (precision < 0) return '0'
+  else if (precision === 1) return '1'
   return ['1'].concat('0'.repeat(precision)).join('')
 }

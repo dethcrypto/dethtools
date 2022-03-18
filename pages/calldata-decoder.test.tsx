@@ -45,10 +45,11 @@ describe(CalldataDecoder.name, () => {
       '0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C',
       '0x0de0b6b3a7640000',
     ]
+
     const decoded = await root.findAllByTestId('decoded')
+
     correctDecoded.forEach((e, i) => {
       expect(e).toEqual(decoded[i].innerHTML.trim())
     })
   })
-  // @todo - write tests regarding to validation (to be impl.)
 })

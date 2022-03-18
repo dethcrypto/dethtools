@@ -5,8 +5,8 @@ import { MyLink } from './MyLink'
 export function Navigation() {
   return (
     <nav
-      className="flex items-center h-20 mx-auto
-      justify-between pt-6 pb-4 border-b border-gray-600"
+      className="mx-auto flex h-20 items-center
+      justify-between border-b border-gray-600 pt-6 pb-4"
     >
       <section className="flex items-center">
         <Image
@@ -16,13 +16,13 @@ export function Navigation() {
           height={40}
           alt="deth tools logo"
         />
-        <h1 className="text-4xl font-syne text-gray-900 cursor-pointer">Deth Tools</h1>
+        <h1 className="cursor-pointer font-syne text-4xl text-gray-900">Deth Tools</h1>
       </section>
 
-      <section className="flex gap-4 items-center">
+      <section className="flex items-center gap-4">
         <MyLink href={'/'}>
           <button
-            className="border-gray-900 border py-2 px-4
+            className="border border-gray-900 py-2 px-4
           hover:bg-black hover:text-white"
           >
             Let's get started
@@ -30,7 +30,7 @@ export function Navigation() {
         </MyLink>
 
         <Image
-          className="cursor-pointer hover:bg-blue-200 rounded-full"
+          className="cursor-pointer rounded-full hover:bg-blue-200"
           src="/static/svg/github.svg"
           width={26}
           height={26}
