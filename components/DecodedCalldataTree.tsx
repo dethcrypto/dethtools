@@ -95,15 +95,15 @@ interface Leaf extends Node {
   components?: never
 }
 
-interface DeepNode extends Node {
-  components: Array<Leaf | Tree>
+interface Tree extends Node {
+  components: Array<Leaf | TreeNode>
   value?: never
 }
 
-type Tree = Leaf | DeepNode
+type TreeNode = Leaf | Tree
 
-function attachValues(components: ParamType[], decoded: Decoded): Tree[] {
-  return components.map((input, index): Tree => {
+function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
+  return components.map((input, index): TreeNode => {
     if (input.type === 'tuple') {
       const value = decoded[index]
 
@@ -128,12 +128,45 @@ function attachValues(components: ParamType[], decoded: Decoded): Tree[] {
   })
 }
 
+function CalldataTreeNode({ node }: { node: TreeNode }) {
+  if (!node) return <div>DUPA</div>
+
+  if ('value' in node) {
+    return (
+      <span>
+        <strong>{node.name}: </strong>
+        {node.value}
+      </span>
+    )
+  }
+
+  return (
+    <section style={{ paddingLeft: '2em' }}>
+      <strong>{node.name}</strong>
+      <ul>
+        {node.components.map((node, index) => (
+          <li key={index}>
+            <CalldataTreeNode node={node} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 export function DecodedCalldataTree() {
-  const value = attachValues(decodingResult.fragment.inputs, decodingResult.decoded)
+  const tree = attachValues(decodingResult.fragment.inputs, decodingResult.decoded)
 
   return (
     <output>
-      <pre style={{ fontSize: '0.8em' }}>{JSON.stringify(value, null, 2)}</pre>
+      <pre style={{ fontSize: '0.8em' }}>
+        {tree.map((node, index) => (
+          <div key={index}>
+            <strong>{node.name}</strong>
+            <CalldataTreeNode node={node} />
+          </div>
+        ))}
+      </pre>
     </output>
   )
 }
