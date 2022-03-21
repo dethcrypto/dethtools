@@ -102,7 +102,6 @@ export default function CalldataDecoder() {
 
       if (decodeResult) {
         const { decoded, fragment, sigHash } = decodeResult
-        console.log(decoded, fragment)
         setDecoded(decoded)
         setInputs(fragment.inputs)
         setSigHash(sigHash)
@@ -177,12 +176,6 @@ export default function CalldataDecoder() {
     }
   }
 
-  function toObject(arr: any[]) {
-    var rv = {}
-    for (var i = 0; i < arr.length; ++i) rv[i] = arr[i]
-    return rv
-  }
-
   function fmtData(param: ParamType, decodedParam: Decoded[]): JSX.Element {
     // console.log(decodedParam)
     // console.log(param)
@@ -215,7 +208,7 @@ export default function CalldataDecoder() {
 
   return (
     <div className="ml-64 mt-32 flex flex-col gap-10">
-      <h1> Calldata decoder </h1>
+      {/* <h1> Calldata decoder </h1>
 
       <label htmlFor="calldata" className="text-lg font-bold">
         Calldata
@@ -278,7 +271,7 @@ export default function CalldataDecoder() {
             )
           })}
         </section>
-      </section>
+      </section> */}
     </div>
   )
 }
