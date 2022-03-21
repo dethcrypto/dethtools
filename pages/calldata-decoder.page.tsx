@@ -3,6 +3,7 @@ import { Interface, ParamType } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { zip } from 'lodash'
 import { ChangeEvent, useState } from 'react'
+import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
 
 import { decodeCalldata } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
@@ -215,7 +216,7 @@ export default function CalldataDecoder() {
 
   return (
     <div className="ml-64 mt-32 flex flex-col gap-10">
-      <h1> Calldata decoder </h1>
+      {/* <h1> Calldata decoder </h1>
 
       <label htmlFor="calldata" className="text-lg font-bold">
         Calldata
@@ -278,7 +279,8 @@ export default function CalldataDecoder() {
             )
           })}
         </section>
-      </section>
+      </section> */}
+      <DecodedCalldataTree />
     </div>
   )
 }
