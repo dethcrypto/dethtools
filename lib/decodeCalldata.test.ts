@@ -1,3 +1,4 @@
+import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { expect } from 'earljs'
 
@@ -6,7 +7,8 @@ import { parseAbi } from './parseAbi'
 
 describe(decodeCalldata.name, () => {
   it('handles expected case', () => {
-    const iface = parseAbi('function transferFrom(address,address,uint256)')!
+    const iface = parseAbi('function transferFrom(address,address,uint256)') as Interface
+
     expect(iface).toBeDefined()
 
     const decoded = decodeCalldata(
@@ -26,7 +28,8 @@ describe(decodeCalldata.name, () => {
     const iface = parseAbi(`
       'constructor(string symbol, string name)',
       'function transferFrom(address from, address to, uint256 amount)',
-      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',`)!
+      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',`) as Interface
+
     expect(iface).toBeDefined()
 
     const decoded = decodeCalldata(
@@ -42,7 +45,7 @@ describe(decodeCalldata.name, () => {
   })
 
   it('handles expected case, but calldata is not found', () => {
-    const iface = parseAbi('function transferFrom(address,address,uint256)')!
+    const iface = parseAbi('function transferFrom(address,address,uint256)') as Interface
 
     expect(iface).toBeDefined()
 
