@@ -1,67 +1,72 @@
-import { ChangeEvent, Fragment, useEffect, useState } from 'react'
+import { ChangeEvent, Fragment, useEffect, useMemo, useRef, useState } from 'react'
 
 import { tokenPrecision } from '../lib/convertProperties'
 import { convertTokenUnits } from '../lib/convertUnits'
 import { decodeHex } from '../lib/decodeHex'
+import { decimalSchema } from '../misc/decimalSchema'
+import { unitSchema } from '../misc/unitSchema'
 
 const DEFAULT_DECIMAL = '18'
+type State = { base: string; unit: string }
+
+const entries = Object.entries as <T>(obj: T) => [keyof T, T[keyof T]][]
 
 export default function TokenUnitConversion() {
-  const [lastType, setLastType] = useState<TokenUnitType>('base')
-  const [lastValue, setLastValue] = useState('')
+  const [error, setError] = useState<string>()
+
+  const lastUpdate = useRef<UnitTypeExtended>()
 
   const [decimal, setDecimal] = useState('')
-  const [unit, setUnit] = useState('')
-  const [base, setBase] = useState('')
+  const [state, setState] = useState<State>({ base: '', unit: '' })
 
-  function resetValues() {
-    setUnit('')
-    setBase('')
-  }
+  const handleChangeValue = useMemo(() => {
+    return (value: string, currentType: TokenUnitType) => {
+      value = decodeHex(value)
+
+      setError(undefined)
+      try {
+        unitSchema.parse(value)
+        decimalSchema.parse(decimal || DEFAULT_DECIMAL)
+      } catch (e) {
+        setError(JSON.parse(e as string)[0].message)
+      }
+
+      setState((oldState) => {
+        const newState: State = { ...oldState, [currentType]: value }
+
+        for (const [name, unitValue] of entries(newState)) {
+          tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
+          if (name === currentType) continue
+
+          let out: string = ''
+          if (!error) {
+            out = convertTokenUnits(value, currentType, name)!
+          }
+          if (isNaN(parseInt(out))) out = unitValue
+          newState[name] = out
+        }
+        lastUpdate.current = { name: currentType, value }
+        return newState
+      })
+    }
+  }, [decimal, error])
+
+  useEffect(() => {
+    if (lastUpdate.current) {
+      handleChangeValue(lastUpdate.current.value, lastUpdate.current.name)
+    }
+  }, [handleChangeValue])
 
   const units: UnitTypeExtended[] = [
-    { name: 'unit', value: unit },
-    { name: 'base', value: base },
+    { name: 'unit', value: state.unit },
+    { name: 'base', value: state.base },
   ]
 
-  function handleChangeEvent(value: string, unitType: TokenUnitType) {
-    let out
-
-    // 'On paste' conversion from hexadecimal to decimal values
-    value = decodeHex(value)
-
-    tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL)
-
-    for (const unit of units) {
-      out = convertTokenUnits(value, unitType, unit.name)
-
-      if (out) {
-        if (isNaN(parseInt(out))) out = ''
-
-        if (unit.name === 'unit') setUnit(out)
-        if (unit.name === 'base') setBase(out)
-      }
-    }
-
-    setLastType(unitType)
-    setLastValue(value)
-
-    if (!out) {
-      resetValues()
-    }
-  }
-
   return (
-    <div className="flex ml-auto max-w-1/3 w-4/5 pl-24 mt-32">
-      <form className="flex flex-col gap-10 mx-auto">
+    <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
+      <form className="mx-auto flex flex-col gap-10">
         <h1> Token unit conversion </h1>
-        <UnitElements
-          onChange={handleChangeEvent}
-          units={units}
-          setDecimal={setDecimal}
-          lastValue={lastValue}
-          lastType={lastType}
-        />
+        <UnitElements units={units} error={error} onChange={handleChangeValue} setDecimal={setDecimal} />
       </form>
     </div>
   )
@@ -69,26 +74,26 @@ export default function TokenUnitConversion() {
 
 interface UnitElementsProps {
   units: UnitTypeExtended[]
+  error: string | undefined
   onChange: (value: string, unitType: TokenUnitType) => void
   setDecimal: (value: string) => void
-  lastType: TokenUnitType
-  lastValue: string
 }
 
-function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: UnitElementsProps): JSX.Element {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => onChange(lastValue, lastType), [units, setDecimal, lastValue, lastType])
-
+function UnitElements({ units, error, onChange, setDecimal }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
+      <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
+        {error}
+      </p>
+
       <section className="mb-6">
-        <table className="min-w-full divide-y divide-gray-200 table-fixed">
-          <thead className="bg-gray-50 rounded-sm">
+        <table className="min-w-full table-fixed divide-y divide-gray-200">
+          <thead className="rounded-sm bg-gray-50">
             <tr>
               <th
                 scope="col"
-                className="py-1 px-6 text-xs font-medium tracking-wider text-left
-                text-gray-700 uppercase dark:text-gray-400"
+                className="py-1 px-6 text-left text-xs font-medium uppercase
+                tracking-wider text-gray-700 dark:text-gray-400"
               >
                 <label htmlFor="decimals" className="text-lg">
                   Decimals
@@ -97,17 +102,18 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
 
               <th
                 scope="col"
-                className="py-3 px-6 text-xs font-medium tracking-wider text-left
-                text-gray-700 uppercase dark:text-gray-400"
+                className="py-3 px-6 text-left text-xs font-medium uppercase
+                tracking-wider text-gray-700 dark:text-gray-400"
               >
                 <input
                   id="decimals"
                   type="number"
+                  min={0}
                   placeholder={tokenPrecision.base.toString()}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setDecimal(event.target.value)
                   }}
-                  className="p-3 w-36 border border-dashed border-black rounded-sm"
+                  className="w-36 rounded-sm border border-dashed border-black p-3"
                 />
               </th>
             </tr>
@@ -120,13 +126,13 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
 
         return (
           <div key={name}>
-            <table className="min-w-full divide-y divide-gray-200 table-fixed">
-              <thead className="bg-gray-50 rounded-sm">
+            <table className="min-w-full table-fixed divide-y divide-gray-200">
+              <thead className="rounded-sm bg-gray-50">
                 <tr>
                   <th
                     scope="col"
-                    className="py-1 px-6 text-xs font-medium tracking-wider text-left
-                    text-gray-700 uppercase dark:text-gray-400"
+                    className="py-1 px-6 text-left text-xs font-medium uppercase
+                    tracking-wider text-gray-700 dark:text-gray-400"
                   >
                     <label htmlFor={name} className="text-lg">
                       {name}
@@ -135,8 +141,8 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
 
                   <th
                     scope="col"
-                    className="py-3 px-6 text-md font-medium tracking-wider text-left
-                    text-gray-700 uppercase dark:text-gray-400"
+                    className="text-md py-3 px-6 text-left font-medium uppercase
+                    tracking-wider text-gray-700 dark:text-gray-400"
                   >
                     <input
                       id={name}
@@ -146,7 +152,7 @@ function UnitElements({ units, onChange, setDecimal, lastValue, lastType }: Unit
                       onChange={(event) => {
                         onChange(event.target.value, name)
                       }}
-                      className="p-3 w-72 border border-dashed border-black rounded-sm"
+                      className="w-72 rounded-sm border border-dashed border-black p-3"
                     />
                   </th>
                 </tr>
