@@ -1,4 +1,4 @@
-import { Fragment, ParamType } from '@ethersproject/abi'
+import { Fragment, Interface, ParamType } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { zip } from 'lodash'
 import { ChangeEvent, useState } from 'react'
@@ -17,7 +17,7 @@ export default function CalldataDecoder() {
 
   function handleDecodeCalldata() {
     const abi = parseAbi(rawAbi)
-    if (abi) {
+    if (abi instanceof Interface) {
       const decodeResult = decodeCalldata(abi, encodedCalldata)
       if (decodeResult) {
         const { decoded, fragment, sigHash } = decodeResult
