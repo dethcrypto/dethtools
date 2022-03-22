@@ -21,19 +21,23 @@ a {
 }
 
 h1 {
-  @apply text-4xl text-black dark:text-slate-400 font-serif font-bold;
+  @apply font-serif text-4xl font-bold text-black dark:text-slate-400;
 }
 
 h2 {
-  @apply text-2xl font-serif text-black font-bold;
+  @apply font-serif text-2xl font-bold text-black;
 }
 
 h3,
 h4,
 h5 {
-  @apply text-xl font-serif text-black font-medium;
+  @apply font-serif text-xl font-medium text-black;
 }
 
 p {
-  @apply text-lg font-sans text-gray-600 font-medium;
+  @apply font-sans text-sm font-medium text-black;
+}
+
+code {
+  @apply font-mono text-sm font-medium text-black;
 }

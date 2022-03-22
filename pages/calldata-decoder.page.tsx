@@ -1,46 +1,31 @@
-import { Fragment, Interface, ParamType } from '@ethersproject/abi'
-import { BigNumber } from '@ethersproject/bignumber'
-import { zip } from 'lodash'
+import { Interface, ParamType } from '@ethersproject/abi'
 import { ChangeEvent, useState } from 'react'
 
-import { decodeCalldata } from '../lib/decodeCalldata'
+import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
+import { decodeCalldata, Decoded } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
-
-type Decoded = string | BigNumber
 
 export default function CalldataDecoder() {
   const [rawAbi, setRawAbi] = useState('')
+
   const [encodedCalldata, setEncodedCalldata] = useState('')
-  const [decoded, setDecoded] = useState<readonly unknown[]>()
-  const [fragment, setFragment] = useState<Fragment>()
+  const [decoded, setDecoded] = useState<Decoded>()
+  const [inputs, setInputs] = useState<ParamType[]>()
   const [sigHash, setSigHash] = useState('')
 
   function handleDecodeCalldata() {
     const abi = parseAbi(rawAbi)
+
     if (abi instanceof Interface) {
       const decodeResult = decodeCalldata(abi, encodedCalldata)
+
       if (decodeResult) {
         const { decoded, fragment, sigHash } = decodeResult
         setDecoded(decoded)
-        setFragment(fragment)
+        setInputs(fragment.inputs)
         setSigHash(sigHash)
       }
     }
-  }
-  function fmtInputParam(param: ParamType): JSX.Element {
-    return (
-      <div className="flex items-center gap-3 font-semibold">
-        {(param as ParamType).name ? (
-          (param as ParamType).name + ' '
-        ) : (
-          <p className="text-sm text-gray-500"> Name missing in ABI </p>
-        )}
-        <p data-testid="inputParam">{(param as Record<string, any>).type}</p>
-      </div>
-    )
-  }
-  function fmtDecoded(decoded: Decoded): JSX.Element {
-    return <p data-testid="decoded"> {typeof decoded === 'string' ? decoded : (decoded as BigNumber)._hex} </p>
   }
 
   return (
@@ -53,46 +38,55 @@ export default function CalldataDecoder() {
       <textarea
         id="calldata"
         placeholder="e.g 0x23b8..3b2"
-        className="h-36 break-words border border-dashed border-black bg-gray-50 p-5"
+        className="h-20 break-words rounded-xl border border-gray-400 bg-gray-50 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value)
         }}
       />
 
-      <label htmlFor="abi" className="text-lg font-bold">
-        Human-readable ABI
-      </label>
-      <textarea
-        id="abi"
-        placeholder="e.g function transferFrom(address, ..)"
-        className="h-36 break-words border border-dashed border-black bg-gray-100 p-5"
-        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-          setRawAbi(event.target.value)
-        }}
-      />
+      <div className="flex flex-1 flex-col">
+        <div className="flex cursor-pointer rounded-md border-x border-t border-gray-400 bg-gray-50 text-lg">
+          <label htmlFor="abi" className="flex-1 border-r-2 p-3 text-center">
+            ABI
+          </label>
+        </div>
 
-      <button className="text-md rounded-md bg-black  px-1 py-3 text-white" onClick={handleDecodeCalldata}>
+        <textarea
+          id="abi"
+          placeholder="e.g function transferFrom(address, ..)"
+          className={'flex h-36 w-full break-words rounded-2xl rounded-t border-b border-gray-400 bg-gray-50 p-5'}
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+            setRawAbi(event.target.value)
+          }}
+        />
+      </div>
+
+      <button
+        className={
+          rawAbi && encodedCalldata
+            ? 'rounded-md bg-black px-1 py-4 text-sm text-white'
+            : 'rounded-md bg-gray-700 px-1 py-4 text-sm text-white'
+        }
+        onClick={handleDecodeCalldata}
+        disabled={!(rawAbi && encodedCalldata)}
+      >
         Decode
       </button>
 
-      <label htmlFor="output" className="text-lg font-bold">
-        Output
-      </label>
-      <section className="mb-24 border border-dashed border-black bg-gray-100 p-5" placeholder="Output">
-        <section className="flex flex-col gap-4 break-words">
-          <div data-testid="sigHash"> {sigHash && `Signature hash: ${sigHash}`} </div>
-          {zip(decoded, fragment?.inputs).map((tupl, i) => {
-            return (
-              <section key={i}>
-                <div className="flex items-center gap-3 font-semibold">
-                  <div>{fmtInputParam(tupl[1] as ParamType)}</div>
-                  <div>{fmtDecoded(tupl[0] as Decoded)}</div>
-                </div>
-              </section>
-            )
-          })}
+      {decoded && (
+        <section className="relative mb-16 rounded-xl border border-gray-400 bg-gray-50 p-8" placeholder="Output">
+          <section className="flex flex-col gap-3">
+            <div className="flex gap-3 pb-2" data-testid="sigHash">
+              <p className="pl-1 font-semibold"> {sigHash && 'Signature hash '} </p>
+              <code> {sigHash} </code>
+            </div>
+
+            <div className="flex items-center gap-3 font-semibold">
+              <DecodedCalldataTree decoded={decoded} inputs={inputs as ParamType[]} />
+            </div>
+          </section>
         </section>
-      </section>
+      )}
     </div>
   )
 }
