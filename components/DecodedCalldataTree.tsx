@@ -56,8 +56,11 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
           )}
         </code>
         <code>
-          <strong className=" text-purple-600"> {node.type} </strong>
-          {node.value}
+          <strong id="node-type" className=" text-purple-600">
+            {' '}
+            {node.type}{' '}
+          </strong>
+          <code id="node-value">{node.value}</code>
         </code>
       </span>
     )
@@ -83,7 +86,7 @@ export function DecodedCalldataTree({ decoded, inputs }: { decoded: Decoded; inp
     <output className="mb-12">
       <pre>
         {tree.map((node, index) => (
-          <div key={index}>
+          <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />
           </div>
         ))}

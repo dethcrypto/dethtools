@@ -1,4 +1,3 @@
-/* eslint-disable no-tabs */
 import { Interface, ParamType } from '@ethersproject/abi'
 import { ChangeEvent, useState } from 'react'
 
