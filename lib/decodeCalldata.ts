@@ -17,8 +17,10 @@ export function decodeCalldata(iface: Interface, calldata: string): DecodeResult
   }
 }
 
+export interface Decoded extends ReadonlyArray<unknown> {}
+
 export interface DecodeResult {
-  decoded: ReadonlyArray<unknown>
+  decoded: Decoded
   fragment: Fragment
   sigHash: string
 }
