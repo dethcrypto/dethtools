@@ -1,33 +1,58 @@
 import { Interface, ParamType } from '@ethersproject/abi'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 
+import { Button } from '../components/Button'
 import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
-import { decodeBySigHash } from '../lib/decodeBySigHash'
+import { Spinner } from '../components/Spinner'
+import { decodeBySigHash, sigHashFromCalldata } from '../lib/decodeBySigHash'
 import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
+import { assert } from '../misc/assert'
 import { sigHashSchema } from '../misc/sigHashSchema'
 
 export default function CalldataDecoder() {
-  // abiMode set to true means that we deduce decode calldata by provided ABI,
-  // otherwise the 4 bytes signature was provided instead
+  const [loading, setLoading] = useState(false)
+
   const [tab, setTab] = useState<'abi' | '4-bytes'>('abi')
-  const [decodeResults, setDecodeResults] =
-    useState<{ fnName?: string; fnType?: string; decoded: Decoded; inputs: ParamType[] }[]>()
+  const [decodeResults, setDecodeResults] = useState<
+    {
+      fnName?: string
+      fnType?: string
+      decoded: Decoded
+      inputs: ParamType[]
+    }[]
+  >()
 
   const [rawAbi, setRawAbi] = useState<string>()
   const [encodedCalldata, setEncodedCalldata] = useState<string>()
 
-  const [signatureHash, setSignatureHash] = useState<string>()
+  const signatureHash = useMemo(() => encodedCalldata && sigHashFromCalldata(encodedCalldata), [encodedCalldata])
 
   async function handleDecodeCalldata() {
     if (!encodedCalldata) return
 
-    if (tab === '4-bytes' && signatureHash && encodedCalldata) {
-      const decodeResults = await decodeBySigHash(signatureHash, encodedCalldata)
+    assert(signatureHash, 'signatureHash must be defined')
+
+    if (tab === '4-bytes') {
+      setLoading(true)
+
+      let decodeResults: DecodeResult[] | undefined
+
+      try {
+        decodeResults = await decodeBySigHash(signatureHash, encodedCalldata)
+      } finally {
+        setLoading(false)
+      }
+
       if (!decodeResults) return
 
       const mappedResults = decodeResults.map((d) => {
-        return { fnName: d.fragment.name, fnType: d.fragment.type, decoded: d.decoded, inputs: d.fragment.inputs }
+        return {
+          fnName: d.fragment.name,
+          fnType: d.fragment.type,
+          decoded: d.decoded,
+          inputs: d.fragment.inputs,
+        }
       })
 
       setDecodeResults(mappedResults)
@@ -42,17 +67,11 @@ export default function CalldataDecoder() {
 
     if (!decodeResult) return
 
-    const { decoded, fragment, sigHash } = decodeResult
-
-    if (sigHashSchema.safeParse(sigHash).success) setSignatureHash(sigHash)
+    const { decoded, fragment } = decodeResult
     setDecodeResults([{ inputs: fragment.inputs, decoded }])
   }
 
-  function clearStates() {
-    setDecodeResults(undefined)
-    setSignatureHash(undefined)
-    setRawAbi(undefined)
-  }
+  const decodeButtonDisabled = !((rawAbi || tab === '4-bytes') && encodedCalldata)
 
   return (
     <div className="ml-64 mt-32 flex flex-col gap-10">
@@ -72,74 +91,65 @@ export default function CalldataDecoder() {
       />
 
       <div className="flex flex-1 flex-col">
-        <div className="flex cursor-pointer rounded-md border-x border-t border-gray-400 bg-gray-50 text-lg">
+        <div className="flex text-lg">
           <button
-            className={`flex-1 cursor-pointer p-4 text-center hover:bg-black hover:text-white ${
+            role="tab"
+            aria-selected={tab === 'abi'}
+            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
               tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
             }`}
             onClick={() => {
               setTab('abi')
-              clearStates()
+              setDecodeResults(undefined)
             }}
           >
             ABI
           </button>
 
           <button
-            className={`flex-1 cursor-pointer p-4 text-center hover:bg-black hover:text-white ${
+            role="tab"
+            aria-selected={tab === '4-bytes'}
+            className={`flex-1 cursor-pointer rounded-tr-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
               tab === '4-bytes' ? 'bg-black text-white' : 'bg-gray-50'
             }`}
             onClick={() => {
               setTab('4-bytes')
-              clearStates()
+              setDecodeResults(undefined)
             }}
           >
             4 bytes
           </button>
         </div>
 
-        {tab === 'abi' ? (
+        {tab === 'abi' && (
           <textarea
             id="abi"
             aria-label="text area for abi"
             value={rawAbi || ''}
             placeholder="e.g function transferFrom(address, ..)"
-            className="flex h-36 w-full break-words rounded-2xl rounded-t border-b border-gray-400 bg-gray-50 p-5"
+            className="flex h-36 w-full break-words rounded-b-2xl border-t-0 border-gray-400 bg-gray-50 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setRawAbi(event.target.value)
-            }}
-          />
-        ) : (
-          <textarea
-            id="4bytes"
-            aria-label="text area for 4 bytes signature hash"
-            value={signatureHash || ''}
-            placeholder="e.g 0x1337"
-            className={'flex h-36 w-full break-words rounded-2xl rounded-t border-b border-gray-400 bg-gray-50 p-5'}
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              setSignatureHash(event.target.value)
             }}
           />
         )}
       </div>
 
-      <button
-        className={
-          (signatureHash || rawAbi) && encodedCalldata
-            ? 'rounded-md bg-black px-1 py-4 text-sm text-white'
-            : 'rounded-md bg-gray-800 px-1 py-4 text-sm text-white'
-        }
-        onClick={handleDecodeCalldata}
-        disabled={!((rawAbi || signatureHash) && encodedCalldata)}
+      <Button
+        onClick={() => void handleDecodeCalldata()}
+        disabled={decodeButtonDisabled}
+        title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
         Decode
-      </button>
+      </Button>
 
-      {decodeResults && (
+      {loading ? (
+        <Spinner className="mx-auto pt-12" />
+      ) : (
         <section className="relative mb-16 rounded-xl border border-gray-400 bg-gray-50 p-8" placeholder="Output">
           <section className="flex flex-col gap-4">
             <div>
-              {sigHashSchema.safeParse(signatureHash).success && (
+              {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-green-600">Signature hash</p>
                   <code data-testid="signature-hash">{signatureHash}</code>
@@ -148,15 +158,19 @@ export default function CalldataDecoder() {
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
-              {tab === '4-bytes' && !(decodeResults.length === 0) ? (
-                <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+              {decodeResults ? (
+                tab === '4-bytes' && decodeResults.length > 0 ? (
+                  <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+                ) : (
+                  'No results found'
+                )
               ) : (
-                'No results found'
+                'Decoded output will appear here'
               )}
-              {decodeResults.map((d, i) => {
+              {decodeResults?.map((d, i) => {
                 return (
-                  <section key={i}>
-                    <div className="pb-4" data-testid={`decodedCalldataTree${i}`}>
+                  <section key={i} data-testid={`decodedCalldataTree${i}`}>
+                    <div className="pb-4">
                       <DecodedCalldataTree fnName={d.fnName} fnType={d.fnType} decoded={d.decoded} inputs={d.inputs} />{' '}
                     </div>
                   </section>

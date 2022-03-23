@@ -9,7 +9,6 @@ export function decodeHex(value: string): string {
   }
 }
 
-// @internal
-function isHex(value: string): boolean {
+export function isHex(value: string): boolean {
   return new RegExp(/0[xX][0-9a-fA-F]+/).test(value)
 }

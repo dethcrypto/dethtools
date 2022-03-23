@@ -54,7 +54,9 @@ describe(TokenUnitConversion.name, () => {
     expect(unitField.value).toEqual('12444444000000000.55')
     expect(baseField.value).toEqual('0.01244444400000000055')
 
-    fireEvent.change(unitField, { target: { value: '12444444000000000.55/fa' } })
+    fireEvent.change(unitField, {
+      target: { value: '12444444000000000.55/fa' },
+    })
     expect(unitField.value).toEqual('12444444000000000.55/fa')
     expect(baseField.value).toEqual('0.01244444400000000055')
   })
