@@ -1,32 +1,77 @@
 import { Interface, ParamType } from '@ethersproject/abi'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 
+import { Button } from '../components/Button'
 import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
-import { decodeCalldata, Decoded } from '../lib/decodeCalldata'
+import { Spinner } from '../components/Spinner'
+import { decodeBySigHash, sigHashFromCalldata } from '../lib/decodeBySigHash'
+import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
+import { assert } from '../misc/assert'
+import { sigHashSchema } from '../misc/sigHashSchema'
 
 export default function CalldataDecoder() {
-  const [rawAbi, setRawAbi] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const [encodedCalldata, setEncodedCalldata] = useState('')
-  const [decoded, setDecoded] = useState<Decoded>()
-  const [inputs, setInputs] = useState<ParamType[]>()
-  const [sigHash, setSigHash] = useState('')
+  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi')
+  const [decodeResults, setDecodeResults] = useState<
+    {
+      fnName?: string
+      fnType?: string
+      decoded: Decoded
+      inputs: ParamType[]
+    }[]
+  >()
 
-  function handleDecodeCalldata() {
-    const abi = parseAbi(rawAbi)
+  const [rawAbi, setRawAbi] = useState<string>()
+  const [encodedCalldata, setEncodedCalldata] = useState<string>()
 
-    if (abi instanceof Interface) {
-      const decodeResult = decodeCalldata(abi, encodedCalldata)
+  const signatureHash = useMemo(() => encodedCalldata && sigHashFromCalldata(encodedCalldata), [encodedCalldata])
 
-      if (decodeResult) {
-        const { decoded, fragment, sigHash } = decodeResult
-        setDecoded(decoded)
-        setInputs(fragment.inputs)
-        setSigHash(sigHash)
+  async function handleDecodeCalldata() {
+    if (!encodedCalldata) return
+
+    assert(signatureHash, 'signatureHash must be defined')
+
+    if (tab === '4-bytes') {
+      setLoading(true)
+
+      let decodeResults: DecodeResult[] | undefined
+
+      try {
+        decodeResults = await decodeBySigHash(signatureHash, encodedCalldata)
+      } finally {
+        setLoading(false)
       }
+
+      if (!decodeResults) return
+
+      const mappedResults = decodeResults.map((d) => {
+        return {
+          fnName: d.fragment.name,
+          fnType: d.fragment.type,
+          decoded: d.decoded,
+          inputs: d.fragment.inputs,
+        }
+      })
+
+      setDecodeResults(mappedResults)
     }
+
+    let decodeResult: DecodeResult | undefined
+    try {
+      if (!rawAbi) return
+      const abi = parseAbi(rawAbi) as Interface
+      decodeResult = decodeCalldata(abi, encodedCalldata)
+    } catch (e) {}
+
+    if (!decodeResult) return
+
+    const { decoded, fragment } = decodeResult
+    setDecodeResults([{ inputs: fragment.inputs, decoded }])
   }
+
+  const decodeButtonDisabled = !((rawAbi || tab === '4-bytes') && encodedCalldata)
 
   return (
     <div className="ml-64 mt-32 flex flex-col gap-10">
@@ -37,6 +82,7 @@ export default function CalldataDecoder() {
       </label>
       <textarea
         id="calldata"
+        value={encodedCalldata || ''}
         placeholder="e.g 0x23b8..3b2"
         className="h-20 break-words rounded-xl border border-gray-400 bg-gray-50 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,44 +91,91 @@ export default function CalldataDecoder() {
       />
 
       <div className="flex flex-1 flex-col">
-        <div className="flex cursor-pointer rounded-md border-x border-t border-gray-400 bg-gray-50 text-lg">
-          <label htmlFor="abi" className="flex-1 border-r-2 p-3 text-center">
+        <div className="flex text-lg">
+          <button
+            role="tab"
+            aria-selected={tab === 'abi'}
+            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
+              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
+            }`}
+            onClick={() => {
+              setTab('abi')
+              setDecodeResults(undefined)
+            }}
+          >
             ABI
-          </label>
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={tab === '4-bytes'}
+            className={`flex-1 cursor-pointer rounded-tr-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
+              tab === '4-bytes' ? 'bg-black text-white' : 'bg-gray-50'
+            }`}
+            onClick={() => {
+              setTab('4-bytes')
+              setDecodeResults(undefined)
+            }}
+          >
+            4 bytes
+          </button>
         </div>
 
-        <textarea
-          id="abi"
-          placeholder="e.g function transferFrom(address, ..)"
-          className={'flex h-36 w-full break-words rounded-2xl rounded-t border-b border-gray-400 bg-gray-50 p-5'}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            setRawAbi(event.target.value)
-          }}
-        />
+        {tab === 'abi' && (
+          <textarea
+            id="abi"
+            aria-label="text area for abi"
+            value={rawAbi || ''}
+            placeholder="e.g function transferFrom(address, ..)"
+            className="flex h-36 w-full break-words rounded-b-2xl border-t-0 border-gray-400 bg-gray-50 p-5"
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+              setRawAbi(event.target.value)
+            }}
+          />
+        )}
       </div>
 
-      <button
-        className={
-          rawAbi && encodedCalldata
-            ? 'rounded-md bg-black px-1 py-4 text-sm text-white'
-            : 'rounded-md bg-gray-700 px-1 py-4 text-sm text-white'
-        }
-        onClick={handleDecodeCalldata}
-        disabled={!(rawAbi && encodedCalldata)}
+      <Button
+        onClick={() => void handleDecodeCalldata()}
+        disabled={decodeButtonDisabled}
+        title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
         Decode
-      </button>
+      </Button>
 
-      {decoded && (
+      {loading ? (
+        <Spinner className="mx-auto pt-12" />
+      ) : (
         <section className="relative mb-16 rounded-xl border border-gray-400 bg-gray-50 p-8" placeholder="Output">
-          <section className="flex flex-col gap-3">
-            <div className="flex gap-3 pb-2" data-testid="sigHash">
-              <p className="pl-1 font-semibold"> {sigHash && 'Signature hash '} </p>
-              <code> {sigHash} </code>
+          <section className="flex flex-col gap-4">
+            <div>
+              {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-green-600">Signature hash</p>
+                  <code data-testid="signature-hash">{signatureHash}</code>
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center gap-3 font-semibold">
-              <DecodedCalldataTree decoded={decoded} inputs={inputs as ParamType[]} />
+            <div className="items-left flex flex-col text-ellipsis font-semibold">
+              {decodeResults ? (
+                tab === '4-bytes' && decodeResults.length > 0 ? (
+                  <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+                ) : (
+                  'No results found'
+                )
+              ) : (
+                'Decoded output will appear here'
+              )}
+              {decodeResults?.map((d, i) => {
+                return (
+                  <section key={i} data-testid={`decodedCalldataTree${i}`}>
+                    <div className="pb-4">
+                      <DecodedCalldataTree fnName={d.fnName} fnType={d.fnType} decoded={d.decoded} inputs={d.inputs} />{' '}
+                    </div>
+                  </section>
+                )
+              })}
             </div>
           </section>
         </section>

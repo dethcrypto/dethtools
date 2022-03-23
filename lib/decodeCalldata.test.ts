@@ -1,4 +1,4 @@
-import { Interface } from '@ethersproject/abi'
+import { Fragment, Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { expect } from 'earljs'
 
@@ -9,7 +9,7 @@ describe(decodeCalldata.name, () => {
   it('handles expected case', () => {
     const iface = parseAbi('function transferFrom(address,address,uint256)') as Interface
 
-    expect(iface).toBeDefined()
+    expect(iface).toBeA(Interface)
 
     const decoded = decodeCalldata(
       iface,
@@ -21,7 +21,7 @@ describe(decodeCalldata.name, () => {
     expect(decoded.decoded[1]).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
     expect((decoded.decoded[2] as BigNumber).toString()).toEqual('1000000000000000000')
     expect(decoded.sigHash).toEqual('0x23b872dd')
-    expect(decoded.fragment).toBeDefined()
+    expect(decoded.fragment).toBeA(Fragment)
   })
 
   it('handles expected case from abi with multiple fragments', () => {
@@ -47,7 +47,7 @@ describe(decodeCalldata.name, () => {
   it('handles expected case, but calldata is not found', () => {
     const iface = parseAbi('function transferFrom(address,address,uint256)') as Interface
 
-    expect(iface).toBeDefined()
+    expect(iface).toBeA(Interface)
 
     expect(decodeCalldata(iface, '0x0')).not.toBeDefined()
   })
