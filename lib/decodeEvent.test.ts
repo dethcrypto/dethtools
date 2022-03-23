@@ -14,7 +14,7 @@ describe(filterNonNamedKeys.name, () => {
 })
 
 describe(doContainsNamedKeys.name, () => {
-  it('filters non named keys e.g 0, 1 correctly', () => {
+  it('checks if object contains named keys', () => {
     expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
     expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
   })
