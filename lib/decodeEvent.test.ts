@@ -50,6 +50,25 @@ describe(decodeEvent.name, () => {
     expect(isNamedResult).toEqual(true)
   })
 
+  it('handles case with too few topics', () => {
+    const iface = parseAbi(`
+      'constructor(string symbol, string name)',
+      'function transferFrom(address from, address to, uint256 amount)',
+      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',
+      'event Transfer(address indexed src, address indexed dst, uint256 amount)',
+      `) as Interface
+    const eventProps: EventProps = {
+      data: '0x0000000000000000000000000000000000000000000000000de0b6b3a7640000',
+      topics: [
+        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+        '0x0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72',
+      ],
+    }
+    const decodeEventResult = decodeEvent(iface, eventProps)
+
+    expect(decodeEventResult).toMatchSnapshot()
+  })
+
   it('handles non-named params case', () => {
     const iface = parseAbi(`
       'constructor(string symbol, string name)',
@@ -72,5 +91,24 @@ describe(decodeEvent.name, () => {
     const { isNamedResult } = decodeEventResult!
 
     expect(isNamedResult).toEqual(false)
+  })
+
+  it('handles case where abi does not contain events', () => {
+    const iface = parseAbi(`
+      'constructor(string symbol, string name)',
+      'function transferFrom(address from, address to, uint256 amount)',
+      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',
+      `) as Interface
+    const eventProps: EventProps = {
+      data: '0x0000000000000000000000000000000000000000000000000de0b6b3a7640000',
+      topics: [
+        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+        '0x0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72',
+        '0x000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c',
+      ],
+    }
+    const decodeEventResult = decodeEvent(iface, eventProps)
+
+    expect(decodeEventResult).toMatchSnapshot()
   })
 })
