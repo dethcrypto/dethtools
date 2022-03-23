@@ -10,8 +10,12 @@ export function decodeCalldata(iface: Interface, calldata: string): DecodeResult
     try {
       decoded = iface.decodeFunctionData(frag.name, calldata)
       fragment = frag
-    } catch (e) {}
+    } catch (e) {
+      // catch error here to avoid error throw,
+      // as we want to check which fragment decodes successfully and save it
+    }
   }
+
   if (decoded && fragment) {
     return { decoded, fragment, sigHash: iface.getSighash(fragment) }
   }

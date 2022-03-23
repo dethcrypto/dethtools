@@ -71,7 +71,7 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
       <strong> {node.name} </strong>
       <ul className="pb-1 pt-2">
         {node.components.map((node, index) => (
-          <li key={index} className="border-l-2 pl-8">
+          <li key={index} className="border-l pl-6">
             <CalldataTreeNode node={node} />
           </li>
         ))}
@@ -80,11 +80,24 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
   )
 }
 
-export function DecodedCalldataTree({ decoded, inputs }: { decoded: Decoded; inputs: ParamType[] }) {
+export function DecodedCalldataTree({
+  fnName,
+  fnType,
+  decoded,
+  inputs,
+}: {
+  fnName?: string
+  fnType?: string
+  decoded: Decoded
+  inputs: ParamType[]
+}) {
   const tree = attachValues(inputs, decoded)
   return (
-    <output className="mb-12">
+    <output className="mb-6">
       <pre>
+        <section>
+          <code className="font-bold text-purple-600">{fnType}</code> <code>{fnName}</code>
+        </section>
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />
