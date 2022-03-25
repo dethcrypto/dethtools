@@ -1,6 +1,5 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
-import Img from 'next/image'
 import { ChangeEvent, Key, useMemo, useState } from 'react'
 
 import { Button } from '../components/Button'
@@ -11,8 +10,7 @@ import { parseAbi } from '../lib/parseAbi'
 import { assert } from '../misc/assert'
 
 interface Topic {
-  id: string
-  title: string
+  id: number
   value: string
 }
 
@@ -23,23 +21,12 @@ export default function EventDecoder() {
   const [rawAbi, setRawAbi] = useState<string>()
 
   const [topics, setTopics] = useState<Topic[] | undefined>([
-    {
-      id: Math.random().toString(36).slice(2, 9),
-      title: 'topic',
-      value: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-    },
-    {
-      id: Math.random().toString(36).slice(2, 9),
-      title: 'topic',
-      value: '0x0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72',
-    },
-    {
-      id: Math.random().toString(36).slice(2, 9),
-      title: 'topic',
-      value: '0x000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c',
-    },
+    { id: 1, value: '' },
+    { id: 2, value: '' },
+    { id: 3, value: '' },
+    { id: 4, value: '' },
   ])
-  const [data, setData] = useState<string>('0x0000000000000000000000000000000000000000000000000de0b6b3a7640000')
+  const [data, setData] = useState<string>('')
 
   const [decodeResults, setDecodeResults] = useState<DecodeEventResult[]>()
 
@@ -56,7 +43,10 @@ export default function EventDecoder() {
 
       try {
         if (topics && data) {
-          const eventProps: EventProps = { data: data, topics: topics.map((t) => t.value) }
+          const eventProps: EventProps = {
+            data: data,
+            topics: topics.filter((t) => t.value.trim().length > 0).map((t) => t.value),
+          }
           decodeResults = await decodeWithEventProps(signatureHash, eventProps)
         }
       } finally {
@@ -74,7 +64,10 @@ export default function EventDecoder() {
       const abi = parseAbi(rawAbi)
 
       if (!(abi instanceof Interface) || !data || !topics) return
-      const eventProps: EventProps = { data: data, topics: topics.map((t) => t.value) }
+      const eventProps: EventProps = {
+        data: data,
+        topics: topics.filter((t) => t.value.trim().length > 0).map((t) => t.value),
+      }
       decodeResult = decodeEvent(abi, eventProps)
     } catch (e) {}
 
@@ -84,7 +77,44 @@ export default function EventDecoder() {
 
   return (
     <div className="ml-64 mt-32 flex flex-col gap-14">
-      <h1> Event Decoder </h1>
+      <h1 className="border-b-2 border-dashed border-gray-300 pb-2"> Event Decoder </h1>
+
+      <div className="relative">
+        <section className="mb-3">
+          {topics &&
+            topics.map((topic, i) => (
+              <section className="flex items-center gap-2" key={i}>
+                <div className="flex flex-1 flex-col">
+                  <label className="pb-2" htmlFor={`${topic.id}`}>
+                    {i === 0 ? <strong> topic{i} </strong> : <p> topic{i} </p>}
+                  </label>
+                  <input
+                    id={`${topic.id}`}
+                    type="text"
+                    placeholder="e.g 0x0..."
+                    className="mb-4 mr-auto h-10 w-3/5 rounded-xl border border-gray-400 text-sm focus:outline-none"
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      setTopics(topics.map((t) => (t.id === topic.id ? { ...t, value: event.target.value } : t)))
+                    }}
+                  />
+                </div>
+              </section>
+            ))}
+        </section>
+
+        <section className="flex flex-1 flex-col">
+          <label className="pb-1" htmlFor="data">
+            data
+          </label>
+          <input
+            id="data"
+            type="text"
+            placeholder="e.g 0x0..."
+            className="mr-auto mb-4 h-10 w-3/5 rounded-xl border-gray-300 text-sm focus:outline-none"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => setData(event.target.value)}
+          />
+        </section>
+      </div>
 
       <div className="flex flex-1 flex-col">
         <div className="flex text-lg">
@@ -134,51 +164,7 @@ export default function EventDecoder() {
         )}
       </div>
 
-      <div className="relative h-72">
-        <section className="flex flex-1 flex-col">
-          <label htmlFor="data"> data </label>
-          <input
-            id="data"
-            type="text"
-            placeholder="e.g 0x0..."
-            className="mr-auto mb-4 h-10 w-3/5 rounded-xl border-black text-sm focus:outline-none"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setData(event.target.value)}
-          />
-        </section>
-        {topics &&
-          topics.map((topic, i) => (
-            <section className="flex items-center gap-2" key={i}>
-              <button className="pt-3" onClick={() => setTopics(topics.filter((t) => t.id !== topic.id))}>
-                <Img src="/static/svg/delete-x.svg" height={30} width={30} />
-              </button>
-
-              <div className="flex flex-1 flex-col">
-                <label htmlFor={topic.id}> topic {i === 0 ? <strong> {i} </strong> : i} </label>
-                <input
-                  id={topic.id}
-                  type="text"
-                  placeholder="e.g 0x0..."
-                  className="mb-4 mr-auto h-10 w-3/5 rounded-xl border-black text-sm focus:outline-none"
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setTopics(topics.map((t) => (t.id === topic.id ? { ...t, value: event.target.value } : t)))
-                  }}
-                />
-              </div>
-            </section>
-          ))}
-        <Button
-          className="absolute right-0 bottom-0 w-1/4"
-          onClick={() =>
-            topics &&
-            topics.length < 4 &&
-            setTopics([...topics, { id: Math.random().toString(36).slice(2, 9), title: 'a', value: '' }])
-          }
-        >
-          New topic
-        </Button>
-      </div>
-
-      <Button onClick={() => void handleDecodeCalldata()} disabled={false} title={'Please fill in the calldata'}>
+      <Button onClick={() => void handleDecodeCalldata()} title={'Please fill in the calldata'}>
         Decode
       </Button>
 

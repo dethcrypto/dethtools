@@ -28,9 +28,9 @@ describe(EventDecoder.name, () => {
       `)
 
     const dataField = (await root.findByLabelText('data')) as HTMLInputElement
-    const topic0Field = (await root.findByLabelText('topic 0')) as HTMLInputElement
-    const topic1Field = (await root.findByLabelText('topic 1')) as HTMLInputElement
-    const topic2Field = (await root.findByLabelText('topic 2')) as HTMLInputElement
+    const topic0Field = (await root.findByLabelText('topic0')) as HTMLInputElement
+    const topic1Field = (await root.findByLabelText('topic1')) as HTMLInputElement
+    const topic2Field = (await root.findByLabelText('topic2')) as HTMLInputElement
 
     fireEvent.change(dataField, {
       target: { value: '0x0000000000000000000000000000000000000000000000000de0b6b3a7640000' },
@@ -69,9 +69,9 @@ describe(EventDecoder.name, () => {
     fireEvent.click(root.getByText('4 bytes'))
 
     const dataField = (await root.findByLabelText('data')) as HTMLInputElement
-    const topic0Field = (await root.findByLabelText('topic 0')) as HTMLInputElement
-    const topic1Field = (await root.findByLabelText('topic 1')) as HTMLInputElement
-    const topic2Field = (await root.findByLabelText('topic 2')) as HTMLInputElement
+    const topic0Field = (await root.findByLabelText('topic0')) as HTMLInputElement
+    const topic1Field = (await root.findByLabelText('topic1')) as HTMLInputElement
+    const topic2Field = (await root.findByLabelText('topic2')) as HTMLInputElement
 
     fireEvent.change(dataField, {
       target: { value: '0x0000000000000000000000000000000000000000000000000000000000000000' },
