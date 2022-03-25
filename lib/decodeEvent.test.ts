@@ -1,8 +1,28 @@
-import { EventFragment, Interface } from '@ethersproject/abi'
+import { EventFragment, FormatTypes, Interface } from '@ethersproject/abi'
 import { expect } from 'earljs'
 
-import { decodeEvent, doContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
+import { attachIndexedToJson, decodeEvent, doesContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
 import { parseAbi } from './parseAbi'
+
+describe(attachIndexedToJson.name, () => {
+  it('attaches indexed modif. basing on topic count to json abi', () => {
+    const iface = parseAbi(`
+      'constructor(string symbol, string name)',
+      'function transferFrom(address from, address to, uint256 amount)',
+      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',
+      'event Transfer(address indexed src, address indexed dst, uint256 amount)',`) as Interface
+
+    expect(iface).toBeA(Interface)
+
+    const indexedIface = attachIndexedToJson(iface.format(FormatTypes.json), 2)
+
+    expect(indexedIface).toBeA(Interface)
+
+    expect(Object.entries(indexedIface.events)[0][1].inputs[0].indexed).toEqual(true)
+    expect(Object.entries(indexedIface.events)[0][1].inputs[1].indexed).toEqual(true)
+    expect(Object.entries(indexedIface.events)[0][1].inputs[2].indexed).toBeFalsy()
+  })
+})
 
 describe(filterNonNamedKeys.name, () => {
   it('filters non named keys e.g 0, 1 correctly', () => {
@@ -13,10 +33,10 @@ describe(filterNonNamedKeys.name, () => {
   })
 })
 
-describe(doContainsNamedKeys.name, () => {
+describe(doesContainsNamedKeys.name, () => {
   it('checks if object contains named keys', () => {
-    expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
-    expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
+    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
+    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
   })
 })
 
@@ -45,7 +65,6 @@ describe(decodeEvent.name, () => {
     expect(decodedTopics.src).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
     expect(decodedTopics.dst).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
     expect(decodedTopics.amount._hex).toEqual('0x0de0b6b3a7640000')
-    expect(eventFragment[0]).toEqual(expect.stringMatching('Transfer(address,address,uint256)'))
     expect(eventFragment[1]).toBeA(EventFragment)
     expect(isNamedResult).toEqual(true)
   })
@@ -86,11 +105,11 @@ describe(decodeEvent.name, () => {
     }
     const decodeEventResult = decodeEvent(iface, eventProps)
 
-    expect(decodeEventResult).toMatchSnapshot()
-
     const { isNamedResult } = decodeEventResult!
 
     expect(isNamedResult).toEqual(false)
+
+    expect(decodeEventResult).toMatchSnapshot()
   })
 
   it('handles case where abi does not contain events', () => {

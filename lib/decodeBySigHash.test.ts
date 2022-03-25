@@ -1,11 +1,25 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { expect } from 'earljs'
 
-import { decodeBySigHash, decodeData, fetchData, parseData } from './decodeBySigHash'
+import {
+  decodeByCalldata,
+  decodeWithCalldata,
+  decodeWithEventProps,
+  fetch4BytesData,
+  fetchSignaturesByCalldata,
+  parse4BytesResToIfaces,
+} from './decodeBySigHash'
+import { EventProps } from './decodeEvent'
 
-describe(fetchData.name, () => {
+describe(fetch4BytesData.name, () => {
+  it('fetches data by signature', async () => {
+    expect(await fetch4BytesData('0x23b872dd', 'signatures').catch()).toBeDefined()
+  })
+})
+
+describe(fetchSignaturesByCalldata.name, () => {
   it('fetches correct data by signature', async () => {
-    expect(await fetchData('0x23b872dd')).toEqual([
+    expect(await fetchSignaturesByCalldata('0x23b872dd')).toEqual([
       {
         id: 31781,
         created_at: '2018-05-12T20:40:45.467194Z',
@@ -24,9 +38,9 @@ describe(fetchData.name, () => {
   })
 })
 
-describe(parseData.name, () => {
+describe(parse4BytesResToIfaces.name, () => {
   it('parses fetched results to interface format', () => {
-    const ifaces = parseData([
+    const ifaces = parse4BytesResToIfaces([
       {
         id: 31781,
         created_at: '2018-05-12T20:40:45.467194Z',
@@ -57,9 +71,9 @@ describe(parseData.name, () => {
   })
 })
 
-describe(decodeData.name, () => {
+describe(decodeByCalldata.name, () => {
   it('decodes interfaces', () => {
-    const ifaces = parseData([
+    const ifaces = parse4BytesResToIfaces([
       {
         id: 31781,
         created_at: '2018-05-12T20:40:45.467194Z',
@@ -75,7 +89,7 @@ describe(decodeData.name, () => {
         bytes_signature: '#¸rÝ',
       },
     ])
-    const decodedResults = decodeData(
+    const decodedResults = decodeByCalldata(
       ifaces,
       '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
     )
@@ -89,23 +103,38 @@ describe(decodeData.name, () => {
     expect(decodedResults[1].fragment.name).toEqual('transferFrom')
     expect(decodedResults[1].sigHash).toEqual('0x23b872dd')
   })
+})
 
-  describe(decodeBySigHash.name, async () => {
-    it('decodes calldata by 4 byte hash signature and returns matches', async () => {
-      const decodedResults = await decodeBySigHash(
-        '0x23b872dd',
-        '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
-      )
+describe(decodeWithCalldata.name, async () => {
+  it('decodes calldata by 4 byte hash signature and returns matches', async () => {
+    const decodedResults = await decodeWithCalldata(
+      '0x23b872dd',
+      '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
+    )
 
-      expect(decodedResults).toBeDefined()
-      expect((decodedResults![0].decoded[0] as BigNumber)._hex).toEqual('0x551bd432803012645ac136ddd64dba72')
-      expect(decodedResults![0].fragment.name).toEqual('gasprice_bit_ether')
-      expect(decodedResults![0].sigHash).toEqual('0x23b872dd')
-      expect(decodedResults![1].decoded[0] as string).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
-      expect(decodedResults![1].decoded[1] as string).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
-      expect((decodedResults![1].decoded[2] as BigNumber)._hex).toEqual('0x0de0b6b3a7640000')
-      expect(decodedResults![1].fragment.name).toEqual('transferFrom')
-      expect(decodedResults![1].sigHash).toEqual('0x23b872dd')
-    })
+    expect(decodedResults).toBeDefined()
+    expect((decodedResults![0].decoded[0] as BigNumber)._hex).toEqual('0x551bd432803012645ac136ddd64dba72')
+    expect(decodedResults![0].fragment.name).toEqual('gasprice_bit_ether')
+    expect(decodedResults![0].sigHash).toEqual('0x23b872dd')
+    expect(decodedResults![1].decoded[0] as string).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
+    expect(decodedResults![1].decoded[1] as string).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
+    expect((decodedResults![1].decoded[2] as BigNumber)._hex).toEqual('0x0de0b6b3a7640000')
+    expect(decodedResults![1].fragment.name).toEqual('transferFrom')
+    expect(decodedResults![1].sigHash).toEqual('0x23b872dd')
+  })
+})
+
+describe(decodeWithEventProps.name, async () => {
+  it('decodes event topics by hash signature', async () => {
+    const eventProps: EventProps = {
+      data: 'e2b742ea2b33efacfe4049c0d5bb074a81cd573dc2a8158b29b207225c8ef903',
+      topics: [
+        '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+        '0x0000000000000000000000005853ed4f26a3fcea565b3fbc698bb19cdf6deb85',
+        '0x000000000000000000000000e1be5d3f34e89de342ee97e6e90d405884da6c67',
+      ],
+    }
+
+    expect(await decodeWithEventProps(eventProps.topics[0], eventProps).catch()).toBeDefined()
   })
 })

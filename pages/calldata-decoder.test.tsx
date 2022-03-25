@@ -21,11 +21,13 @@ describe(CalldataDecoder.name, () => {
     )
 
     const abiField = (await root.findByLabelText('text area for abi')) as HTMLTextAreaElement
+
     fireEvent.change(abiField, {
       target: {
         value: 'function transferFrom(address,address,uint256)',
       },
     })
+
     expect(abiField.value).toEqual('function transferFrom(address,address,uint256)')
 
     userEvent.click(await root.findByText('Decode'))

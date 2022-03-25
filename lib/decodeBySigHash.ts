@@ -3,15 +3,23 @@ import fetch from 'node-fetch'
 
 import { sigHashSchema } from '../misc/sigHashSchema'
 import { decodeCalldata, DecodeResult } from './decodeCalldata'
+import { decodeEvent, EventProps } from './decodeEvent'
 import { parseAbi } from './parseAbi'
 
-const HEX_SIG_API_URL = 'https://www.4byte.directory/api/v1/signatures/?hex_signature='
-
-export async function decodeBySigHash(sigHash: string, calldata: string): Promise<DecodeResult[] | undefined> {
-  const data = await fetchData(sigHash)
+export async function decodeWithEventProps(sigHash: string, eventProps: EventProps): Promise<any[] | undefined> {
+  const data = await fetchSignaturesByTopic(sigHash)
   if (data) {
-    const ifaces = parseData(data)
-    return decodeData(ifaces, calldata)
+    // force indexing basing on topic count
+    const ifaces = parse4BytesResToIfaces(data, 'event')
+    return decodeByEventProps(ifaces, eventProps)
+  }
+}
+
+export async function decodeWithCalldata(sigHash: string, calldata: string): Promise<DecodeResult[] | undefined> {
+  const data = await fetchSignaturesByCalldata(sigHash)
+  if (data) {
+    const ifaces = parse4BytesResToIfaces(data)
+    return decodeByCalldata(ifaces, calldata)
   }
 }
 
@@ -31,12 +39,36 @@ export type FetchResult = {
 }
 
 // @internal
-export async function fetchData(sigHash: string): Promise<FetchResult[] | undefined> {
-  return JSON.parse(await fetch(`${HEX_SIG_API_URL}${sigHash}`).then((response) => response.text())).results
+export async function fetch4BytesData(hexSig: string, hexSigType: HexSigType): Promise<FetchResult[] | undefined> {
+  return JSON.parse(await fetch(`${urlTo(hexSigType)}${hexSig}`).then((response) => response.text())).results
 }
 
 // @internal
-export function parseData(data: FetchResult[]): Interface[] {
+function urlTo(hexSigType: HexSigType): string {
+  return `https://www.4byte.directory/api/v1/${hexSigType}/?hex_signature=`
+}
+
+// @internal
+// there are more types, but we don't need them for now
+type HexSigType = 'signatures' | 'event-signatures'
+
+// @internal
+export async function fetchSignaturesByCalldata(sigHash: string) {
+  return fetch4BytesData(sigHash, 'signatures')
+}
+
+// @internal
+export async function fetchSignaturesByTopic(sigHash: string) {
+  return fetch4BytesData(sigHash, 'event-signatures')
+}
+
+// @internal
+export function parse4BytesResToIfaces(
+  data: FetchResult[],
+  defaultKeyword: string = 'function',
+  // @notice how many params should be changed to indexed (basing on given topic count)
+  indexArgs?: number,
+): Interface[] {
   const ifaces: Interface[] = []
 
   for (const result of data) {
@@ -44,7 +76,7 @@ export function parseData(data: FetchResult[]): Interface[] {
 
     let parsed: Interface | Error
     try {
-      parsed = parseAbi(frag)
+      parsed = parseAbi(frag, defaultKeyword)
       if (parsed instanceof Interface) ifaces.push(parsed)
     } catch (e) {}
   }
@@ -52,11 +84,24 @@ export function parseData(data: FetchResult[]): Interface[] {
 }
 
 // @internal
-export function decodeData(ifaces: Interface[], calldata: string): DecodeResult[] {
-  const decoded: DecodeResult[] = []
+export function decodeByEventProps(ifaces: Interface[], eventProps: EventProps) {
+  return decode4BytesData(ifaces, eventProps, decodeEvent)
+}
 
+// @internal
+export function decodeByCalldata(ifaces: Interface[], calldata: string): DecodeResult[] {
+  return decode4BytesData(ifaces, calldata, decodeCalldata)
+}
+
+// @internal
+export function decode4BytesData<T extends unknown, R>(
+  ifaces: Interface[],
+  data: T,
+  decodeFn: (iface: Interface, data: T) => R | undefined,
+): R[] {
+  const decoded: R[] = []
   for (const iface of ifaces) {
-    const decodeResult = decodeCalldata(iface, calldata)
+    const decodeResult = decodeFn(iface, data)
     if (decodeResult) decoded.push(decodeResult)
   }
   return decoded

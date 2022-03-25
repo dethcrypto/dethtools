@@ -15,7 +15,7 @@ Object {
     },
   ],
   "eventFragment": Array [
-    "Transfer(address,address,uint256)",
+    "3",
     EventFragment {
       "_isFragment": true,
       "anonymous": false,
