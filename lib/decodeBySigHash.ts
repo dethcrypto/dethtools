@@ -94,7 +94,6 @@ export function decodeByCalldata(ifaces: Interface[], calldata: string): DecodeR
 }
 
 // @internal
-// @abstract
 export function decode4BytesData<T extends unknown, R>(
   ifaces: Interface[],
   data: T,
