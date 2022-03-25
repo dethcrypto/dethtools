@@ -4,6 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 export function decodeEvent(iface: Interface, eventProps: EventProps): DecodeEventResult | undefined {
   const { data, topics } = eventProps
 
+  // attachIndexedToJson currently performs lossy conversion while attaching indexed modif. to params
+  // @see https://github.com/dethcrypto/tools/pull/29#discussion_r835175130
   const indexedIface = attachIndexedToJson(iface.format(FormatTypes.json), topics.length - 1)
   const events = indexedIface.fragments
 
