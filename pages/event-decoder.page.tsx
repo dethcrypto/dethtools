@@ -4,6 +4,7 @@ import { ChangeEvent, Key, useMemo, useState } from 'react'
 
 import { Button } from '../components/Button'
 import { Spinner } from '../components/Spinner'
+import { ToolLayout } from '../layout/ToolLayout'
 import { decodeWithEventProps } from '../lib/decodeBySigHash'
 import { decodeEvent, DecodeEventResult, EventProps } from '../lib/decodeEvent'
 import { parseAbi } from '../lib/parseAbi'
@@ -76,7 +77,7 @@ export default function EventDecoder() {
   }
 
   return (
-    <div className="ml-64 mt-32 flex flex-col gap-14">
+    <ToolLayout>
       <h1 className="border-b-2 border-dashed border-gray-300 pb-2"> Event Decoder </h1>
 
       <div className="relative">
@@ -237,6 +238,6 @@ export default function EventDecoder() {
           </section>
         </section>
       )}
-    </div>
+    </ToolLayout>
   )
 }

@@ -4,6 +4,7 @@ import { ChangeEvent, useMemo, useState } from 'react'
 import { Button } from '../components/Button'
 import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
 import { Spinner } from '../components/Spinner'
+import { ToolLayout } from '../layout/ToolLayout'
 import { decodeWithCalldata, sigHashFromCalldata } from '../lib/decodeBySigHash'
 import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
@@ -74,7 +75,7 @@ export default function CalldataDecoder() {
   const decodeButtonDisabled = !((rawAbi || tab === '4-bytes') && encodedCalldata)
 
   return (
-    <div className="ml-64 mt-32 flex flex-col gap-10">
+    <ToolLayout>
       <h1> Calldata decoder </h1>
 
       <label htmlFor="calldata" className="text-lg font-bold">
@@ -180,6 +181,6 @@ export default function CalldataDecoder() {
           </section>
         </section>
       )}
-    </div>
+    </ToolLayout>
   )
 }
