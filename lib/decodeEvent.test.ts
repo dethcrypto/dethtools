@@ -1,8 +1,17 @@
 import { EventFragment, Interface } from '@ethersproject/abi'
 import { expect } from 'earljs'
 
-import { decodeEvent, doContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
+import { attachIndexedToJson, decodeEvent, doesContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
 import { parseAbi } from './parseAbi'
+
+describe(attachIndexedToJson.name, () => {
+  it('filters non named keys e.g 0, 1 correctly', () => {
+    expect(filterNonNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual({
+      dethTools: 'is',
+      awesome: '8)',
+    })
+  })
+})
 
 describe(filterNonNamedKeys.name, () => {
   it('filters non named keys e.g 0, 1 correctly', () => {
@@ -13,10 +22,10 @@ describe(filterNonNamedKeys.name, () => {
   })
 })
 
-describe(doContainsNamedKeys.name, () => {
+describe(doesContainsNamedKeys.name, () => {
   it('checks if object contains named keys', () => {
-    expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
-    expect(doContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
+    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
+    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
   })
 })
 
@@ -45,7 +54,6 @@ describe(decodeEvent.name, () => {
     expect(decodedTopics.src).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
     expect(decodedTopics.dst).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
     expect(decodedTopics.amount._hex).toEqual('0x0de0b6b3a7640000')
-    expect(eventFragment[0]).toEqual(expect.stringMatching('Transfer(address,address,uint256)'))
     expect(eventFragment[1]).toBeA(EventFragment)
     expect(isNamedResult).toEqual(true)
   })
@@ -86,11 +94,11 @@ describe(decodeEvent.name, () => {
     }
     const decodeEventResult = decodeEvent(iface, eventProps)
 
-    expect(decodeEventResult).toMatchSnapshot()
-
     const { isNamedResult } = decodeEventResult!
 
     expect(isNamedResult).toEqual(false)
+
+    expect(decodeEventResult).toMatchSnapshot()
   })
 
   it('handles case where abi does not contain events', () => {

@@ -4,7 +4,7 @@ import { ChangeEvent, useMemo, useState } from 'react'
 import { Button } from '../components/Button'
 import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
 import { Spinner } from '../components/Spinner'
-import { decodeBySigHash, sigHashFromCalldata } from '../lib/decodeBySigHash'
+import { decodeWithCalldata, sigHashFromCalldata } from '../lib/decodeBySigHash'
 import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata'
 import { parseAbi } from '../lib/parseAbi'
 import { assert } from '../misc/assert'
@@ -39,7 +39,7 @@ export default function CalldataDecoder() {
       let decodeResults: DecodeResult[] | undefined
 
       try {
-        decodeResults = await decodeBySigHash(signatureHash, encodedCalldata)
+        decodeResults = await decodeWithCalldata(signatureHash, encodedCalldata)
       } finally {
         setLoading(false)
       }
@@ -171,7 +171,7 @@ export default function CalldataDecoder() {
                 return (
                   <section key={i} data-testid={`decodedCalldataTree${i}`}>
                     <div className="pb-4">
-                      <DecodedCalldataTree fnName={d.fnName} fnType={d.fnType} decoded={d.decoded} inputs={d.inputs} />{' '}
+                      <DecodedCalldataTree fnName={d.fnName} fnType={d.fnType} decoded={d.decoded} inputs={d.inputs} />
                     </div>
                   </section>
                 )

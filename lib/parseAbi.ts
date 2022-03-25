@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 
-export function parseAbi(rawAbi: string): Interface | Error {
+export function parseAbi(rawAbi: string, defaultKeyword: string = 'function'): Interface | Error {
   const formated: string[] = []
 
   // check for JSON format
@@ -29,7 +29,7 @@ export function parseAbi(rawAbi: string): Interface | Error {
       if (frag.includes('indexed')) {
         formated.push(`event ${frag}`)
       } else {
-        formated.push(`${DEFAULT_KEYWORD} ${frag}`)
+        formated.push(`${defaultKeyword} ${frag}`)
       }
     } else {
       formated.push(frag)
@@ -39,7 +39,6 @@ export function parseAbi(rawAbi: string): Interface | Error {
   return new Interface(formated)
 }
 
-const DEFAULT_KEYWORD = 'function'
 const keywords = ['function', 'modifier', 'event', 'error', 'constructor', 'fallback', 'receive']
 
 // @internal
