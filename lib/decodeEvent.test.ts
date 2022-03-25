@@ -1,15 +1,26 @@
-import { EventFragment, Interface } from '@ethersproject/abi'
+import { EventFragment, FormatTypes, Interface } from '@ethersproject/abi'
 import { expect } from 'earljs'
 
 import { attachIndexedToJson, decodeEvent, doesContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
 import { parseAbi } from './parseAbi'
 
 describe(attachIndexedToJson.name, () => {
-  it('filters non named keys e.g 0, 1 correctly', () => {
-    expect(filterNonNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual({
-      dethTools: 'is',
-      awesome: '8)',
-    })
+  it('attaches indexed modif. basing on topic count to json abi', () => {
+    const iface = parseAbi(`
+      'constructor(string symbol, string name)',
+      'function transferFrom(address from, address to, uint256 amount)',
+      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',
+      'event Transfer(address indexed src, address indexed dst, uint256 amount)',`) as Interface
+
+    expect(iface).toBeA(Interface)
+
+    const indexedIface = attachIndexedToJson(iface.format(FormatTypes.json), 2)
+
+    expect(indexedIface).toBeA(Interface)
+
+    expect(Object.entries(indexedIface.events)[0][1].inputs[0].indexed).toEqual(true)
+    expect(Object.entries(indexedIface.events)[0][1].inputs[1].indexed).toEqual(true)
+    expect(Object.entries(indexedIface.events)[0][1].inputs[2].indexed).toBeFalsy()
   })
 })
 
