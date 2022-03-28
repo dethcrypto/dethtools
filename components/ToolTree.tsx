@@ -8,7 +8,7 @@ export function ToolTree() {
     <section className=" top-52 w-56">
       <div className="flex flex-col">
         {Object.entries(tree).map(([key, value]) => (
-          <Disclosure key={key}>
+          <Disclosure key={key} defaultOpen={true}>
             {({ open }) => (
               <>
                 <Disclosure.Button className=" mt-2 flex items-center justify-between gap-2">
