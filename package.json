@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "next start",
     "test": "mocha",
-    "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{ts,tsx}\"",
-    "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{ts,tsx}\"",
+    "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{ts,tsx,js}\"",
+    "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{ts,tsx,js}\"",
     "lint": "eslint --ext .ts,.tsx lib pages --ext .tsx components",
     "lint:fix": "yarn lint --fix"
   },
