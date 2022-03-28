@@ -5,7 +5,7 @@ import { MyLink } from '../components/MyLink'
 
 export function ToolTree() {
   return (
-    <section className="left-1/6 absolute top-52 w-56">
+    <section className=" top-52 w-56">
       <div className="flex flex-col">
         {Object.entries(tree).map(([key, value]) => (
           <Disclosure key={key}>

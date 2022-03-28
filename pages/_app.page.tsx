@@ -11,10 +11,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <main className="mx-auto max-w-4xl">
       <ThemeProvider attribute="class" defaultTheme="light">
         <Navigation />
-        <div className="mx-auto flex max-w-6xl items-center gap-12">
+        <div className="mt-28 flex max-w-6xl gap-12 align-top">
           <ToolTree />
+          <Component className="max-w-1/2" {...pageProps} />
         </div>
-        <Component className="max-w-1/2" {...pageProps} />
       </ThemeProvider>
     </main>
   )
