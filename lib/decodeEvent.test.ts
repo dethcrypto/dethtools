@@ -1,7 +1,7 @@
 import { EventFragment, FormatTypes, Interface } from '@ethersproject/abi'
 import { expect } from 'earljs'
 
-import { attachIndexedToJson, decodeEvent, doesContainsNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
+import { attachIndexedToJson, decodeEvent, doesContainNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
 import { parseAbi } from './parseAbi'
 
 describe(attachIndexedToJson.name, () => {
@@ -33,10 +33,10 @@ describe(filterNonNamedKeys.name, () => {
   })
 })
 
-describe(doesContainsNamedKeys.name, () => {
+describe(doesContainNamedKeys.name, () => {
   it('checks if object contains named keys', () => {
-    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
-    expect(doesContainsNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
+    expect(doesContainNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual(true)
+    expect(doesContainNamedKeys({ '0': 'hello', 1: 'world!' })).toEqual(false)
   })
 })
 

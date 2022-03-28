@@ -21,7 +21,7 @@ export function decodeEvent(iface: Interface, eventProps: EventProps): DecodeEve
 
   if (decodedTopics && eventFragment) {
     let isNamedResult = false
-    if (doesContainsNamedKeys(decodedTopics)) {
+    if (doesContainNamedKeys(decodedTopics)) {
       isNamedResult = true
       decodedTopics = filterNonNamedKeys(decodedTopics)
     }
@@ -82,6 +82,6 @@ export function filterNonNamedKeys<T extends object>(object: T): Record<string, 
 }
 
 // @internal
-export function doesContainsNamedKeys<T extends object>(object: T): boolean {
+export function doesContainNamedKeys<T extends object>(object: T): boolean {
   return Object.keys(object).some((key) => isNaN(parseInt(key)))
 }
