@@ -3,52 +3,85 @@ import Img from 'next/image'
 
 import { MyLink } from '../components/MyLink'
 
-export function ToolTree() {
+function ToolTreeElements({ className }: { className?: string }) {
   return (
-    <section className=" top-52 w-56">
-      <div className="flex flex-col">
-        {Object.entries(tree).map(([key, value]) => (
-          <Disclosure key={key} defaultOpen={true}>
-            {({ open }) => (
-              <>
-                <Disclosure.Button className=" mt-2 flex items-center justify-between gap-2">
-                  <h2> {key} </h2>
-                  {open ? (
-                    <Img className="text-red-100" src="/static/svg/minus.svg" width={18} height={18} />
-                  ) : (
-                    <Img className="text-red-100" src="/static/svg/plus.svg" width={18} height={18} />
-                  )}
-                </Disclosure.Button>
+    <div className={`items-start" flex flex-col ${className}`}>
+      {Object.entries(tree).map(([key, value]) => (
+        <Disclosure key={key} defaultOpen={true}>
+          {({ open }) => (
+            <>
+              <Disclosure.Button className="flex items-center justify-between">
+                <div className="mt-6 flex gap-3">
+                  <Img src={value.icon} height={16} width={16} />
+                  <p className="uppercase text-deth-gray-300"> {key} </p>
+                </div>
+                {open ? (
+                  <Img className="text-red-100" src="/static/svg/minus.svg" width={18} height={18} />
+                ) : (
+                  <Img className="text-red-100" src="/static/svg/plus.svg" width={18} height={18} />
+                )}
+              </Disclosure.Button>
 
-                {(value as Tool[]).map((tool) => (
-                  <Disclosure.Panel key={tool.title} className="min-w-38 mt-3 flex flex-col items-start">
-                    <MyLink
-                      href={`/${tool.pageHref}`}
-                      className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-black hover:text-white"
-                    >
-                      {tool.isNew && <p className="mr-2 rounded-lg bg-purple-200 px-0.5"> NEW </p>}
-                      {tool.title}
-                    </MyLink>
-                  </Disclosure.Panel>
-                ))}
-              </>
-            )}
-          </Disclosure>
-        ))}
-      </div>
-    </section>
+              {value.tools.map((tool) => (
+                <Disclosure.Panel key={tool.title} className="min-w-38 mt-2 flex flex-col items-start">
+                  <MyLink
+                    href={`/${tool.pageHref}`}
+                    className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-deth-gray-600 hover:text-white"
+                  >
+                    {tool.isNew && (
+                      <p className="mr-4 rounded-lg bg-deth-purple px-2 font-semibold text-deth-white"> NEW </p>
+                    )}
+                    <p className="text-deth-white">{tool.title}</p>
+                  </MyLink>
+                </Disclosure.Panel>
+              ))}
+            </>
+          )}
+        </Disclosure>
+      ))}
+    </div>
+  )
+}
+
+export function ToolTree({
+  className,
+  isShowMobileTree,
+  isMobile,
+}: {
+  className?: string
+  isShowMobileTree: boolean
+  isMobile: boolean
+}) {
+  return (
+    <>
+      {isShowMobileTree && isMobile ? (
+        <div className="absolute top-0 left-0 z-10 mt-32 h-full w-full bg-deth-gray-900">
+          <ToolTreeElements className="mx-8 mt-8" />
+        </div>
+      ) : (
+        <section className={`hidden w-5/12 md:block lg:ml-0 ${className}`}>
+          <ToolTreeElements />
+        </section>
+      )}
+    </>
   )
 }
 
 const tree: Tree = {
-  calculators: [
-    { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
-    { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
-  ],
-  decoders: [
-    { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
-    { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
-  ],
+  calculators: {
+    icon: '/static/svg/calculator.svg',
+    tools: [
+      { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
+      { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
+    ],
+  },
+  decoders: {
+    icon: '/static/svg/decoders.svg',
+    tools: [
+      { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
+      { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
+    ],
+  },
 }
 
 interface Tool {
@@ -59,4 +92,4 @@ interface Tool {
 }
 
 // optionally soon add more alternative values to Tree rows
-type Tree = { [key: string]: Tool[] }
+type Tree = { [key: string]: { icon: string; tools: Tool[] } }

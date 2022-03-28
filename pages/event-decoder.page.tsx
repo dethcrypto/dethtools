@@ -2,7 +2,7 @@ import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChangeEvent, Key, useMemo, useState } from 'react'
 
-import { Button } from '../components/Button'
+import { Button } from '../components/Button/Button'
 import { Spinner } from '../components/Spinner'
 import { ToolLayout } from '../layout/ToolLayout'
 import { decodeWithEventProps } from '../lib/decodeBySigHash'
@@ -78,7 +78,10 @@ export default function EventDecoder() {
 
   return (
     <ToolLayout>
-      <h1 className="border-b-2 border-dashed border-gray-300 pb-2"> Event Decoder </h1>
+      <header className="flex items-center gap-3 align-middle">
+        <h3 className="text-deth-gray-300"> Decoders / </h3>
+        <h3 className="text-deth-pink"> Event Decoder </h3>
+      </header>
 
       <div className="relative">
         <section className="mb-3">
@@ -87,13 +90,14 @@ export default function EventDecoder() {
               <section className="flex items-center gap-2" key={i}>
                 <div className="flex flex-1 flex-col">
                   <label className="pb-2" htmlFor={`${topic.id}`}>
-                    {i === 0 ? <strong> topic{i} </strong> : <p> topic{i} </p>}
+                    <div>{i === 0 ? <b> topic{i} </b> : <p> topic{i} </p>}</div>
                   </label>
+
                   <input
                     id={`${topic.id}`}
                     type="text"
                     placeholder="e.g 0x0..."
-                    className="mb-4 mr-auto h-10 w-3/5 rounded-xl border border-gray-400 text-sm focus:outline-none"
+                    className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       setTopics(topics.map((t) => (t.id === topic.id ? { ...t, value: event.target.value } : t)))
                     }}
@@ -107,11 +111,12 @@ export default function EventDecoder() {
           <label className="pb-1" htmlFor="data">
             data
           </label>
+
           <input
             id="data"
             type="text"
             placeholder="e.g 0x0..."
-            className="mr-auto mb-4 h-10 w-3/5 rounded-xl border-gray-300 text-sm focus:outline-none"
+            className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
             onChange={(event: ChangeEvent<HTMLInputElement>) => setData(event.target.value)}
           />
         </section>
@@ -122,9 +127,8 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400
-            bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
+            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
               setTab('abi')
@@ -137,10 +141,8 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tr-2xl border border-gray-400
-            bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === '4-bytes' ? 'bg-black text-white' : 'bg-gray-50'
-            }`}
+            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
+            p-1 text-center ${tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'}`}
             onClick={() => {
               setTab('4-bytes')
               setDecodeResults(undefined)
@@ -156,8 +158,8 @@ export default function EventDecoder() {
             aria-label="text area for abi"
             value={rawAbi || ''}
             placeholder="e.g function transferFrom(address, ..)"
-            className="flex h-36 w-full break-words rounded-b-2xl border-t-0
-            border-gray-400 bg-gray-50 p-5"
+            className="flex h-48 w-full break-words rounded-b-md border-t-0
+            border-deth-gray-600 bg-deth-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setRawAbi(event.target.value)
             }}
@@ -169,31 +171,36 @@ export default function EventDecoder() {
         Decode
       </Button>
 
+      <section className="pt-4">
+        {decodeResults ? (
+          tab === '4-bytes' && decodeResults.length > 0 ? (
+            <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+          ) : (
+            'No results found'
+          )
+        ) : (
+          <p> Decoded output will appear here </p>
+        )}
+      </section>
+
       {loading ? (
         <Spinner className="mx-auto pt-12" />
       ) : (
-        <section className="relative mb-16 rounded-xl border border-gray-400 bg-gray-50 p-8" placeholder="Output">
+        <section
+          className="relative mb-16 rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-8"
+          placeholder="Output"
+        >
           <section className="flex flex-col gap-4">
             <div>
               {signatureHash && (
                 <div className="flex flex-wrap items-center gap-2 break-all">
-                  <p className="font-bold text-purple-600">Signature hash</p>
+                  <p className="font-bold ">Signature hash</p>
                   <code data-testid="signature-hash">{signatureHash}</code>
                 </div>
               )}
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
-              {decodeResults ? (
-                tab === '4-bytes' && decodeResults.length > 0 ? (
-                  <h3 className="text-md pb-4 font-semibold"> Possible decoded event topics: </h3>
-                ) : (
-                  ''
-                )
-              ) : (
-                <h3 className="pb-4"> Decoded output will appear here </h3>
-              )}
-
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i}>

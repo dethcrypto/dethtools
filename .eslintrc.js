@@ -1,49 +1,42 @@
-const inTextEditor = process.env.VSCODE_PID !== undefined
-
+const inTextEditor = process.env.VSCODE_PID !== undefined;
 /** @type {import("eslint").Linter.Config} */
+
 module.exports = {
   env: {
-    es6: true,
+    es6: true
   },
-  extends: ['typestrict', 'react-app'],
+  extends: ["typestrict", "react-app", "plugin:storybook/recommended"],
   plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports', 'import'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
-    sourceType: 'module',
+    sourceType: 'module'
   },
-  overrides: [
-    {
-      files: ['pages/**.tsx', 'pages/**/*.tsx'],
-      rules: {
-        'import/no-default-export': 'off',
-      },
-    },
-  ],
+  overrides: [{
+    files: ['pages/**.tsx', 'pages/**/*.tsx', './tailwind.config.js'],
+    rules: {
+      'import/no-default-export': 'off'
+    }
+  }],
   rules: {
     'no-redeclare': 'off',
     'import/no-default-export': 'error',
     'no-invalid-this': 'off',
     // this gets inlined into a package eslint, so it means: use current package's package.info or the one at the project root
-    'import/no-extraneous-dependencies': ['error', { packageDir: ['./', __dirname] }],
+    'import/no-extraneous-dependencies': ['error', {
+      packageDir: ['./', __dirname]
+    }],
     'unused-imports/no-unused-imports-ts': inTextEditor ? 'off' : 'error',
-
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
-
     '@typescript-eslint/no-redeclare': ['error'],
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-useless-constructor': 'error',
-
     'accessor-pairs': 'error',
     'constructor-super': 'error',
-    eqeqeq: [
-      'error',
-      'always',
-      {
-        null: 'ignore',
-      },
-    ],
+    eqeqeq: ['error', 'always', {
+      null: 'ignore'
+    }],
     'handle-callback-err': ['error', '^(err|error)$'],
     'new-parens': 'error',
     'no-array-constructor': 'error',
@@ -53,12 +46,9 @@ module.exports = {
     'no-compare-neg-zero': 'error',
     'no-cond-assign': 'error',
     'no-const-assign': 'error',
-    'no-constant-condition': [
-      'error',
-      {
-        checkLoops: false,
-      },
-    ],
+    'no-constant-condition': ['error', {
+      checkLoops: false
+    }],
     'no-control-regex': 'error',
     'no-console': 'error',
     'no-debugger': 'error',
@@ -82,13 +72,10 @@ module.exports = {
     'no-invalid-regexp': 'error',
     'no-iterator': 'error',
     'no-label-var': 'error',
-    'no-labels': [
-      'error',
-      {
-        allowLoop: false,
-        allowSwitch: false,
-      },
-    ],
+    'no-labels': ['error', {
+      allowLoop: false,
+      allowSwitch: false
+    }],
     'no-lone-blocks': 'error',
     'no-misleading-character-class': 'error',
     'no-multi-str': 'error',
@@ -116,12 +103,9 @@ module.exports = {
     'no-throw-literal': 'error',
     'no-unexpected-multiline': 'error',
     'no-unmodified-loop-condition': 'error',
-    'no-unneeded-ternary': [
-      'error',
-      {
-        defaultAssignment: false,
-      },
-    ],
+    'no-unneeded-ternary': ['error', {
+      defaultAssignment: false
+    }],
     'no-unreachable': 'error',
     'no-unsafe-finally': 'error',
     'no-unsafe-negation': 'error',
@@ -134,31 +118,20 @@ module.exports = {
     'no-useless-rename': 'error',
     'no-useless-return': 'error',
     'no-with': 'error',
-    'one-var': [
-      'error',
-      {
-        initialized: 'never',
-      },
-    ],
-    'prefer-const': [
-      'error',
-      {
-        destructuring: 'all',
-      },
-    ],
+    'one-var': ['error', {
+      initialized: 'never'
+    }],
+    'prefer-const': ['error', {
+      destructuring: 'all'
+    }],
     'prefer-promise-reject-errors': 'error',
     'symbol-description': 'error',
     'use-isnan': 'error',
-    'valid-typeof': [
-      'error',
-      {
-        requireStringLiterals: true,
-      },
-    ],
+    'valid-typeof': ['error', {
+      requireStringLiterals: true
+    }],
     yoda: ['error', 'never'],
-
     'no-only-tests/no-only-tests': 'error',
-
-    'react/jsx-key': 'warn',
-  },
-}
+    'react/jsx-key': 'warn'
+  }
+};

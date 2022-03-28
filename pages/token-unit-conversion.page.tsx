@@ -65,8 +65,11 @@ export default function TokenUnitConversion() {
 
   return (
     <ToolLayout>
-      <form className="flex flex-col gap-10">
-        <h1> Token unit conversion </h1>
+      <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
+        <header className="flex items-center gap-3 align-middle">
+          <h3 className="text-deth-gray-300"> Calculators ﹥ </h3>
+          <h3 className="text-deth-pink"> Token unit conversion </h3>
+        </header>
         <UnitElements units={units} error={error} onChange={handleChangeValue} setDecimal={setDecimal} />
       </form>
     </ToolLayout>
@@ -83,82 +86,54 @@ interface UnitElementsProps {
 function UnitElements({ units, error, onChange, setDecimal }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
-      <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
+      <p data-testid="error" className="absolute top-2/3 text-sm text-deth-error">
         {error}
       </p>
 
-      <section className="mb-6">
-        <table className="min-w-full table-fixed divide-y divide-gray-200">
-          <thead className="rounded-sm bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-1 px-6 text-left text-xs font-medium uppercase
-                tracking-wider text-gray-700 dark:text-gray-400"
-              >
-                <label htmlFor="decimals" className="text-lg">
-                  Decimals
-                </label>
-              </th>
+      <div className="mt-5 w-full">
+        <div className="flex flex-col">
+          <div className="py-1 text-left text-xs font-medium uppercase tracking-wider">
+            <label htmlFor="decimals" className="text-lg">
+              decimals
+            </label>
+          </div>
 
-              <th
-                scope="col"
-                className="py-3 px-6 text-left text-xs font-medium uppercase
-                tracking-wider text-gray-700 dark:text-gray-400"
-              >
-                <input
-                  id="decimals"
-                  type="number"
-                  min={0}
-                  placeholder={tokenPrecision.base.toString()}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setDecimal(event.target.value)
-                  }}
-                  className="w-36 rounded-sm border border-dashed border-black p-3"
-                />
-              </th>
-            </tr>
-          </thead>
-        </table>
-      </section>
+          <input
+            id="decimals"
+            type="number"
+            min={0}
+            placeholder={tokenPrecision.base.toString()}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setDecimal(event.target.value)
+            }}
+            className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
+          />
+        </div>
+      </div>
 
       {units.map((unit) => {
         const { name, value } = unit
 
         return (
-          <div key={name}>
-            <table className="min-w-full table-fixed divide-y divide-gray-200">
-              <thead className="rounded-sm bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-1 px-6 text-left text-xs font-medium uppercase
-                    tracking-wider text-gray-700 dark:text-gray-400"
-                  >
-                    <label htmlFor={name} className="text-lg">
-                      {name}
-                    </label>
-                  </th>
+          <div key={name} className="mt-5 w-full">
+            <div className="flex flex-col">
+              <div className="py-1 text-left text-xs font-medium uppercase tracking-wider">
+                <label htmlFor={name} className="text-lg">
+                  {name}
+                </label>
+              </div>
 
-                  <th
-                    scope="col"
-                    className="text-md py-3 px-6 text-left font-medium uppercase
-                    tracking-wider text-gray-700 dark:text-gray-400"
-                  >
-                    <input
-                      id={name}
-                      placeholder={value ? value.toString() : '0'}
-                      value={value}
-                      type="string"
-                      onChange={(event) => {
-                        onChange(event.target.value, name)
-                      }}
-                      className="w-72 rounded-sm border border-dashed border-black p-3"
-                    />
-                  </th>
-                </tr>
-              </thead>
-            </table>
+              <input
+                id={name}
+                placeholder={value ? value.toString() : '0'}
+                value={value}
+                type="string"
+                onChange={(event) => {
+                  onChange(event.target.value, name)
+                }}
+                className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
+              />
+            </div>
           </div>
         )
       })}
