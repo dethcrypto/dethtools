@@ -5,12 +5,7 @@ module.exports = {
   experimental: {
     optimizeUniversalDefaults: true,
   },
-  content: [
-    './pages/**/*.{tx,tsx}',
-    './components/**/*.{tx,tsx}',
-    './layouts/**/*.{tx,tsx}',
-    './lib/**/*.{tx,tsx}',
-  ],
+  content: ['./pages/**/*.{tx,tsx}', './components/**/*.{tx,tsx}', './layouts/**/*.{tx,tsx}', './lib/**/*.{tx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
@@ -27,4 +22,3 @@ module.exports = {
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }
-
