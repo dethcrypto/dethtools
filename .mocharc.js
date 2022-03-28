@@ -6,4 +6,5 @@ module.exports = {
   watchExtensions: ['ts', 'tsx'],
   spec: ['./{components,layout,lib,pages}/**/*.test.{ts,tsx}'],
   timeout: 5000,
+  exit: true, // @See ./docs/MOCHA_REACT_BUG.md
 }
