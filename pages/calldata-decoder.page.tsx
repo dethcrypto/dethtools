@@ -1,4 +1,5 @@
 import { Interface, ParamType } from '@ethersproject/abi'
+import Img from 'next/image'
 import { ChangeEvent, useMemo, useState } from 'react'
 
 import { Button } from '../components/Button/Button'
@@ -76,9 +77,10 @@ export default function CalldataDecoder() {
 
   return (
     <ToolLayout>
-      <header className="flex items-center gap-3 align-middle">
-        <h3 className="text-deth-gray-300"> Decoders / </h3>
-        <h3 className="text-deth-pink"> Calldata Decoder </h3>
+      <header className="mb-6 flex items-center gap-3 align-middle">
+        <Img src="/static/svg/decoders.svg" width={32} height={32} alt="deth tools logo" />
+        <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl"> Calldata Decoder </h3>
       </header>
 
       <label htmlFor="calldata" className="pt-2 text-lg font-bold">

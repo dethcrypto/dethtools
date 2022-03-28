@@ -1,3 +1,4 @@
+import Img from 'next/image'
 import { ChangeEvent, Fragment, useState } from 'react'
 
 import { ToolLayout } from '../layout/ToolLayout'
@@ -49,9 +50,10 @@ export default function EthUnitConversion() {
   return (
     <ToolLayout>
       <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
-        <header className="flex items-center gap-3 align-middle">
-          <h3 className="text-deth-gray-300"> Calculators / </h3>
-          <h3 className="text-deth-pink"> Ethereum unit conversion </h3>
+        <header className="mb-6 flex items-center gap-3 align-middle">
+          <Img src="/static/svg/calculator.svg" width={32} height={32} alt="deth tools logo" />
+          <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Calculators / </h3>
+          <h3 className="text-sm text-deth-pink sm:text-xl"> Eth unit conversion </h3>
         </header>
         <UnitElements onChange={handleChangeValue} units={units} error={error} />
       </form>

@@ -75,7 +75,7 @@ module.exports = {
             code: {
               marginTop: '0',
               fontSize: '15px',
-              color: theme('colors.deth-gray-800'),
+              color: theme('colors.deth-white'),
             },
           },
         },

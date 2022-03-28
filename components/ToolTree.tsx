@@ -10,8 +10,8 @@ function ToolTreeElements({ className }: { className?: string }) {
         <Disclosure key={key} defaultOpen={true}>
           {({ open }) => (
             <>
-              <Disclosure.Button className="flex items-center justify-between">
-                <div className="mt-6 flex gap-3">
+              <Disclosure.Button className="mt-6 flex items-center justify-between">
+                <div className="flex gap-3">
                   <Img src={value.icon} height={16} width={16} />
                   <p className="uppercase text-deth-gray-300"> {key} </p>
                 </div>
@@ -29,7 +29,9 @@ function ToolTreeElements({ className }: { className?: string }) {
                     className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-deth-gray-600 hover:text-white"
                   >
                     {tool.isNew && (
-                      <p className="mr-4 rounded-lg bg-deth-purple px-2 font-semibold text-deth-white"> NEW </p>
+                      <p className="mr-4 animate-pulse rounded-lg bg-deth-purple px-2 font-semibold text-deth-white duration-700">
+                        NEW
+                      </p>
                     )}
                     <p className="text-deth-white">{tool.title}</p>
                   </MyLink>

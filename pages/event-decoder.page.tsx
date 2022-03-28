@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
+import Img from 'next/image'
 import { ChangeEvent, Key, useMemo, useState } from 'react'
 
 import { Button } from '../components/Button/Button'
@@ -79,8 +80,9 @@ export default function EventDecoder() {
   return (
     <ToolLayout>
       <header className="flex items-center gap-3 align-middle">
-        <h3 className="text-deth-gray-300"> Decoders / </h3>
-        <h3 className="text-deth-pink"> Event Decoder </h3>
+        <Img src="/static/svg/decoders.svg" width={32} height={32} alt="deth tools logo" />
+        <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl"> Event Decoder </h3>
       </header>
 
       <div className="relative">
@@ -212,8 +214,8 @@ export default function EventDecoder() {
 
                         {Object.entries(d.decodedTopics).map(([key, value], i) => (
                           <code key={i}>
-                            <strong className="font-bold text-purple-600">{` "${key}"`}</strong>:
-                            {typeof value === 'string' ? ` ${value}` : ` "${value._hex}"`}{' '}
+                            <b className="font-bold text-purple-300">{key}</b>:
+                            {typeof value === 'string' ? value : value._hex}{' '}
                           </code>
                         ))}
 
@@ -222,7 +224,7 @@ export default function EventDecoder() {
                     ) : (
                       <div className="flex flex-col gap-2 pb-4">
                         <code>
-                          <strong className="text-purple-600"> {d.eventFragment[1].type} </strong>
+                          <b className="text-purple-300"> {d.eventFragment[1].type} </b>
                           {d.eventFragment[1].name} ({d.eventFragment[1].inputs.map((i) => i.type).join(', ')})
                         </code>
 
@@ -230,7 +232,7 @@ export default function EventDecoder() {
 
                         {(d.decodedTopics as Record<string, any>).map((value: string | BigNumber, i: Key) => (
                           <code key={i}>
-                            <strong className="font-bold text-purple-600">{`"arg${i}"`}</strong>:
+                            <b className="font-bold text-purple-300">{`"arg${i}"`}</b>:
                             {typeof value === 'string' ? ` "${value}"` : ` "${value._hex}"`}{' '}
                           </code>
                         ))}
