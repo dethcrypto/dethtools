@@ -18,5 +18,5 @@ export function Spinner({ className }: React.HTMLAttributes<HTMLDivElement>) {
         />
       </svg>
     </div>
-  )
+  );
 }

@@ -1,47 +1,47 @@
-import { ChangeEvent, Fragment, useState } from 'react'
+import { ChangeEvent, Fragment, useState } from 'react';
 
-import { UnitType } from '../lib/convertProperties'
-import { convertEthUnits } from '../lib/convertUnits'
-import { decodeHex } from '../lib/decodeHex'
-import { unitSchema } from '../misc/unitSchema'
+import { UnitType } from '../lib/convertProperties';
+import { convertEthUnits } from '../lib/convertUnits';
+import { decodeHex } from '../lib/decodeHex';
+import { unitSchema } from '../misc/unitSchema';
 
-type State = { wei: string; gwei: string; eth: string }
+type State = { wei: string; gwei: string; eth: string };
 
 export default function EthUnitConversion() {
-  const [error, setError] = useState<string | undefined>()
-  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' })
+  const [error, setError] = useState<string | undefined>();
+  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' });
 
   const units: UnitTypeExtended[] = [
     { name: 'wei', value: state.wei },
     { name: 'gwei', value: state.gwei },
     { name: 'eth', value: state.eth },
-  ]
+  ];
 
   function handleChangeValue(value: string, currentType: UnitType) {
-    value = decodeHex(value)
+    value = decodeHex(value);
 
-    const result = unitSchema.safeParse(value)
+    const result = unitSchema.safeParse(value);
     if (!result.success) {
-      setError(result.error.errors[0].message)
+      setError(result.error.errors[0].message);
     } else {
-      value = result.data
-      setError(undefined)
+      value = result.data;
+      setError(undefined);
     }
 
-    setState((s) => ({ ...s, [currentType]: value }))
+    setState((s) => ({ ...s, [currentType]: value }));
 
     for (const unit of units) {
-      if (unit.name === currentType) continue
+      if (unit.name === currentType) continue;
 
-      let out: string = ''
+      let out: string = '';
       if (parseFloat(value) >= 0) {
-        out = convertEthUnits(value, currentType, unit.name)!
+        out = convertEthUnits(value, currentType, unit.name)!;
       }
       if (isNaN(parseInt(out))) {
-        out = unit.value
+        out = unit.value;
       }
 
-      setState((s) => ({ ...s, [unit.name]: out }))
+      setState((s) => ({ ...s, [unit.name]: out }));
     }
   }
 
@@ -49,18 +49,26 @@ export default function EthUnitConversion() {
     <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
       <form className="mx-auto flex flex-col gap-10">
         <h1> Ethereum unit conversion </h1>
-        <UnitElements onChange={handleChangeValue} units={units} error={error} />
+        <UnitElements
+          onChange={handleChangeValue}
+          units={units}
+          error={error}
+        />
       </form>
     </div>
-  )
+  );
 }
 
 interface UnitElementsProps {
-  units: UnitTypeExtended[]
-  error: string | undefined
-  onChange: (value: string, unitType: UnitType) => void
+  units: UnitTypeExtended[];
+  error: string | undefined;
+  onChange: (value: string, unitType: UnitType) => void;
 }
-function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Element {
+function UnitElements({
+  units,
+  error,
+  onChange,
+}: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
       <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
@@ -68,7 +76,7 @@ function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Elemen
       </p>
 
       {units.map((unit) => {
-        const { name, value } = unit
+        const { name, value } = unit;
         return (
           <div key={name}>
             <table className="min-w-full table-fixed divide-y divide-gray-200">
@@ -93,7 +101,7 @@ function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Elemen
                       value={value}
                       type="string"
                       onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                        onChange(event.target.value, name)
+                        onChange(event.target.value, name);
                       }}
                       className="w-72 rounded-sm border border-dashed border-black p-3 text-lg"
                     />
@@ -102,13 +110,13 @@ function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Elemen
               </thead>
             </table>
           </div>
-        )
+        );
       })}
     </Fragment>
-  )
+  );
 }
 
 interface UnitTypeExtended {
-  name: UnitType
-  value: string
+  name: UnitType;
+  value: string;
 }

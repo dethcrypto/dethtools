@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-const LARGEST_DECIMAL = 26
+const LARGEST_DECIMAL = 26;
 
 export const decimalSchema = z.preprocess(
   (value) => parseInt(String(value)),
@@ -10,4 +10,4 @@ export const decimalSchema = z.preprocess(
     .lte(LARGEST_DECIMAL, {
       message: `The decimal value must be smaller or equal to ${LARGEST_DECIMAL}`,
     }),
-)
+);

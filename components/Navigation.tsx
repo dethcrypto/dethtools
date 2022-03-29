@@ -1,6 +1,6 @@
-import Image from 'next/image'
+import Image from 'next/image';
 
-import { MyLink } from './MyLink'
+import { MyLink } from './MyLink';
 
 export function Navigation() {
   return (
@@ -16,7 +16,9 @@ export function Navigation() {
           height={40}
           alt="deth tools logo"
         />
-        <h1 className="cursor-pointer font-syne text-4xl text-gray-900">Deth Tools</h1>
+        <h1 className="cursor-pointer font-syne text-4xl text-gray-900">
+          Deth Tools
+        </h1>
       </section>
 
       <section className="flex items-center gap-4">
@@ -38,5 +40,5 @@ export function Navigation() {
         />
       </section>
     </nav>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from 'next/link';
+import React from 'react';
 
 interface MyLinkProps {
-  href: string
-  className?: string
-  children: React.ReactNode
+  href: string;
+  className?: string;
+  children: React.ReactNode;
 }
 
 export const MyLink = ({ className, href, children }: MyLinkProps) => (
@@ -12,4 +12,4 @@ export const MyLink = ({ className, href, children }: MyLinkProps) => (
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a className={className || ''}>{children}</a>
   </Link>
-)
+);

@@ -1,15 +1,15 @@
-import '/css/globals.css'
+import '/css/globals.css';
 
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
+import type { AppProps } from 'next/app';
+import { ThemeProvider } from 'next-themes';
 
-import { MyLink } from '../components/MyLink'
-import { Navigation } from '../components/Navigation'
+import { MyLink } from '../components/MyLink';
+import { Navigation } from '../components/Navigation';
 
 interface Tool {
-  title: string
-  pageHref: string
-  iconHref?: string
+  title: string;
+  pageHref: string;
+  iconHref?: string;
 }
 
 const tools: Tool[] = [
@@ -17,7 +17,7 @@ const tools: Tool[] = [
   { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
   { title: 'Calldata Decoder', pageHref: 'calldata-decoder' },
   { title: 'Event Decoder', pageHref: 'event-decoder' },
-]
+];
 
 function ToolList() {
   return (
@@ -38,11 +38,11 @@ function ToolList() {
                 </div>
               </MyLink>
             </div>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -56,5 +56,5 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <Component className="max-w-1/2" {...pageProps} />
       </ThemeProvider>
     </main>
-  )
+  );
 }

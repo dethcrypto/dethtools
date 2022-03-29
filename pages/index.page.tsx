@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import Head from 'next/head';
 
 export default function Home() {
   return (
@@ -11,5 +11,5 @@ export default function Home() {
       <main className="mx-auto max-w-6xl"></main>
       <footer className="mx-auto mt-12 max-w-4xl"></footer>
     </div>
-  )
+  );
 }
