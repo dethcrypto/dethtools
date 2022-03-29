@@ -1,27 +1,22 @@
 import '../src/globals.css';
 
-<<<<<<< HEAD
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
-import { useState } from 'react'
-=======
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'next-themes';
->>>>>>> main
+import { useState } from 'react';
 
 import { Navigation } from '../src/components/Navigation';
 import { ToolTree } from '../src/components/ToolTree';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  const [isShowMobileTree, setIsShowMobileTree] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isShowMobileTree, setIsShowMobileTree] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   function handleShowMobileTree(width: number) {
-    setIsShowMobileTree(!isShowMobileTree)
+    setIsShowMobileTree(!isShowMobileTree);
     if (width >= 480) {
-      setIsMobile(false)
+      setIsMobile(false);
     } else {
-      setIsMobile(true)
+      setIsMobile(true);
     }
   }
 

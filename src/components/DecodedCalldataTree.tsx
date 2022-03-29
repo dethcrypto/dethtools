@@ -51,7 +51,11 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
     return (
       <span>
         <code>
-          {node.name ? <b className="text-deth-pink"> {node.name} </b> : <b className="text-pink-600">unknown</b>}
+          {node.name ? (
+            <b className="text-deth-pink"> {node.name} </b>
+          ) : (
+            <b className="text-pink-600">unknown</b>
+          )}
         </code>
         <code>
           <b id="node-type" className=" text-purple-600">

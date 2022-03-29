@@ -1,16 +1,23 @@
-import { Interface, ParamType } from '@ethersproject/abi'
-import Img from 'next/image'
-import { ChangeEvent, useMemo, useState } from 'react'
+import { Interface, ParamType } from '@ethersproject/abi';
+import Img from 'next/image';
+import { ChangeEvent, useMemo, useState } from 'react';
 
-import { Button } from '../src/components/Button'
-import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree'
-import { Spinner } from '../src/components/Spinner'
-import { ToolLayout } from '../src/layout/ToolLayout'
-import { decodeWithCalldata, sigHashFromCalldata } from '../src/lib/decodeBySigHash'
-import { decodeCalldata, Decoded, DecodeResult } from '../src/lib/decodeCalldata'
-import { parseAbi } from '../src/lib/parseAbi'
-import { assert } from '../src/misc/assert'
-import { sigHashSchema } from '../src/misc/sigHashSchema'
+import { Button } from '../src/components/Button';
+import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
+import { Spinner } from '../src/components/Spinner';
+import { ToolLayout } from '../src/layout/ToolLayout';
+import {
+  decodeWithCalldata,
+  sigHashFromCalldata,
+} from '../src/lib/decodeBySigHash';
+import {
+  decodeCalldata,
+  Decoded,
+  DecodeResult,
+} from '../src/lib/decodeCalldata';
+import { parseAbi } from '../src/lib/parseAbi';
+import { assert } from '../src/misc/assert';
+import { sigHashSchema } from '../src/misc/sigHashSchema';
 
 export default function CalldataDecoder() {
   const [loading, setLoading] = useState(false);
@@ -87,9 +94,17 @@ export default function CalldataDecoder() {
   return (
     <ToolLayout>
       <header className="mb-6 flex items-center gap-3 align-middle">
-        <Img src="/static/svg/decoders.svg" width={32} height={32} alt="deth tools logo" />
+        <Img
+          src="/static/svg/decoders.svg"
+          width={32}
+          height={32}
+          alt="deth tools logo"
+        />
         <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl"> Calldata Decoder </h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl">
+          {' '}
+          Calldata Decoder{' '}
+        </h3>
       </header>
 
       <label htmlFor="calldata" className="pt-2 text-lg font-bold">
@@ -126,7 +141,9 @@ export default function CalldataDecoder() {
             role="tab"
             aria-selected={tab === '4-bytes'}
             className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
-            p-1 text-center ${tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'}`}
+            p-1 text-center ${
+              tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            }`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -162,7 +179,10 @@ export default function CalldataDecoder() {
       <section className="pt-4">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
-            <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+            <h3 className="text-md pb-4 font-semibold">
+              {' '}
+              Possible decoded calldata:{' '}
+            </h3>
           ) : (
             'No results found'
           )

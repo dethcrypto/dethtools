@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi';
+import Img from 'next/image';
 import { ChangeEvent, useMemo, useState } from 'react';
-import Img from 'next/image'
 
 import { Button } from '../src/components/Button';
 import { Spinner } from '../src/components/Spinner';
@@ -90,7 +90,12 @@ export default function EventDecoder() {
   return (
     <ToolLayout>
       <header className="flex items-center gap-3 align-middle">
-        <Img src="/static/svg/decoders.svg" width={32} height={32} alt="deth tools logo" />
+        <Img
+          src="/static/svg/decoders.svg"
+          width={32}
+          height={32}
+          alt="deth tools logo"
+        />
         <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
         <h3 className="text-sm text-deth-pink sm:text-xl"> Event Decoder </h3>
       </header>
@@ -135,7 +140,9 @@ export default function EventDecoder() {
             type="text"
             placeholder="e.g 0x0..."
             className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setData(event.target.value)}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setData(event.target.value)
+            }
           />
         </section>
       </div>
@@ -160,7 +167,9 @@ export default function EventDecoder() {
             role="tab"
             aria-selected={tab === '4-bytes'}
             className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
-            p-1 text-center ${tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'}`}
+            p-1 text-center ${
+              tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            }`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -195,7 +204,10 @@ export default function EventDecoder() {
       <section className="pt-4">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
-            <h3 className="text-md pb-4 font-semibold"> Possible decoded calldata: </h3>
+            <h3 className="text-md pb-4 font-semibold">
+              {' '}
+              Possible decoded calldata:{' '}
+            </h3>
           ) : (
             'No results found'
           )
@@ -222,19 +234,6 @@ export default function EventDecoder() {
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
-              {decodeResults ? (
-                tab === '4-bytes' && decodeResults.length > 0 ? (
-                  <h3 className="text-md pb-4 font-semibold">
-                    {' '}
-                    Possible decoded event topics:{' '}
-                  </h3>
-                ) : (
-                  ''
-                )
-              ) : (
-                <h3 className="pb-4"> Decoded output will appear here </h3>
-              )}
-
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i}>
@@ -245,7 +244,7 @@ export default function EventDecoder() {
 
                       {Object.entries(d.args).map(([key, value], i) => (
                         <code key={i}>
-                          <strong className="font-bold text-purple-600">{` "${key}"`}</strong>
+                          <b className="font-bold text-purple-600">{` "${key}"`}</b>
                           :{value.toString()}{' '}
                         </code>
                       ))}

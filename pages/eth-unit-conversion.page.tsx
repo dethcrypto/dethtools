@@ -1,5 +1,5 @@
-import Img from 'next/image'
-import { ChangeEvent, Fragment, useState } from 'react'
+import Img from 'next/image';
+import { ChangeEvent, Fragment, useState } from 'react';
 
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
@@ -17,7 +17,7 @@ export default function EthUnitConversion() {
     { name: 'wei', powFormat: '10-18', value: state.wei },
     { name: 'gwei', powFormat: '10-9', value: state.gwei },
     { name: 'eth', powFormat: '10-1', value: state.eth },
-  ]
+  ];
 
   function handleChangeValue(value: string, currentType: UnitType) {
     value = decodeHex(value);
@@ -51,11 +51,26 @@ export default function EthUnitConversion() {
     <ToolLayout>
       <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
         <header className="mb-6 flex items-center gap-3 align-middle">
-          <Img src="/static/svg/calculator.svg" width={32} height={32} alt="deth tools logo" />
-          <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Calculators / </h3>
-          <h3 className="text-sm text-deth-pink sm:text-xl"> Eth unit conversion </h3>
+          <Img
+            src="/static/svg/calculator.svg"
+            width={32}
+            height={32}
+            alt="deth tools logo"
+          />
+          <h3 className="text-sm text-deth-gray-300 sm:text-xl">
+            {' '}
+            Calculators /{' '}
+          </h3>
+          <h3 className="text-sm text-deth-pink sm:text-xl">
+            {' '}
+            Eth unit conversion{' '}
+          </h3>
         </header>
-        <UnitElements onChange={handleChangeValue} units={units} error={error} />
+        <UnitElements
+          onChange={handleChangeValue}
+          units={units}
+          error={error}
+        />
       </form>
     </ToolLayout>
   );
@@ -73,12 +88,15 @@ function UnitElements({
 }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
-      <p data-testid="error" className="absolute top-2/3 text-sm text-deth-error">
+      <p
+        data-testid="error"
+        className="absolute top-2/3 text-sm text-deth-error"
+      >
         {error}
       </p>
 
       {units.map((unit) => {
-        const { name, value, powFormat } = unit
+        const { name, value, powFormat } = unit;
         return (
           <div key={name} className="mt-5 w-full">
             <section className="flex flex-col">
@@ -96,7 +114,7 @@ function UnitElements({
                 value={value}
                 type="string"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  onChange(event.target.value, name)
+                  onChange(event.target.value, name);
                 }}
                 className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
               />
@@ -109,7 +127,7 @@ function UnitElements({
 }
 
 interface UnitTypeExtended {
-  name: UnitType
-  powFormat: string
-  value: string
+  name: UnitType;
+  powFormat: string;
+  value: string;
 }

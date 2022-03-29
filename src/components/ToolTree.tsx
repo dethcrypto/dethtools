@@ -16,14 +16,27 @@ function ToolTreeElements({ className }: { className?: string }) {
                   <p className="uppercase text-deth-gray-300"> {key} </p>
                 </div>
                 {open ? (
-                  <Img className="text-red-100" src="/static/svg/minus.svg" width={18} height={18} />
+                  <Img
+                    className="text-red-100"
+                    src="/static/svg/minus.svg"
+                    width={18}
+                    height={18}
+                  />
                 ) : (
-                  <Img className="text-red-100" src="/static/svg/plus.svg" width={18} height={18} />
+                  <Img
+                    className="text-red-100"
+                    src="/static/svg/plus.svg"
+                    width={18}
+                    height={18}
+                  />
                 )}
               </Disclosure.Button>
 
               {value.tools.map((tool) => (
-                <Disclosure.Panel key={tool.title} className="min-w-38 mt-2 flex flex-col items-start">
+                <Disclosure.Panel
+                  key={tool.title}
+                  className="min-w-38 mt-2 flex flex-col items-start"
+                >
                   <MyLink
                     href={`/${tool.pageHref}`}
                     className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-deth-gray-600 hover:text-white"
@@ -42,7 +55,7 @@ function ToolTreeElements({ className }: { className?: string }) {
         </Disclosure>
       ))}
     </div>
-  )
+  );
 }
 
 export function ToolTree({
@@ -50,9 +63,9 @@ export function ToolTree({
   isShowMobileTree,
   isMobile,
 }: {
-  className?: string
-  isShowMobileTree: boolean
-  isMobile: boolean
+  className?: string;
+  isShowMobileTree: boolean;
+  isMobile: boolean;
 }) {
   return (
     <>
@@ -66,7 +79,7 @@ export function ToolTree({
         </section>
       )}
     </>
-  )
+  );
 }
 
 const tree: Tree = {
@@ -84,7 +97,7 @@ const tree: Tree = {
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
     ],
   },
-}
+};
 
 interface Tool {
   title: string;
@@ -94,4 +107,4 @@ interface Tool {
 }
 
 // optionally soon add more alternative values to Tree rows
-type Tree = { [key: string]: { icon: string; tools: Tool[] } }
+type Tree = { [key: string]: { icon: string; tools: Tool[] } };

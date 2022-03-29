@@ -1,6 +1,6 @@
 // .storybook/main.js
 
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   stories: [
@@ -26,7 +26,10 @@ module.exports = {
     builder: 'webpack5',
   },
   webpackFinal: (config) => {
-    config.resolve.roots = [path.resolve(__dirname, '../public'), 'node_modules']
-    return config
+    config.resolve.roots = [
+      path.resolve(__dirname, '../public'),
+      'node_modules',
+    ];
+    return config;
   },
-}
+};
