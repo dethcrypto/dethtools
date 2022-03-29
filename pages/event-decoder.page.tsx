@@ -1,11 +1,10 @@
 import { Interface } from '@ethersproject/abi'
-import { BigNumber } from '@ethersproject/bignumber'
-import { ChangeEvent, Key, useMemo, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 
 import { Button } from '../components/Button'
 import { Spinner } from '../components/Spinner'
 import { decodeWithEventProps } from '../lib/decodeBySigHash'
-import { decodeEvent, DecodeEventResult, EventProps } from '../lib/decodeEvent'
+import { DecodedEventResult, decodeEvent, EventProps } from '../lib/decodeEvent'
 import { parseAbi } from '../lib/parseAbi'
 import { assert } from '../misc/assert'
 
@@ -28,7 +27,7 @@ export default function EventDecoder() {
   ])
   const [data, setData] = useState<string>('')
 
-  const [decodeResults, setDecodeResults] = useState<DecodeEventResult[]>()
+  const [decodeResults, setDecodeResults] = useState<DecodedEventResult[]>()
 
   const signatureHash = useMemo(() => topics && topics.length > 0 && topics[0].value, [topics])
 
@@ -39,7 +38,7 @@ export default function EventDecoder() {
     if (tab === '4-bytes') {
       setLoading(true)
 
-      let decodeResults: DecodeEventResult[] | undefined
+      let decodeResults: DecodedEventResult[] | undefined
 
       try {
         if (topics && data) {
@@ -58,7 +57,7 @@ export default function EventDecoder() {
       }
     }
 
-    let decodeResult: DecodeEventResult | undefined
+    let decodeResult: DecodedEventResult | undefined
     try {
       if (!rawAbi) return
       const abi = parseAbi(rawAbi)
@@ -196,40 +195,19 @@ export default function EventDecoder() {
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i}>
-                    {d.isNamedResult ? (
-                      <div className="flex flex-col gap-2 pb-4">
-                        {d.eventFragment[0]}
+                    <div className="flex flex-col gap-2 pb-4">
+                      {d.fullSignature}
 
-                        <code>{'{'}</code>
+                      <code>{'{'}</code>
 
-                        {Object.entries(d.decodedTopics).map(([key, value], i) => (
-                          <code key={i}>
-                            <strong className="font-bold text-purple-600">{` "${key}"`}</strong>:
-                            {typeof value === 'string' ? ` ${value}` : ` "${value._hex}"`}{' '}
-                          </code>
-                        ))}
-
-                        <code>{'}'}</code>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-2 pb-4">
-                        <code>
-                          <strong className="text-purple-600"> {d.eventFragment[1].type} </strong>
-                          {d.eventFragment[1].name} ({d.eventFragment[1].inputs.map((i) => i.type).join(', ')})
+                      {Object.entries(d.args).map(([key, value], i) => (
+                        <code key={i}>
+                          <strong className="font-bold text-purple-600">{` "${key}"`}</strong>:{value.toString()}{' '}
                         </code>
+                      ))}
 
-                        <code>{'{'}</code>
-
-                        {(d.decodedTopics as Record<string, any>).map((value: string | BigNumber, i: Key) => (
-                          <code key={i}>
-                            <strong className="font-bold text-purple-600">{`"arg${i}"`}</strong>:
-                            {typeof value === 'string' ? ` "${value}"` : ` "${value._hex}"`}{' '}
-                          </code>
-                        ))}
-
-                        <code>{'}'}</code>
-                      </div>
-                    )}
+                      <code>{'}'}</code>
+                    </div>
                   </section>
                 )
               })}

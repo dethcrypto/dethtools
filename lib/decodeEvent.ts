@@ -1,77 +1,92 @@
-import { EventFragment, FormatTypes, Fragment, Interface, Result } from '@ethersproject/abi'
+import { EventFragment, FormatTypes, Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 
-export function decodeEvent(iface: Interface, eventProps: EventProps): DecodeEventResult | undefined {
-  const { data, topics } = eventProps
-
-  // attachIndexedToJson currently performs lossy conversion while attaching indexed modif. to params
-  // @see https://github.com/dethcrypto/tools/pull/29#discussion_r835175130
-  const indexedIface = attachIndexedToJson(iface.format(FormatTypes.json), topics.length - 1)
-  const events = indexedIface.fragments
-
-  let decodedTopics: Result | Record<string, string | BigNumber> | undefined
-  let eventFragment: [string, Fragment | EventFragment] | undefined
-
-  for (const event of Object.entries(events)) {
-    try {
-      decodedTopics = indexedIface.decodeEventLog(event[1] as EventFragment, data, topics)
-      eventFragment = event
-    } catch (e) {}
-  }
-
-  if (decodedTopics && eventFragment) {
-    let isNamedResult = false
-    if (doesContainNamedKeys(decodedTopics)) {
-      isNamedResult = true
-      decodedTopics = filterNonNamedKeys(decodedTopics)
-    }
-    return { decodedTopics, eventFragment, isNamedResult }
-  }
-}
-
 export interface EventProps {
-  topics: readonly string[]
+  topics: string[]
   data: string
 }
 
-export interface DecodeEventResult {
-  decodedTopics: Result | Record<string, string | BigNumber>
-  eventFragment: [string, Fragment | EventFragment]
-  isNamedResult: boolean
+interface AbstractDecodedEventResult {
+  eventFragment: EventFragment
+  hasArgumentNames: boolean
+  signature: string
+  fullSignature: string
 }
 
-// @internal
-export function attachIndexedToJson(json: string | string[], topicCount: number): Interface {
-  let parsed
-  if (typeof json === 'string') {
-    parsed = JSON.parse(json)
-    return new Interface(attachIndexes(parsed, topicCount))
-  } else {
-    const parsed = []
-    for (const str of json) {
-      parsed.push(JSON.parse(str))
+export interface DecodedEventResultWithArgNames extends AbstractDecodedEventResult {
+  hasArgumentNames: true
+  args: Record<string, string | BigNumber>
+}
+
+export interface DecodedEventResultWithoutArgNames extends AbstractDecodedEventResult {
+  hasArgumentNames: false
+  args: ReadonlyArray<string | BigNumber>
+}
+
+export type DecodedEventResult = DecodedEventResultWithArgNames | DecodedEventResultWithoutArgNames
+
+export function decodeEvent(iface: Interface, eventProps: EventProps): DecodedEventResult | undefined {
+  try {
+    const decoded = iface.parseLog(eventProps)
+    const hasArgumentNames = doesContainNamedKeys(decoded.args)
+    const decodedEventResult = {
+      args: hasArgumentNames ? omitNonNamedKeys(decoded.args) : decoded.args,
+      eventFragment: decoded.eventFragment,
+      hasArgumentNames,
+      signature: decoded.signature,
+      fullSignature: decoded.eventFragment.format(FormatTypes.full),
     }
-    return new Interface(attachIndexes(parsed, topicCount))
+    return decodedEventResult as DecodedEventResult
+  } catch (e: any) {
+    switch (e.reason) {
+      case 'no matching event':
+        return undefined
+      case 'data out-of-bounds':
+        // At this point we know that we have a matching topic, but the number of indexed args is incorrect
+        console.log(3, eventProps)
+        return undefined
+      default:
+        throw e
+    }
+  }
+}
+
+export function tryToDecodeEvent(iface: Interface, eventProps: EventProps): DecodedEventResult | undefined {
+  const indexedArgsCount = eventProps.topics.length - 1
+  const topichash = eventProps.topics[0]
+  for (const name in iface.events) {
+    if (topichash === iface.getEventTopic(name)) {
+      console.log(1, name, indexedArgsCount)
+    }
+  }
+}
+
+export function decodeEventNoGuessing(iface: Interface, eventProps: EventProps): DecodedEventResult | undefined {
+  try {
+    const decoded = iface.parseLog(eventProps)
+    const hasArgumentNames = doesContainNamedKeys(decoded.args)
+    const decodedEventResult = {
+      args: hasArgumentNames ? omitNonNamedKeys(decoded.args) : decoded.args,
+      eventFragment: decoded.eventFragment,
+      hasArgumentNames,
+      signature: decoded.signature,
+      fullSignature: decoded.eventFragment.format(FormatTypes.full),
+    }
+    return decodedEventResult as DecodedEventResult
+  } catch (e: any) {
+    switch (e.reason) {
+      case 'no matching event':
+        return undefined
+      case 'data out-of-bounds':
+        return undefined
+      default:
+        throw e
+    }
   }
 }
 
 // @internal
-function attachIndexes<T extends Fragment[]>(array: T, topicCount: number): T[number][] {
-  const myArray = [...array]
-
-  for (const frag of myArray) {
-    let indexedLeft = topicCount
-    for (const input of frag.inputs) {
-      if (indexedLeft <= 0) break
-      Object.assign(input, { indexed: true })
-      indexedLeft -= 1
-    }
-  }
-  return myArray
-}
-
-// @internal
-export function filterNonNamedKeys<T extends object>(object: T): Record<string, string | BigNumber> | T {
+export function omitNonNamedKeys<T extends object>(object: T): Record<string, string | BigNumber> | T {
   const obj: Record<string, string | BigNumber> = {}
   for (const [key, val] of Object.entries(object)) {
     if (isNaN(parseInt(key))) {

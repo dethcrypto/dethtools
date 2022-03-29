@@ -127,7 +127,7 @@ describe(decodeWithCalldata.name, async () => {
 describe(decodeWithEventProps.name, async () => {
   it('decodes event topics by hash signature', async () => {
     const eventProps: EventProps = {
-      data: 'e2b742ea2b33efacfe4049c0d5bb074a81cd573dc2a8158b29b207225c8ef903',
+      data: '0xe2b742ea2b33efacfe4049c0d5bb074a81cd573dc2a8158b29b207225c8ef903',
       topics: [
         '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
         '0x0000000000000000000000005853ed4f26a3fcea565b3fbc698bb19cdf6deb85',

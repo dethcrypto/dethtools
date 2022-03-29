@@ -1,32 +1,18 @@
-import { EventFragment, FormatTypes, Interface } from '@ethersproject/abi'
+import { Interface } from '@ethersproject/abi'
 import { expect } from 'earljs'
 
-import { attachIndexedToJson, decodeEvent, doesContainNamedKeys, EventProps, filterNonNamedKeys } from './decodeEvent'
+import {
+  DecodedEventResultWithArgNames,
+  decodeEvent,
+  doesContainNamedKeys,
+  EventProps,
+  omitNonNamedKeys,
+} from './decodeEvent'
 import { parseAbi } from './parseAbi'
 
-describe(attachIndexedToJson.name, () => {
-  it('attaches indexed modif. basing on topic count to json abi', () => {
-    const iface = parseAbi(`
-      'constructor(string symbol, string name)',
-      'function transferFrom(address from, address to, uint256 amount)',
-      'function getUser(uint256 id) view returns (tuple(string name, address addr) user)',
-      'event Transfer(address indexed src, address indexed dst, uint256 amount)',`) as Interface
-
-    expect(iface).toBeA(Interface)
-
-    const indexedIface = attachIndexedToJson(iface.format(FormatTypes.json), 2)
-
-    expect(indexedIface).toBeA(Interface)
-
-    expect(Object.entries(indexedIface.events)[0][1].inputs[0].indexed).toEqual(true)
-    expect(Object.entries(indexedIface.events)[0][1].inputs[1].indexed).toEqual(true)
-    expect(Object.entries(indexedIface.events)[0][1].inputs[2].indexed).toBeFalsy()
-  })
-})
-
-describe(filterNonNamedKeys.name, () => {
+describe(omitNonNamedKeys.name, () => {
   it('filters non named keys e.g 0, 1 correctly', () => {
-    expect(filterNonNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual({
+    expect(omitNonNamedKeys({ '0': 'hello', 1: 'world!', dethTools: 'is', awesome: '8)' })).toEqual({
       dethTools: 'is',
       awesome: '8)',
     })
@@ -60,13 +46,10 @@ describe(decodeEvent.name, () => {
 
     expect(decodeEventResult).toBeDefined()
 
-    const { decodedTopics, eventFragment, isNamedResult } = decodeEventResult!
+    const { fullSignature } = decodeEventResult! as DecodedEventResultWithArgNames
 
-    expect(decodedTopics.src).toEqual('0x8ba1f109551bD432803012645Ac136ddd64DBA72')
-    expect(decodedTopics.dst).toEqual('0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C')
-    expect(decodedTopics.amount._hex).toEqual('0x0de0b6b3a7640000')
-    expect(eventFragment[1]).toBeA(EventFragment)
-    expect(isNamedResult).toEqual(true)
+    expect(fullSignature).toEqual('event Transfer(address indexed src, address indexed dst, uint256 amount)')
+    expect(decodeEventResult).toMatchSnapshot()
   })
 
   it('handles case with too few topics', () => {
@@ -85,7 +68,7 @@ describe(decodeEvent.name, () => {
     }
     const decodeEventResult = decodeEvent(iface, eventProps)
 
-    expect(decodeEventResult).toMatchSnapshot()
+    expect(decodeEventResult).toEqual(undefined)
   })
 
   it('handles non-named params case', () => {
@@ -105,10 +88,9 @@ describe(decodeEvent.name, () => {
     }
     const decodeEventResult = decodeEvent(iface, eventProps)
 
-    const { isNamedResult } = decodeEventResult!
+    const { hasArgumentNames } = decodeEventResult!
 
-    expect(isNamedResult).toEqual(false)
-
+    expect(hasArgumentNames).toEqual(false)
     expect(decodeEventResult).toMatchSnapshot()
   })
 
