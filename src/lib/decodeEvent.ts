@@ -7,7 +7,6 @@ import {
 import { version } from '@ethersproject/abi/lib/_version';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Logger } from '@ethersproject/logger';
-import assert from 'assert';
 
 import { combinations as generateCombinations } from '../misc/combinations';
 

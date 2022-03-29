@@ -4,6 +4,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import { Button } from '../src/components/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
+import { ToolLayout } from '../src/layout/ToolLayout';
 import {
   decodeWithCalldata,
   sigHashFromCalldata,
@@ -90,7 +91,7 @@ export default function CalldataDecoder() {
   );
 
   return (
-    <div className="ml-64 mt-32 flex flex-col gap-10">
+    <ToolLayout>
       <h1> Calldata decoder </h1>
 
       <label htmlFor="calldata" className="text-lg font-bold">
@@ -207,6 +208,6 @@ export default function CalldataDecoder() {
           </section>
         </section>
       )}
-    </div>
+    </ToolLayout>
   );
 }

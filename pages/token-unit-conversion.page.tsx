@@ -7,9 +7,10 @@ import {
   useState,
 } from 'react';
 
+import { decodeHex } from '../src/lib/decodeHex';
+import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
-import { decodeHex } from '../src/lib/decodeHex';
 import { decimalSchema } from '../src/misc/decimalSchema';
 import { unitSchema } from '../src/misc/unitSchema';
 
@@ -70,8 +71,8 @@ export default function TokenUnitConversion() {
   ];
 
   return (
-    <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
-      <form className="mx-auto flex flex-col gap-10">
+    <ToolLayout>
+      <form className="flex flex-col gap-10">
         <h1> Token unit conversion </h1>
         <UnitElements
           units={units}
@@ -80,7 +81,7 @@ export default function TokenUnitConversion() {
           setDecimal={setDecimal}
         />
       </form>
-    </div>
+    </ToolLayout>
   );
 }
 

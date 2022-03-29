@@ -1,5 +1,6 @@
 import { ChangeEvent, Fragment, useState } from 'react';
 
+import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
@@ -46,8 +47,8 @@ export default function EthUnitConversion() {
   }
 
   return (
-    <div className="max-w-1/3 ml-auto mt-32 flex w-4/5 pl-24">
-      <form className="mx-auto flex flex-col gap-10">
+    <ToolLayout>
+      <form className="flex flex-col gap-10">
         <h1> Ethereum unit conversion </h1>
         <UnitElements
           onChange={handleChangeValue}
@@ -55,7 +56,7 @@ export default function EthUnitConversion() {
           error={error}
         />
       </form>
-    </div>
+    </ToolLayout>
   );
 }
 
