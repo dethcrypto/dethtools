@@ -8,9 +8,9 @@ const nextConfig = {
         destination: '/eth-unit-conversion',
         permanent: true,
       },
-    ]
+    ];
   },
   pageExtensions: ['page.tsx'],
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -1,4 +1,4 @@
-const inTextEditor = process.env.VSCODE_PID !== undefined
+const inTextEditor = process.env.VSCODE_PID !== undefined;
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
@@ -25,7 +25,10 @@ module.exports = {
     'import/no-default-export': 'error',
     'no-invalid-this': 'off',
     // this gets inlined into a package eslint, so it means: use current package's package.info or the one at the project root
-    'import/no-extraneous-dependencies': ['error', { packageDir: ['./', __dirname] }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { packageDir: ['./', __dirname] },
+    ],
     'unused-imports/no-unused-imports-ts': inTextEditor ? 'off' : 'error',
 
     'simple-import-sort/imports': 'error',
@@ -161,4 +164,4 @@ module.exports = {
 
     'react/jsx-key': 'warn',
   },
-}
+};
