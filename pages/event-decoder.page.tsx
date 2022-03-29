@@ -1,16 +1,16 @@
 import { Interface } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
-import { Button } from '../components/Button';
-import { Spinner } from '../components/Spinner';
-import { decodeWithEventProps } from '../lib/decodeBySigHash';
+import { Button } from '../src/components/Button';
+import { Spinner } from '../src/components/Spinner';
+import { decodeWithEventProps } from '../src/lib/decodeBySigHash';
 import {
   DecodedEventResult,
   decodeEvent,
   EventProps,
-} from '../lib/decodeEvent';
-import { parseAbi } from '../lib/parseAbi';
-import { assert } from '../misc/assert';
+} from '../src/lib/decodeEvent';
+import { parseAbi } from '../src/lib/parseAbi';
+import { assert } from '../src/misc/assert';
 
 interface Topic {
   id: number;

@@ -11,7 +11,6 @@ export async function decodeWithEventProps(
   eventProps: EventProps,
 ): Promise<any[] | undefined> {
   const data = await fetchSignaturesByTopic(sigHash);
-  console.log(data);
   if (data) {
     // force indexing basing on topic count
     const ifaces = parse4BytesResToIfaces(data, 'event');
@@ -102,7 +101,6 @@ export function decodeByEventProps(
   ifaces: Interface[],
   eventProps: EventProps,
 ) {
-  console.log(ifaces, eventProps);
   return decode4BytesData(ifaces, eventProps, decodeEvent);
 }
 

@@ -1,17 +1,21 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
-import { Button } from '../components/Button';
-import { DecodedCalldataTree } from '../components/DecodedCalldataTree';
-import { Spinner } from '../components/Spinner';
+import { Button } from '../src/components/Button';
+import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
+import { Spinner } from '../src/components/Spinner';
 import {
   decodeWithCalldata,
   sigHashFromCalldata,
-} from '../lib/decodeBySigHash';
-import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata';
-import { parseAbi } from '../lib/parseAbi';
-import { assert } from '../misc/assert';
-import { sigHashSchema } from '../misc/sigHashSchema';
+} from '../src/lib/decodeBySigHash';
+import {
+  decodeCalldata,
+  Decoded,
+  DecodeResult,
+} from '../src/lib/decodeCalldata';
+import { parseAbi } from '../src/lib/parseAbi';
+import { assert } from '../src/misc/assert';
+import { sigHashSchema } from '../src/misc/sigHashSchema';
 
 export default function CalldataDecoder() {
   const [loading, setLoading] = useState(false);

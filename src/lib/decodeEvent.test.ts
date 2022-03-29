@@ -83,9 +83,10 @@ describe(decodeEvent.name, () => {
         '0x0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72',
       ],
     };
-    const decodeEventResult = decodeEvent(iface, eventProps);
 
-    expect(decodeEventResult).toEqual(undefined);
+    expect(() => decodeEvent(iface, eventProps)).toThrow(
+      expect.stringMatching(/data out-of-bounds/),
+    );
   });
 
   it('handles non-named params case', () => {
@@ -125,8 +126,12 @@ describe(decodeEvent.name, () => {
         '0x000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c',
       ],
     };
-    const decodeEventResult = decodeEvent(iface, eventProps);
 
-    expect(decodeEventResult).toMatchSnapshot();
+    try {
+      decodeEvent(iface, eventProps);
+    } catch (err: any) {
+      expect(err.reason).toEqual('no matching event');
+      expect(err).toMatchSnapshot();
+    }
   });
 });

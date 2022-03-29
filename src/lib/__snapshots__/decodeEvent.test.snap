@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`decodeEvent handles case where abi does not contain events 1`] = `undefined`;
+exports[`decodeEvent handles case where abi does not contain events 1`] = `[Error: no matching event (argument="topichash", value="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef", code=INVALID_ARGUMENT, version=abi/5.6.0)]`;
 
 exports[`decodeEvent handles case with too few topics 1`] = `undefined`;
 

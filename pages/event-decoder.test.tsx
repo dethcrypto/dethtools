@@ -97,7 +97,7 @@ describe(EventDecoder.name, () => {
     );
   });
 
-  it.only('clicks on 4byte button, fills data and three topics and clicks on decode button', async () => {
+  it('clicks on 4byte button, fills data and three topics and clicks on decode button', async () => {
     const root = render(<EventDecoder />);
 
     fireEvent.click(root.getByText('4 bytes'));
@@ -161,12 +161,16 @@ describe(EventDecoder.name, () => {
       ),
     );
 
-    // const arg0 = await waitFor(() => root.findByText('"0"'))
-    // const arg1 = await waitFor(() => root.findByText('"1"'))
-    // const arg2 = await waitFor(() => root.findByText('"2"'))
+    const arg0 = await waitFor(() => root.findByText('"0"'));
+    const arg1 = await waitFor(() => root.findByText('"1"'));
+    const arg2 = await waitFor(() => root.findByText('"2"'));
 
-    // expect(arg0.parentElement!.innerHTML).toEqual(expect.stringMatching('0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85'))
-    // expect(arg1.parentElement!.innerHTML).toEqual(expect.stringMatching('0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67'))
-    // expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching('0x00'))
+    expect(arg0.parentElement!.innerHTML).toEqual(
+      expect.stringMatching('0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85'),
+    );
+    expect(arg1.parentElement!.innerHTML).toEqual(
+      expect.stringMatching('0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67'),
+    );
+    expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching('0'));
   });
 });

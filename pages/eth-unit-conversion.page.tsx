@@ -1,9 +1,9 @@
 import { ChangeEvent, Fragment, useState } from 'react';
 
-import { UnitType } from '../lib/convertProperties';
-import { convertEthUnits } from '../lib/convertUnits';
-import { decodeHex } from '../lib/decodeHex';
-import { unitSchema } from '../misc/unitSchema';
+import { UnitType } from '../src/lib/convertProperties';
+import { convertEthUnits } from '../src/lib/convertUnits';
+import { decodeHex } from '../src/lib/decodeHex';
+import { unitSchema } from '../src/misc/unitSchema';
 
 type State = { wei: string; gwei: string; eth: string };
 

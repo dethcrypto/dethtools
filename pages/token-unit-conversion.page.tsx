@@ -7,11 +7,11 @@ import {
   useState,
 } from 'react';
 
-import { tokenPrecision } from '../lib/convertProperties';
-import { convertTokenUnits } from '../lib/convertUnits';
-import { decodeHex } from '../lib/decodeHex';
-import { decimalSchema } from '../misc/decimalSchema';
-import { unitSchema } from '../misc/unitSchema';
+import { tokenPrecision } from '../src/lib/convertProperties';
+import { convertTokenUnits } from '../src/lib/convertUnits';
+import { decodeHex } from '../src/lib/decodeHex';
+import { decimalSchema } from '../src/misc/decimalSchema';
+import { unitSchema } from '../src/misc/unitSchema';
 
 const DEFAULT_DECIMAL = '18';
 type State = { base: string; unit: string };
