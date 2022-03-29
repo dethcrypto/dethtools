@@ -21,7 +21,7 @@ import { sigHashSchema } from '../src/misc/sigHashSchema';
 export default function CalldataDecoder() {
   const [loading, setLoading] = useState(false);
 
-  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
+  const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
   const [decodeResults, setDecodeResults] = useState<
     {
       fnName?: string;
@@ -111,20 +111,6 @@ export default function CalldataDecoder() {
         <div className="flex text-lg">
           <button
             role="tab"
-            aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
-            }`}
-            onClick={() => {
-              setTab('abi');
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
-
-          <button
-            role="tab"
             aria-selected={tab === '4-bytes'}
             className={`flex-1 cursor-pointer rounded-tr-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
               tab === '4-bytes' ? 'bg-black text-white' : 'bg-gray-50'
@@ -135,6 +121,19 @@ export default function CalldataDecoder() {
             }}
           >
             4 bytes
+          </button>
+          <button
+            role="tab"
+            aria-selected={tab === 'abi'}
+            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
+              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
+            }`}
+            onClick={() => {
+              setTab('abi');
+              setDecodeResults(undefined);
+            }}
+          >
+            ABI
           </button>
         </div>
 
