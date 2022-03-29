@@ -17,8 +17,6 @@ Object {
   "eventFragment": EventFragment {
     "_isFragment": true,
     "anonymous": false,
-    "constructor": [Function],
-    "format": [Function],
     "inputs": Array [
       ParamType {
         "_isParamType": true,
@@ -73,8 +71,6 @@ Object {
   "eventFragment": EventFragment {
     "_isFragment": true,
     "anonymous": false,
-    "constructor": [Function],
-    "format": [Function],
     "inputs": Array [
       ParamType {
         "_isParamType": true,
