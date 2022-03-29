@@ -46,13 +46,20 @@ export function decodeEvent(
 ): DecodedEventResult {
   try {
     const decoded = iface.parseLog(eventProps);
+    /**
+     * Ethers under the hood converts EventFragment to object-like form without format function, so we rehydrate it here.
+     */
+    const eventFragment = EventFragment.fromObject({
+      ...decoded.eventFragment,
+      _isFragment: false, // Otherwise this function noops
+    });
     const hasArgumentNames = doesContainNamedKeys(decoded.args);
     const decodedEventResult = {
       args: hasArgumentNames ? omitNonNamedKeys(decoded.args) : decoded.args,
-      eventFragment: decoded.eventFragment,
+      eventFragment: eventFragment,
       hasArgumentNames,
       signature: decoded.signature,
-      fullSignature: decoded.eventFragment.format(FormatTypes.full),
+      fullSignature: eventFragment.format(FormatTypes.full),
     };
     return decodedEventResult as DecodedEventResult;
   } catch (e: any) {
