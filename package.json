@@ -12,12 +12,13 @@
     "test": "mocha",
     "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{ts,tsx,js}\"",
     "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{ts,tsx,js}\"",
-    "lint": "eslint --ext .ts,.tsx lib pages --ext .tsx components",
+    "lint": "eslint --ext .ts,.tsx src pages",
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.6.0",
     "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/logger": "^5.6.0",
     "@ethersproject/units": "^5.5.0",
     "@headlessui/react": "^1.5.0",
     "bignumber.js": "^9.0.2",

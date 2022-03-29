@@ -1,10 +1,10 @@
-import '/css/globals.css'
+import '../src/globals.css';
 
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
+import type { AppProps } from 'next/app';
+import { ThemeProvider } from 'next-themes';
 
-import { Navigation } from '../components/Navigation'
-import { ToolTree } from '../components/ToolTree'
+import { Navigation } from '../src/components/Navigation';
+import { ToolTree } from '../src/components/ToolTree';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,5 +17,5 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </div>
       </ThemeProvider>
     </main>
-  )
+  );
 }
