@@ -1,80 +1,90 @@
-import { Interface } from '@ethersproject/abi'
-import { BigNumber } from '@ethersproject/bignumber'
+import { Interface } from '@ethersproject/abi';
+import { ChangeEvent, useMemo, useState } from 'react';
 import Img from 'next/image'
-import { ChangeEvent, Key, useMemo, useState } from 'react'
 
-import { Button } from '../components/Button/Button'
-import { Spinner } from '../components/Spinner'
-import { ToolLayout } from '../layout/ToolLayout'
-import { decodeWithEventProps } from '../lib/decodeBySigHash'
-import { decodeEvent, DecodeEventResult, EventProps } from '../lib/decodeEvent'
-import { parseAbi } from '../lib/parseAbi'
-import { assert } from '../misc/assert'
+import { Button } from '../src/components/Button';
+import { Spinner } from '../src/components/Spinner';
+import { ToolLayout } from '../src/layout/ToolLayout';
+import { decodeWithEventProps } from '../src/lib/decodeBySigHash';
+import {
+  DecodedEventResult,
+  decodeEvent,
+  EventProps,
+} from '../src/lib/decodeEvent';
+import { parseAbi } from '../src/lib/parseAbi';
+import { assert } from '../src/misc/assert';
 
 interface Topic {
-  id: number
-  value: string
+  id: number;
+  value: string;
 }
 
 export default function EventDecoder() {
-  const [loading, setLoading] = useState(false)
-  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi')
+  const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
 
-  const [rawAbi, setRawAbi] = useState<string>()
+  const [rawAbi, setRawAbi] = useState<string>();
 
   const [topics, setTopics] = useState<Topic[] | undefined>([
     { id: 1, value: '' },
     { id: 2, value: '' },
     { id: 3, value: '' },
     { id: 4, value: '' },
-  ])
-  const [data, setData] = useState<string>('')
+  ]);
+  const [data, setData] = useState<string>('');
 
-  const [decodeResults, setDecodeResults] = useState<DecodeEventResult[]>()
+  const [decodeResults, setDecodeResults] = useState<DecodedEventResult[]>();
 
-  const signatureHash = useMemo(() => topics && topics.length > 0 && topics[0].value, [topics])
+  const signatureHash = useMemo(
+    () => topics && topics.length > 0 && topics[0].value,
+    [topics],
+  );
 
   async function handleDecodeCalldata() {
-    setDecodeResults(undefined)
-    assert(signatureHash, 'signatureHash must be defined')
+    setDecodeResults(undefined);
+    assert(signatureHash, 'signatureHash must be defined');
 
     if (tab === '4-bytes') {
-      setLoading(true)
+      setLoading(true);
 
-      let decodeResults: DecodeEventResult[] | undefined
+      let decodeResults: DecodedEventResult[] | undefined;
 
       try {
         if (topics && data) {
           const eventProps: EventProps = {
             data: data,
-            topics: topics.filter((t) => t.value.trim().length > 0).map((t) => t.value),
-          }
-          decodeResults = await decodeWithEventProps(signatureHash, eventProps)
+            topics: topics
+              .filter((t) => t.value.trim().length > 0)
+              .map((t) => t.value),
+          };
+          decodeResults = await decodeWithEventProps(signatureHash, eventProps);
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
 
       if (decodeResults) {
-        setDecodeResults(decodeResults)
+        setDecodeResults(decodeResults);
       }
     }
 
-    let decodeResult: DecodeEventResult | undefined
+    let decodeResult: DecodedEventResult | undefined;
     try {
-      if (!rawAbi) return
-      const abi = parseAbi(rawAbi)
+      if (!rawAbi) return;
+      const abi = parseAbi(rawAbi);
 
-      if (!(abi instanceof Interface) || !data || !topics) return
+      if (!(abi instanceof Interface) || !data || !topics) return;
       const eventProps: EventProps = {
         data: data,
-        topics: topics.filter((t) => t.value.trim().length > 0).map((t) => t.value),
-      }
-      decodeResult = decodeEvent(abi, eventProps)
+        topics: topics
+          .filter((t) => t.value.trim().length > 0)
+          .map((t) => t.value),
+      };
+      decodeResult = decodeEvent(abi, eventProps);
     } catch (e) {}
 
-    if (!decodeResult) return
-    setDecodeResults([decodeResult])
+    if (!decodeResult) return;
+    setDecodeResults([decodeResult]);
   }
 
   return (
@@ -101,7 +111,13 @@ export default function EventDecoder() {
                     placeholder="e.g 0x0..."
                     className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                      setTopics(topics.map((t) => (t.id === topic.id ? { ...t, value: event.target.value } : t)))
+                      setTopics(
+                        topics.map((t) =>
+                          t.id === topic.id
+                            ? { ...t, value: event.target.value }
+                            : t,
+                        ),
+                      );
                     }}
                   />
                 </div>
@@ -133,8 +149,8 @@ export default function EventDecoder() {
               tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
-              setTab('abi')
-              setDecodeResults(undefined)
+              setTab('abi');
+              setDecodeResults(undefined);
             }}
           >
             ABI
@@ -146,8 +162,8 @@ export default function EventDecoder() {
             className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
             p-1 text-center ${tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'}`}
             onClick={() => {
-              setTab('4-bytes')
-              setDecodeResults(undefined)
+              setTab('4-bytes');
+              setDecodeResults(undefined);
             }}
           >
             4 bytes
@@ -163,13 +179,16 @@ export default function EventDecoder() {
             className="flex h-48 w-full break-words rounded-b-md border-t-0
             border-deth-gray-600 bg-deth-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              setRawAbi(event.target.value)
+              setRawAbi(event.target.value);
             }}
           />
         )}
       </div>
 
-      <Button onClick={() => void handleDecodeCalldata()} title={'Please fill in the calldata'}>
+      <Button
+        onClick={() => void handleDecodeCalldata()}
+        title={'Please fill in the calldata'}
+      >
         Decode
       </Button>
 
@@ -203,50 +222,43 @@ export default function EventDecoder() {
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
+              {decodeResults ? (
+                tab === '4-bytes' && decodeResults.length > 0 ? (
+                  <h3 className="text-md pb-4 font-semibold">
+                    {' '}
+                    Possible decoded event topics:{' '}
+                  </h3>
+                ) : (
+                  ''
+                )
+              ) : (
+                <h3 className="pb-4"> Decoded output will appear here </h3>
+              )}
+
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i}>
-                    {d.isNamedResult ? (
-                      <div className="flex flex-col gap-2 pb-4">
-                        {d.eventFragment[0]}
+                    <div className="flex flex-col gap-2 pb-4">
+                      {d.fullSignature}
 
-                        <code>{'{'}</code>
+                      <code>{'{'}</code>
 
-                        {Object.entries(d.decodedTopics).map(([key, value], i) => (
-                          <code key={i}>
-                            <b className="font-bold text-purple-300">{key}</b>:
-                            {typeof value === 'string' ? value : value._hex}{' '}
-                          </code>
-                        ))}
-
-                        <code>{'}'}</code>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-2 pb-4">
-                        <code>
-                          <b className="text-purple-300"> {d.eventFragment[1].type} </b>
-                          {d.eventFragment[1].name} ({d.eventFragment[1].inputs.map((i) => i.type).join(', ')})
+                      {Object.entries(d.args).map(([key, value], i) => (
+                        <code key={i}>
+                          <strong className="font-bold text-purple-600">{` "${key}"`}</strong>
+                          :{value.toString()}{' '}
                         </code>
+                      ))}
 
-                        <code>{'{'}</code>
-
-                        {(d.decodedTopics as Record<string, any>).map((value: string | BigNumber, i: Key) => (
-                          <code key={i}>
-                            <b className="font-bold text-purple-300">{`"arg${i}"`}</b>:
-                            {typeof value === 'string' ? ` "${value}"` : ` "${value._hex}"`}{' '}
-                          </code>
-                        ))}
-
-                        <code>{'}'}</code>
-                      </div>
-                    )}
+                      <code>{'}'}</code>
+                    </div>
                   </section>
-                )
+                );
               })}
             </div>
           </section>
         </section>
       )}
     </ToolLayout>
-  )
+  );
 }

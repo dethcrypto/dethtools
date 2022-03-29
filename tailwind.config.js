@@ -1,11 +1,11 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   experimental: {
     optimizeUniversalDefaults: true,
   },
-  content: ['./pages/**/*.{tx,tsx}', './components/**/*.{tx,tsx}', './layouts/**/*.{tx,tsx}', './lib/**/*.{tx,tsx}'],
+  content: ['./{pages,src}/**/*.{tx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
@@ -84,4 +84,4 @@ module.exports = {
   },
   variants: {},
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
-}
+};

@@ -2,51 +2,57 @@ import { Interface, ParamType } from '@ethersproject/abi'
 import Img from 'next/image'
 import { ChangeEvent, useMemo, useState } from 'react'
 
-import { Button } from '../components/Button/Button'
-import { DecodedCalldataTree } from '../components/DecodedCalldataTree'
-import { Spinner } from '../components/Spinner'
-import { ToolLayout } from '../layout/ToolLayout'
-import { decodeWithCalldata, sigHashFromCalldata } from '../lib/decodeBySigHash'
-import { decodeCalldata, Decoded, DecodeResult } from '../lib/decodeCalldata'
-import { parseAbi } from '../lib/parseAbi'
-import { assert } from '../misc/assert'
-import { sigHashSchema } from '../misc/sigHashSchema'
+import { Button } from '../src/components/Button'
+import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree'
+import { Spinner } from '../src/components/Spinner'
+import { ToolLayout } from '../src/layout/ToolLayout'
+import { decodeWithCalldata, sigHashFromCalldata } from '../src/lib/decodeBySigHash'
+import { decodeCalldata, Decoded, DecodeResult } from '../src/lib/decodeCalldata'
+import { parseAbi } from '../src/lib/parseAbi'
+import { assert } from '../src/misc/assert'
+import { sigHashSchema } from '../src/misc/sigHashSchema'
 
 export default function CalldataDecoder() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi')
+  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
   const [decodeResults, setDecodeResults] = useState<
     {
-      fnName?: string
-      fnType?: string
-      decoded: Decoded
-      inputs: ParamType[]
+      fnName?: string;
+      fnType?: string;
+      decoded: Decoded;
+      inputs: ParamType[];
     }[]
-  >()
+  >();
 
-  const [rawAbi, setRawAbi] = useState<string>()
-  const [encodedCalldata, setEncodedCalldata] = useState<string>()
+  const [rawAbi, setRawAbi] = useState<string>();
+  const [encodedCalldata, setEncodedCalldata] = useState<string>();
 
-  const signatureHash = useMemo(() => encodedCalldata && sigHashFromCalldata(encodedCalldata), [encodedCalldata])
+  const signatureHash = useMemo(
+    () => encodedCalldata && sigHashFromCalldata(encodedCalldata),
+    [encodedCalldata],
+  );
 
   async function handleDecodeCalldata() {
-    if (!encodedCalldata) return
+    if (!encodedCalldata) return;
 
-    assert(signatureHash, 'signatureHash must be defined')
+    assert(signatureHash, 'signatureHash must be defined');
 
     if (tab === '4-bytes') {
-      setLoading(true)
+      setLoading(true);
 
-      let decodeResults: DecodeResult[] | undefined
+      let decodeResults: DecodeResult[] | undefined;
 
       try {
-        decodeResults = await decodeWithCalldata(signatureHash, encodedCalldata)
+        decodeResults = await decodeWithCalldata(
+          signatureHash,
+          encodedCalldata,
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
 
-      if (!decodeResults) return
+      if (!decodeResults) return;
 
       const mappedResults = decodeResults.map((d) => {
         return {
@@ -54,26 +60,29 @@ export default function CalldataDecoder() {
           fnType: d.fragment.type,
           decoded: d.decoded,
           inputs: d.fragment.inputs,
-        }
-      })
+        };
+      });
 
-      setDecodeResults(mappedResults)
+      setDecodeResults(mappedResults);
     }
 
-    let decodeResult: DecodeResult | undefined
+    let decodeResult: DecodeResult | undefined;
     try {
-      if (!rawAbi) return
-      const abi = parseAbi(rawAbi) as Interface
-      decodeResult = decodeCalldata(abi, encodedCalldata)
+      if (!rawAbi) return;
+      const abi = parseAbi(rawAbi) as Interface;
+      decodeResult = decodeCalldata(abi, encodedCalldata);
     } catch (e) {}
 
-    if (!decodeResult) return
+    if (!decodeResult) return;
 
-    const { decoded, fragment } = decodeResult
-    setDecodeResults([{ inputs: fragment.inputs, decoded }])
+    const { decoded, fragment } = decodeResult;
+    setDecodeResults([{ inputs: fragment.inputs, decoded }]);
   }
 
-  const decodeButtonDisabled = !((rawAbi || tab === '4-bytes') && encodedCalldata)
+  const decodeButtonDisabled = !(
+    (rawAbi || tab === '4-bytes') &&
+    encodedCalldata
+  );
 
   return (
     <ToolLayout>
@@ -93,7 +102,7 @@ export default function CalldataDecoder() {
         placeholder="e.g 0x23b8..3b2"
         className="h-20 break-words rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-          setEncodedCalldata(event.target.value)
+          setEncodedCalldata(event.target.value);
         }}
       />
 
@@ -106,8 +115,8 @@ export default function CalldataDecoder() {
               tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
-              setTab('abi')
-              setDecodeResults(undefined)
+              setTab('abi');
+              setDecodeResults(undefined);
             }}
           >
             ABI
@@ -119,8 +128,8 @@ export default function CalldataDecoder() {
             className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
             p-1 text-center ${tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'}`}
             onClick={() => {
-              setTab('4-bytes')
-              setDecodeResults(undefined)
+              setTab('4-bytes');
+              setDecodeResults(undefined);
             }}
           >
             4 bytes
@@ -136,7 +145,7 @@ export default function CalldataDecoder() {
             className="flex h-48 w-full break-words rounded-b-md border-t-0
             border-deth-gray-600 bg-deth-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              setRawAbi(event.target.value)
+              setRawAbi(event.target.value);
             }}
           />
         )}
@@ -184,15 +193,20 @@ export default function CalldataDecoder() {
                 return (
                   <section key={i} data-testid={`decodedCalldataTree${i}`}>
                     <div className="pb-4">
-                      <DecodedCalldataTree fnName={d.fnName} fnType={d.fnType} decoded={d.decoded} inputs={d.inputs} />
+                      <DecodedCalldataTree
+                        fnName={d.fnName}
+                        fnType={d.fnType}
+                        decoded={d.decoded}
+                        inputs={d.inputs}
+                      />
                     </div>
                   </section>
-                )
+                );
               })}
             </div>
           </section>
         </section>
       )}
     </ToolLayout>
-  )
+  );
 }

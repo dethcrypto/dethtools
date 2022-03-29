@@ -1,17 +1,17 @@
 import Img from 'next/image'
 import { ChangeEvent, Fragment, useState } from 'react'
 
-import { ToolLayout } from '../layout/ToolLayout'
-import { UnitType } from '../lib/convertProperties'
-import { convertEthUnits } from '../lib/convertUnits'
-import { decodeHex } from '../lib/decodeHex'
-import { unitSchema } from '../misc/unitSchema'
+import { ToolLayout } from '../src/layout/ToolLayout';
+import { UnitType } from '../src/lib/convertProperties';
+import { convertEthUnits } from '../src/lib/convertUnits';
+import { decodeHex } from '../src/lib/decodeHex';
+import { unitSchema } from '../src/misc/unitSchema';
 
-type State = { wei: string; gwei: string; eth: string }
+type State = { wei: string; gwei: string; eth: string };
 
 export default function EthUnitConversion() {
-  const [error, setError] = useState<string | undefined>()
-  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' })
+  const [error, setError] = useState<string | undefined>();
+  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' });
 
   const units: UnitTypeExtended[] = [
     { name: 'wei', powFormat: '10-18', value: state.wei },
@@ -20,30 +20,30 @@ export default function EthUnitConversion() {
   ]
 
   function handleChangeValue(value: string, currentType: UnitType) {
-    value = decodeHex(value)
+    value = decodeHex(value);
 
-    const result = unitSchema.safeParse(value)
+    const result = unitSchema.safeParse(value);
     if (!result.success) {
-      setError(result.error.errors[0].message)
+      setError(result.error.errors[0].message);
     } else {
-      value = result.data
-      setError(undefined)
+      value = result.data;
+      setError(undefined);
     }
 
-    setState((s) => ({ ...s, [currentType]: value }))
+    setState((s) => ({ ...s, [currentType]: value }));
 
     for (const unit of units) {
-      if (unit.name === currentType) continue
+      if (unit.name === currentType) continue;
 
-      let out: string = ''
+      let out: string = '';
       if (parseFloat(value) >= 0) {
-        out = convertEthUnits(value, currentType, unit.name)!
+        out = convertEthUnits(value, currentType, unit.name)!;
       }
       if (isNaN(parseInt(out))) {
-        out = unit.value
+        out = unit.value;
       }
 
-      setState((s) => ({ ...s, [unit.name]: out }))
+      setState((s) => ({ ...s, [unit.name]: out }));
     }
   }
 
@@ -58,15 +58,19 @@ export default function EthUnitConversion() {
         <UnitElements onChange={handleChangeValue} units={units} error={error} />
       </form>
     </ToolLayout>
-  )
+  );
 }
 
 interface UnitElementsProps {
-  units: UnitTypeExtended[]
-  error: string | undefined
-  onChange: (value: string, unitType: UnitType) => void
+  units: UnitTypeExtended[];
+  error: string | undefined;
+  onChange: (value: string, unitType: UnitType) => void;
 }
-function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Element {
+function UnitElements({
+  units,
+  error,
+  onChange,
+}: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
       <p data-testid="error" className="absolute top-2/3 text-sm text-deth-error">
@@ -98,10 +102,10 @@ function UnitElements({ units, error, onChange }: UnitElementsProps): JSX.Elemen
               />
             </section>
           </div>
-        )
+        );
       })}
     </Fragment>
-  )
+  );
 }
 
 interface UnitTypeExtended {
