@@ -7,10 +7,10 @@ import {
   useState,
 } from 'react';
 
-import { decodeHex } from '../src/lib/decodeHex';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
+import { decodeHex } from '../src/lib/decodeHex';
 import { decimalSchema } from '../src/misc/decimalSchema';
 import { unitSchema } from '../src/misc/unitSchema';
 
