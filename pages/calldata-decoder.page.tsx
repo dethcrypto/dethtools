@@ -1,6 +1,7 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
+import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
@@ -92,28 +93,33 @@ export default function CalldataDecoder() {
 
   return (
     <ToolLayout>
-      <h1> Calldata decoder </h1>
+      <header className="mb-6 flex items-center gap-3 align-middle">
+        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
+        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl">Calldata Decoder</h3>
+      </header>
 
-      <label htmlFor="calldata" className="text-lg font-bold">
-        Calldata
+      <label htmlFor="calldata" className="pt-2 text-lg font-bold">
+        <p>Calldata</p>
       </label>
+
       <textarea
         id="calldata"
         value={encodedCalldata || ''}
         placeholder="e.g 0x23b8..3b2"
-        className="h-20 break-words rounded-xl border border-gray-400 bg-gray-50 p-5"
+        className="h-20 break-words rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value);
         }}
       />
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-col">
         <div className="flex text-lg">
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
+            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
               setTab('abi');
@@ -126,8 +132,9 @@ export default function CalldataDecoder() {
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tr-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === '4-bytes' ? 'bg-black text-white' : 'bg-gray-50'
+            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
+            p-1 text-center ${
+              tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
               setTab('4-bytes');
@@ -144,7 +151,8 @@ export default function CalldataDecoder() {
             aria-label="text area for abi"
             value={rawAbi || ''}
             placeholder="e.g function transferFrom(address, ..)"
-            className="flex h-36 w-full break-words rounded-b-2xl border-t-0 border-gray-400 bg-gray-50 p-5"
+            className="flex h-48 w-full break-words rounded-b-md border-t-0
+            border-deth-gray-600 bg-deth-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setRawAbi(event.target.value);
             }}
@@ -160,11 +168,25 @@ export default function CalldataDecoder() {
         Decode
       </Button>
 
+      <section className="pt-4">
+        {decodeResults ? (
+          tab === '4-bytes' && decodeResults.length > 0 ? (
+            <h3 className="text-md pb-4 font-semibold">
+              Possible decoded calldata:
+            </h3>
+          ) : (
+            'No results found'
+          )
+        ) : (
+          <p> Decoded output will appear here </p>
+        )}
+      </section>
+
       {loading ? (
-        <Spinner className="mx-auto pt-12" />
+        <Spinner className="mx-auto pt-6" />
       ) : (
         <section
-          className="relative mb-16 rounded-xl border border-gray-400 bg-gray-50 p-8"
+          className="relative mb-16 rounded-md border border-deth-gray-600 bg-deth-gray-900 p-8"
           placeholder="Output"
         >
           <section className="flex flex-col gap-4">
@@ -178,18 +200,6 @@ export default function CalldataDecoder() {
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
-              {decodeResults ? (
-                tab === '4-bytes' && decodeResults.length > 0 ? (
-                  <h3 className="text-md pb-4 font-semibold">
-                    {' '}
-                    Possible decoded calldata:{' '}
-                  </h3>
-                ) : (
-                  'No results found'
-                )
-              ) : (
-                'Decoded output will appear here'
-              )}
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i} data-testid={`decodedCalldataTree${i}`}>

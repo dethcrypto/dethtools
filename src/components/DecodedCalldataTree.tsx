@@ -52,17 +52,16 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
       <span>
         <code>
           {node.name ? (
-            <strong className="text-yellow-600">{node.name}</strong>
+            <b className="text-deth-pink"> {node.name} </b>
           ) : (
-            <strong className="text-green-600">unknown</strong>
+            <b className="text-pink-600">unknown</b>
           )}
         </code>
         <code>
-          <strong id="node-type" className=" text-purple-600">
-            {' '}
-            {node.type}{' '}
-          </strong>
-          <code id="node-value">{node.value}</code>
+          <b id="node-type" className=" text-purple-600">
+            {node.type}
+          </b>
+          <code id="node-value"> {node.value} </code>
         </code>
       </span>
     );
@@ -70,12 +69,12 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
 
   return (
     <section>
-      <strong> {node.name} </strong>
+      <b className=""> {node.name} </b>
       <ul className="pb-1 pt-2">
         {node.components.map((node, index) => (
-          <li key={index} className="border-l pl-6">
+          <p key={index} className="border-l pl-6">
             <CalldataTreeNode node={node} />
-          </li>
+          </p>
         ))}
       </ul>
     </section>
@@ -95,10 +94,10 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="mb-6">
-      <pre>
+    <output className="mb-2 bg-red-600">
+      <pre className="bg-deth-gray-900">
         <section>
-          <code className="font-bold text-purple-600">{fnType}</code>{' '}
+          <code className="font-bold text-purple-600">{fnType}</code>
           <code>{fnName}</code>
         </section>
         {tree.map((node, index) => (

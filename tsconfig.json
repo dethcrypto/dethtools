@@ -15,7 +15,7 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.test.ts", "next.config.js", ".eslintrc.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.test.ts", "next.config.js", ".eslintrc.js", "public/static/svg/address.jsx"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
