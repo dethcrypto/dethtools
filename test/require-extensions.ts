@@ -1,4 +1,4 @@
-const noop = () => 1;
+const noop = () => {};
 
 require.extensions['.css'] = noop;
 require.extensions['.scss'] = noop;
@@ -7,3 +7,5 @@ require.extensions['.jpg'] = noop;
 require.extensions['.jpeg'] = noop;
 require.extensions['.gif'] = noop;
 require.extensions['.svg'] = noop;
+
+export {};

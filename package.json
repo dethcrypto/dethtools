@@ -9,7 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "mocha --require ./testNullCompiler.js",
+    "test": "mocha",
     "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{ts,tsx,js}\"",
     "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{ts,tsx,js}\"",
     "lint": "eslint --ext .ts,.tsx src pages",
