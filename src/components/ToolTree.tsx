@@ -63,9 +63,11 @@ export function ToolTree({
   return (
     <>
       {isShowMobileTree && isMobile ? (
-        <div className="absolute top-0 left-0 z-10 mt-32 h-full w-full bg-deth-gray-900">
+        <section
+          className={`absolute top-0 left-0 z-10 mt-32 h-full w-full bg-deth-gray-900 ${className}`}
+        >
           <ToolTreeElements className="mx-8 mt-8" />
-        </div>
+        </section>
       ) : (
         <section className={`hidden w-5/12 md:block lg:ml-0 ${className}`}>
           <ToolTreeElements />
