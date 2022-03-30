@@ -7,7 +7,7 @@ import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
-  decodeWithCalldata,
+  fetchAndDecodeWithCalldata,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
 import {
@@ -19,7 +19,13 @@ import { parseAbi } from '../src/lib/parseAbi';
 import { assert } from '../src/misc/assert';
 import { sigHashSchema } from '../src/misc/sigHashSchema';
 
-export default function CalldataDecoder() {
+export interface CalldataDecoderProps {
+  fetchAndDecode?: typeof fetchAndDecodeWithCalldata;
+}
+
+export default function CalldataDecoder({
+  fetchAndDecode = fetchAndDecodeWithCalldata,
+}: CalldataDecoderProps) {
   const [loading, setLoading] = useState(false);
 
   const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
@@ -51,9 +57,11 @@ export default function CalldataDecoder() {
       let decodeResults: DecodeResult[] | undefined;
 
       try {
-        decodeResults = await decodeWithCalldata(
-          signatureHash,
-          encodedCalldata,
+        decodeResults = await fetchAndDecode(signatureHash, encodedCalldata);
+
+        console.dir(
+          decodeResults?.map((x) => x.fragment.format()),
+          { depth: 999 },
         );
       } finally {
         setLoading(false);
@@ -161,7 +169,9 @@ export default function CalldataDecoder() {
       </div>
 
       <Button
-        onClick={() => void handleDecodeCalldata()}
+        onClick={() =>
+          void handleDecodeCalldata().catch((e) => console.error(e))
+        }
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
