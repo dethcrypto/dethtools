@@ -1,7 +1,7 @@
 import { Interface, ParamType } from '@ethersproject/abi';
-import Img from 'next/image';
 import { ChangeEvent, useMemo, useState } from 'react';
 
+import DecoderSvg from '../public/static/svg/decoders.svg';
 import { Button } from '../src/components/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
@@ -94,17 +94,9 @@ export default function CalldataDecoder() {
   return (
     <ToolLayout>
       <header className="mb-6 flex items-center gap-3 align-middle">
-        <Img
-          src="/static/svg/decoders.svg"
-          width={32}
-          height={32}
-          alt="deth tools logo"
-        />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl">
-          {' '}
-          Calldata Decoder{' '}
-        </h3>
+        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
+        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl">Calldata Decoder</h3>
       </header>
 
       <label htmlFor="calldata" className="pt-2 text-lg font-bold">
@@ -180,8 +172,7 @@ export default function CalldataDecoder() {
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
             <h3 className="text-md pb-4 font-semibold">
-              {' '}
-              Possible decoded calldata:{' '}
+              Possible decoded calldata:
             </h3>
           ) : (
             'No results found'

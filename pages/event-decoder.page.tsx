@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
-import Img from 'next/image';
 import { ChangeEvent, useMemo, useState } from 'react';
 
+import DecoderSvg from '../public/static/svg/decoders.svg';
 import { Button } from '../src/components/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
@@ -90,14 +90,9 @@ export default function EventDecoder() {
   return (
     <ToolLayout>
       <header className="flex items-center gap-3 align-middle">
-        <Img
-          src="/static/svg/decoders.svg"
-          width={32}
-          height={32}
-          alt="deth tools logo"
-        />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl"> Decoders / </h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl"> Event Decoder </h3>
+        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
+        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
+        <h3 className="text-sm text-deth-pink sm:text-xl">Event Decoder</h3>
       </header>
 
       <div className="relative">
@@ -107,7 +102,7 @@ export default function EventDecoder() {
               <section className="flex items-center gap-2" key={i}>
                 <div className="flex flex-1 flex-col">
                   <label className="pb-2" htmlFor={`${topic.id}`}>
-                    <div>{i === 0 ? <b> topic{i} </b> : <p> topic{i} </p>}</div>
+                    <div>{i === 0 ? <b>topic{i}</b> : <p>topic{i}</p>}</div>
                   </label>
 
                   <input
@@ -205,8 +200,7 @@ export default function EventDecoder() {
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
             <h3 className="text-md pb-4 font-semibold">
-              {' '}
-              Possible decoded calldata:{' '}
+              Possible decoded calldata:
             </h3>
           ) : (
             'No results found'

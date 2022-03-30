@@ -1,4 +1,3 @@
-import Img from 'next/image';
 import {
   ChangeEvent,
   Fragment,
@@ -8,6 +7,7 @@ import {
   useState,
 } from 'react';
 
+import CalculatorSvg from '../public/static/svg/calculator.svg';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
@@ -75,19 +75,16 @@ export default function TokenUnitConversion() {
     <ToolLayout>
       <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
         <header className="flex items-center gap-3 align-middle">
-          <Img
-            src="/static/svg/calculator.svg"
+          <CalculatorSvg
             width={32}
             height={32}
-            alt="deth tools logo"
+            alt="deth token unit conversion calculator icon"
           />
           <h3 className="text-sm text-deth-gray-300 sm:text-xl">
-            {' '}
-            Calculators ﹥{' '}
+            Calculators ﹥
           </h3>
           <h3 className="text-sm text-deth-pink sm:text-xl">
-            {' '}
-            Token unit conversion{' '}
+            Token unit conversion
           </h3>
         </header>
         <UnitElements

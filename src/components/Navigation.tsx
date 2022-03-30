@@ -1,5 +1,11 @@
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
+
+import BurgerSvg from '../../public/static/svg/burger.svg';
+import DethToolsSvg from '../../public/static/svg/deth-tools.svg';
+import DiscordSvg from '../../public/static/svg/discord.svg';
+import GithubSvg from '../../public/static/svg/github.svg';
+import LogoSvg from '../../public/static/svg/logo.svg';
+import TwitterSvg from '../../public/static/svg/twitter.svg';
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -35,21 +41,9 @@ export function Navigation({
   return (
     <nav className="mx-auto flex h-20 items-center justify-between px-8 pt-6 pb-4 sm:px-0">
       <section className="flex cursor-pointer items-center gap-4">
-        <Image
-          className=""
-          src="/static/svg/logo.svg"
-          width={36}
-          height={36}
-          alt="deth tools logo"
-        />
+        <LogoSvg width={36} height={36} alt="deth tools logo" />
         {width > 480 && (
-          <Image
-            className=""
-            src="/static/svg/deth-tools.svg"
-            width={164}
-            height={164}
-            alt="deth tools logo"
-          />
+          <DethToolsSvg width={164} height={164} alt="deth tools logo text" />
         )}
         <p> WIP </p>
       </section>
@@ -57,36 +51,16 @@ export function Navigation({
       <section className="flex items-center gap-4">
         {width > 480 ? (
           <section className="flex gap-3">
-            <Image
-              className="cursor-pointer"
-              src="/static/svg/github.svg"
-              width={26}
-              height={26}
-              alt="deth tools github logo"
-            />
-            <Image
-              className="cursor-pointer"
-              src="/static/svg/twitter.svg"
-              width={26}
-              height={26}
-              alt="deth tools github logo"
-            />
-            <Image
-              className="cursor-pointer"
-              src="/static/svg/discord.svg"
-              width={26}
-              height={26}
-              alt="deth tools github logo"
-            />
+            <GithubSvg width={26} height={26} alt="github icon" />
+            <TwitterSvg width={26} height={26} alt="twitter icon" />
+            <DiscordSvg width={26} height={26} alt="discord icon" />
           </section>
         ) : (
-          <Image
-            className="cursor-pointer"
-            src="/static/svg/burger.svg"
+          <BurgerSvg
             width={36}
             height={36}
             onClick={() => handleShowMobileTree(width)}
-            alt="deth tools github logo"
+            alt="mobile burger menu"
           />
         )}
       </section>

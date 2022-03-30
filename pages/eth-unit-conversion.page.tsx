@@ -1,6 +1,6 @@
-import Img from 'next/image';
 import { ChangeEvent, Fragment, useState } from 'react';
 
+import CalculatorSvg from '../public/static/svg/calculator.svg';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
@@ -51,19 +51,16 @@ export default function EthUnitConversion() {
     <ToolLayout>
       <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
         <header className="mb-6 flex items-center gap-3 align-middle">
-          <Img
-            src="/static/svg/calculator.svg"
+          <CalculatorSvg
             width={32}
             height={32}
-            alt="deth tools logo"
+            alt="deth ethereum unit conversion calculator icon"
           />
           <h3 className="text-sm text-deth-gray-300 sm:text-xl">
-            {' '}
-            Calculators /{' '}
+            Calculators /
           </h3>
           <h3 className="text-sm text-deth-pink sm:text-xl">
-            {' '}
-            Eth unit conversion{' '}
+            Eth unit conversion
           </h3>
         </header>
         <UnitElements
@@ -101,7 +98,7 @@ function UnitElements({
           <div key={name} className="mt-5 w-full">
             <section className="flex flex-col">
               <div className="mb-2 flex gap-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-                <label htmlFor={name}> {name} </label>
+                <label htmlFor={name}>{name}</label>
                 <p className="text-deth-gray-300">
                   {powFormat.slice(0, 2)}
                   <sup>{powFormat.slice(2, 5)}</sup>

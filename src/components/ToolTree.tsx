@@ -1,6 +1,8 @@
 import { Disclosure } from '@headlessui/react';
 import Img from 'next/image';
 
+import MinusSvg from '../../public/static/svg/minus.svg';
+import PlusSvg from '../../public/static/svg/plus.svg';
 import { MyLink } from '../components/MyLink';
 
 function ToolTreeElements({ className }: { className?: string }) {
@@ -16,19 +18,9 @@ function ToolTreeElements({ className }: { className?: string }) {
                   <p className="uppercase text-deth-gray-300"> {key} </p>
                 </div>
                 {open ? (
-                  <Img
-                    className="text-red-100"
-                    src="/static/svg/minus.svg"
-                    width={18}
-                    height={18}
-                  />
+                  <MinusSvg width={18} height={18} />
                 ) : (
-                  <Img
-                    className="text-red-100"
-                    src="/static/svg/plus.svg"
-                    width={18}
-                    height={18}
-                  />
+                  <PlusSvg width={18} height={18} />
                 )}
               </Disclosure.Button>
 

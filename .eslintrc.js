@@ -14,7 +14,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['pages/**.tsx', 'pages/**/*.tsx', './tailwind.config.js'],
+      files: [
+        'pages/**.tsx',
+        'pages/**/*.tsx',
+        './tailwind.config.js',
+        'src/components/**/*.stories.tsx',
+      ],
       rules: {
         'import/no-default-export': 'off',
       },
