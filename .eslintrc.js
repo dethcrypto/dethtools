@@ -1,11 +1,11 @@
 const inTextEditor = process.env.VSCODE_PID !== undefined;
-
 /** @type {import("eslint").Linter.Config} */
+
 module.exports = {
   env: {
     es6: true,
   },
-  extends: ['typestrict', 'react-app'],
+  extends: ['typestrict', 'react-app', 'plugin:storybook/recommended'],
   plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports', 'import'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -14,7 +14,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['pages/**.tsx', 'pages/**/*.tsx'],
+      files: [
+        'pages/**.tsx',
+        'pages/**/*.tsx',
+        './tailwind.config.js',
+        'src/components/**/*.stories.tsx',
+      ],
       rules: {
         'import/no-default-export': 'off',
       },
@@ -30,14 +35,11 @@ module.exports = {
       { packageDir: ['./', __dirname] },
     ],
     'unused-imports/no-unused-imports-ts': inTextEditor ? 'off' : 'error',
-
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
-
     '@typescript-eslint/no-redeclare': ['error'],
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-useless-constructor': 'error',
-
     'accessor-pairs': 'error',
     'constructor-super': 'error',
     eqeqeq: [
@@ -159,7 +161,6 @@ module.exports = {
       },
     ],
     yoda: ['error', 'never'],
-
     'no-only-tests/no-only-tests': 'error',
 
     'react/jsx-key': 'warn',
