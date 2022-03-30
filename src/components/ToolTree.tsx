@@ -1,8 +1,9 @@
 import { Disclosure } from '@headlessui/react';
-import Img from 'next/image';
 
-import MinusSvg from '../../public/static/svg/minus.svg';
-import PlusSvg from '../../public/static/svg/plus.svg';
+import CalculatorSvg from '../../public/static/svg/calculator';
+import DecoderSvg from '../../public/static/svg/decoders';
+import MinusSvg from '../../public/static/svg/minus';
+import PlusSvg from '../../public/static/svg/plus';
 import { MyLink } from '../components/MyLink';
 
 function ToolTreeElements({ className }: { className?: string }) {
@@ -14,7 +15,7 @@ function ToolTreeElements({ className }: { className?: string }) {
             <>
               <Disclosure.Button className="mt-6 flex items-center justify-between">
                 <div className="flex gap-3">
-                  <Img src={value.icon} height={16} width={16} />
+                  {value.icon}
                   <p className="uppercase text-deth-gray-300"> {key} </p>
                 </div>
                 {open ? (
@@ -76,14 +77,14 @@ export function ToolTree({
 
 const tree: Tree = {
   calculators: {
-    icon: '/static/svg/calculator.svg',
+    icon: <CalculatorSvg height={20} width={20} />,
     tools: [
       { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
       { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
     ],
   },
   decoders: {
-    icon: '/static/svg/decoders.svg',
+    icon: <DecoderSvg height={20} width={20} />,
     tools: [
       { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
@@ -99,4 +100,4 @@ interface Tool {
 }
 
 // optionally soon add more alternative values to Tree rows
-type Tree = { [key: string]: { icon: string; tools: Tool[] } };
+type Tree = { [key: string]: { icon: JSX.Element; tools: Tool[] } };

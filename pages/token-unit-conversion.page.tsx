@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-import CalculatorSvg from '../public/static/svg/calculator.svg';
+import CalculatorSvg from '../public/static/svg/calculator';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';

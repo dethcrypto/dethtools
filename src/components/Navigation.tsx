@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import BurgerSvg from '../../public/static/svg/burger.svg';
-import DethToolsSvg from '../../public/static/svg/deth-tools.svg';
-import DiscordSvg from '../../public/static/svg/discord.svg';
-import GithubSvg from '../../public/static/svg/github.svg';
-import LogoSvg from '../../public/static/svg/logo.svg';
-import TwitterSvg from '../../public/static/svg/twitter.svg';
+import BurgerSvg from '../../public/static/svg/burger';
+import DethToolsSvg from '../../public/static/svg/deth-tools';
+import DiscordSvg from '../../public/static/svg/discord';
+import GithubSvg from '../../public/static/svg/github';
+import LogoSvg from '../../public/static/svg/logo';
+import TwitterSvg from '../../public/static/svg/twitter';
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({

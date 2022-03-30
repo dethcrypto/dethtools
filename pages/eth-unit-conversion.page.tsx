@@ -1,6 +1,6 @@
 import { ChangeEvent, Fragment, useState } from 'react';
 
-import CalculatorSvg from '../public/static/svg/calculator.svg';
+import CalculatorSvg from '../public/static/svg/calculator';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';

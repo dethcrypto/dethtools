@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
-import DecoderSvg from '../public/static/svg/decoders.svg';
+import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
