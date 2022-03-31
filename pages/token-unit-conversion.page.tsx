@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 
+import CalculatorSvg from '../public/static/svg/calculator';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
@@ -72,8 +73,20 @@ export default function TokenUnitConversion() {
 
   return (
     <ToolLayout>
-      <form className="flex flex-col gap-10">
-        <h1> Token unit conversion </h1>
+      <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
+        <header className="flex items-center gap-3 align-middle">
+          <CalculatorSvg
+            width={32}
+            height={32}
+            alt="deth token unit conversion calculator icon"
+          />
+          <h3 className="text-sm text-deth-gray-300 sm:text-xl">
+            Calculators ﹥
+          </h3>
+          <h3 className="text-sm text-deth-pink sm:text-xl">
+            Token unit conversion
+          </h3>
+        </header>
         <UnitElements
           units={units}
           error={error}
@@ -100,82 +113,53 @@ function UnitElements({
 }: UnitElementsProps): JSX.Element {
   return (
     <Fragment>
-      <p data-testid="error" className="absolute mt-12 text-sm text-red-400">
+      <p
+        data-testid="error"
+        className="absolute top-2/3 text-sm text-deth-error"
+      >
         {error}
       </p>
 
-      <section className="mb-6">
-        <table className="min-w-full table-fixed divide-y divide-gray-200">
-          <thead className="rounded-sm bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-1 px-6 text-left text-xs font-medium uppercase
-                tracking-wider text-gray-700 dark:text-gray-400"
-              >
-                <label htmlFor="decimals" className="text-lg">
-                  Decimals
-                </label>
-              </th>
+      <div className="mt-5 w-full">
+        <div className="flex flex-col">
+          <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
+            <label htmlFor="decimals">decimals</label>
+          </div>
 
-              <th
-                scope="col"
-                className="py-3 px-6 text-left text-xs font-medium uppercase
-                tracking-wider text-gray-700 dark:text-gray-400"
-              >
-                <input
-                  id="decimals"
-                  type="number"
-                  min={0}
-                  placeholder={tokenPrecision.base.toString()}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setDecimal(event.target.value);
-                  }}
-                  className="w-36 rounded-sm border border-dashed border-black p-3"
-                />
-              </th>
-            </tr>
-          </thead>
-        </table>
-      </section>
+          <input
+            id="decimals"
+            type="number"
+            min={0}
+            placeholder={tokenPrecision.base.toString()}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setDecimal(event.target.value);
+            }}
+            className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
+          />
+        </div>
+      </div>
 
       {units.map((unit) => {
         const { name, value } = unit;
 
         return (
-          <div key={name}>
-            <table className="min-w-full table-fixed divide-y divide-gray-200">
-              <thead className="rounded-sm bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-1 px-6 text-left text-xs font-medium uppercase
-                    tracking-wider text-gray-700 dark:text-gray-400"
-                  >
-                    <label htmlFor={name} className="text-lg">
-                      {name}
-                    </label>
-                  </th>
+          <div key={name} className="mt-5 w-full">
+            <div className="flex flex-col">
+              <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
+                <label htmlFor={name}>{name}</label>
+              </div>
 
-                  <th
-                    scope="col"
-                    className="text-md py-3 px-6 text-left font-medium uppercase
-                    tracking-wider text-gray-700 dark:text-gray-400"
-                  >
-                    <input
-                      id={name}
-                      placeholder={value ? value.toString() : '0'}
-                      value={value}
-                      type="string"
-                      onChange={(event) => {
-                        onChange(event.target.value, name);
-                      }}
-                      className="w-72 rounded-sm border border-dashed border-black p-3"
-                    />
-                  </th>
-                </tr>
-              </thead>
-            </table>
+              <input
+                id={name}
+                placeholder={value ? value.toString() : '0'}
+                value={value}
+                type="string"
+                onChange={(event) => {
+                  onChange(event.target.value, name);
+                }}
+                className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
+              />
+            </div>
           </div>
         );
       })}
