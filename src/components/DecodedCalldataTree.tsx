@@ -98,10 +98,10 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="mb-2 bg-red-600">
+    <output className="bg-red-600 mb-2">
       <pre className="bg-deth-gray-900">
         <section>
-          <code className="font-bold text-purple-600">{fnType}</code>{' '}
+          <code className="text-purple-600 font-bold">{fnType}</code>{' '}
           <code>{fnName}</code>
         </section>
         {tree.map((node, index) => (

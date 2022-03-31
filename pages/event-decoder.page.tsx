@@ -242,7 +242,7 @@ export default function EventDecoder() {
 
                       {Object.entries(d.args).map(([key, value], i) => (
                         <code key={i}>
-                          <b className="font-bold text-purple-600">{` "${key}"`}</b>
+                          <b className="text-purple-600 font-bold">{` "${key}"`}</b>
                           :{value.toString()}{' '}
                         </code>
                       ))}

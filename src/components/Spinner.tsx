@@ -3,7 +3,7 @@ export function Spinner({ className }: React.HTMLAttributes<HTMLDivElement>) {
     <div className={className}>
       <svg
         role="status"
-        className="mr-2 h-16 w-16 animate-spin fill-purple-600 text-black dark:text-black"
+        className="fill-purple-600 text-black dark:text-black mr-2 h-16 w-16 animate-spin"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
