@@ -62,7 +62,7 @@ function CalldataTreeNode({
           ) : (
             <b className="text-pink-600">unknown</b>
           )}
-        </code>
+        </code>{' '}
         <code>
           <b id="node-type" className=" text-purple-600">
             {node.type}
@@ -101,7 +101,7 @@ export function DecodedCalldataTree({
     <output className="mb-2 bg-red-600">
       <pre className="bg-deth-gray-900">
         <section>
-          <code className="font-bold text-purple-600">{fnType}</code>
+          <code className="font-bold text-purple-600">{fnType}</code>{' '}
           <code>{fnName}</code>
         </section>
         {tree.map((node, index) => (
