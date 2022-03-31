@@ -3,7 +3,6 @@ import { expect } from 'earljs';
 
 import {
   decodeByCalldata,
-  decodeWithCalldata,
   decodeWithEventProps,
   fetch4BytesData,
   getSignaturesByCalldata,
@@ -116,9 +115,9 @@ describe(decodeByCalldata.name, () => {
   });
 });
 
-describe(decodeWithCalldata.name, async () => {
+describe(fetchAndDecodeWithCalldata.name, async () => {
   it('decodes calldata by 4 byte hash signature and returns matches', async () => {
-    const decodedResults = await decodeWithCalldata(
+    const decodedResults = await fetchAndDecodeWithCalldata(
       '0x23b872dd',
       '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
     );

@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 import { sigHashSchema } from '../misc/sigHashSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
-import { decodeEvent, EventProps } from './decodeEvent';
+import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
 import { parseAbi } from './parseAbi';
 
 export async function decodeWithEventProps(
@@ -14,11 +14,11 @@ export async function decodeWithEventProps(
   if (data) {
     // force indexing basing on topic count
     const ifaces = parse4BytesResToIfaces(data, 'event');
-    return decodeByEventProps(ifaces, eventProps);
+    return decode4BytesData(ifaces, eventProps, decodeEvent);
   }
 }
 
-export async function decodeWithCalldata(
+export async function fetchAndDecodeWithCalldata(
   sigHash: string,
   calldata: string,
 ): Promise<DecodeResult[] | undefined> {
@@ -81,12 +81,9 @@ export async function fetch4BytesData(
   hexSig: string,
   hexSigType: HexSigType,
 ): Promise<FetchResult[] | undefined> {
-  const results = JSON.parse(
-    await fetch(`${urlTo(hexSigType)}${hexSig}`).then((response) =>
-      response.text(),
-    ),
-  ).results;
-  return (bytes4Cache[hexSigType][hexSig] = results);
+  const response = await fetch(`${urlTo(hexSigType)}${hexSig}`);
+  const json = await response.json();
+  return (bytes4Cache[hexSigType][hexSig] = json.results);
 }
 
 // @internal
@@ -123,14 +120,6 @@ export function parse4BytesResToIfaces(
     } catch (e) {}
   }
   return ifaces;
-}
-
-// @internal
-export function decodeByEventProps(
-  ifaces: Interface[],
-  eventProps: EventProps,
-) {
-  return decode4BytesData(ifaces, eventProps, decodeEvent);
 }
 
 // @internal

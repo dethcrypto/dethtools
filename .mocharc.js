@@ -5,6 +5,7 @@ module.exports = {
     'global-jsdom/register',
     'ts-node/register/transpile-only',
     'earljs/mocha',
+    './test/require-extensions.ts',
   ],
   extension: ['ts', 'tsx'],
   watchExtensions: ['ts', 'tsx'],
