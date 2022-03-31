@@ -1,5 +1,5 @@
 import { Interface, ParamType } from '@ethersproject/abi';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import { Button } from '../src/components/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
@@ -7,6 +7,8 @@ import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
   decodeWithCalldata,
+  fetch4BytesData,
+  HexSigType,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
 import {
@@ -104,6 +106,13 @@ export default function CalldataDecoder() {
         className="h-20 break-words rounded-xl border border-gray-400 bg-gray-50 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value);
+        }}
+        onPaste={(event: ClipboardEvent<HTMLTextAreaElement>) => {
+          const encodedCalldata = event.clipboardData.getData('Text');
+          const sigHash = sigHashFromCalldata(encodedCalldata);
+          if (sigHash) {
+            void fetch4BytesData(sigHash, HexSigType.Signatures);
+          }
         }}
       />
 

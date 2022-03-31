@@ -1,10 +1,14 @@
 import { Interface } from '@ethersproject/abi';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import { Button } from '../src/components/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
-import { decodeWithEventProps } from '../src/lib/decodeBySigHash';
+import {
+  decodeWithEventProps,
+  fetch4BytesData,
+  HexSigType,
+} from '../src/lib/decodeBySigHash';
 import {
   DecodedEventResult,
   decodeEvent,
@@ -13,29 +17,19 @@ import {
 import { parseAbi } from '../src/lib/parseAbi';
 import { assert } from '../src/misc/assert';
 
-interface Topic {
-  id: number;
-  value: string;
-}
-
 export default function EventDecoder() {
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
 
   const [rawAbi, setRawAbi] = useState<string>();
 
-  const [topics, setTopics] = useState<Topic[] | undefined>([
-    { id: 1, value: '' },
-    { id: 2, value: '' },
-    { id: 3, value: '' },
-    { id: 4, value: '' },
-  ]);
+  const [topics, setTopics] = useState<string[] | undefined>(['', '', '', '']);
   const [data, setData] = useState<string>('');
 
   const [decodeResults, setDecodeResults] = useState<DecodedEventResult[]>();
 
   const signatureHash = useMemo(
-    () => topics && topics.length > 0 && topics[0].value,
+    () => topics && topics.length > 0 && topics[0],
     [topics],
   );
 
@@ -52,9 +46,7 @@ export default function EventDecoder() {
         if (topics && data) {
           const eventProps: EventProps = {
             data: data,
-            topics: topics
-              .filter((t) => t.value.trim().length > 0)
-              .map((t) => t.value),
+            topics: topics.filter((t) => t.trim().length > 0).map((t) => t),
           };
           decodeResults = await decodeWithEventProps(signatureHash, eventProps);
         }
@@ -75,9 +67,7 @@ export default function EventDecoder() {
       if (!(abi instanceof Interface) || !data || !topics) return;
       const eventProps: EventProps = {
         data: data,
-        topics: topics
-          .filter((t) => t.value.trim().length > 0)
-          .map((t) => t.value),
+        topics: topics.filter((t) => t.trim().length > 0).map((t) => t),
       };
       decodeResult = decodeEvent(abi, eventProps);
     } catch (e) {}
@@ -96,25 +86,34 @@ export default function EventDecoder() {
       <div className="relative">
         <section className="mb-3">
           {topics &&
-            topics.map((topic, i) => (
+            topics.map((_topic, i) => (
               <section className="flex items-center gap-2" key={i}>
                 <div className="flex flex-1 flex-col">
-                  <label className="pb-2" htmlFor={`${topic.id}`}>
+                  <label className="pb-2" htmlFor={`${i}`}>
                     {i === 0 ? <strong> topic{i} </strong> : <p> topic{i} </p>}
                   </label>
                   <input
-                    id={`${topic.id}`}
+                    id={`${i}`}
                     type="text"
                     placeholder="e.g 0x0..."
                     className="mb-4 mr-auto h-10 w-3/5 rounded-xl border border-gray-400 text-sm focus:outline-none"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       setTopics(
-                        topics.map((t) =>
-                          t.id === topic.id
-                            ? { ...t, value: event.target.value }
-                            : t,
+                        topics.map((topic, id) =>
+                          i === id ? event.target.value : topic,
                         ),
                       );
+                    }}
+                    onPaste={(event: ClipboardEvent<HTMLInputElement>) => {
+                      if (i !== 0) return;
+                      const topicValue = event.clipboardData.getData('Text');
+                      const sigHash = topicValue;
+                      if (sigHash) {
+                        void fetch4BytesData(
+                          sigHash,
+                          HexSigType.EventSignatures,
+                        );
+                      }
                     }}
                   />
                 </div>
