@@ -9,6 +9,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     colors: {
+      transparent: 'transparent',
       primary: colors.teal,
       'deth-pink': '#FF34F0',
       pink: '#FF34F0',
@@ -48,7 +49,6 @@ module.exports = {
         DEFAULT: {
           css: {
             color: theme('colors.deth-white'),
-            fontFamily: '"Inconsolata", monospace',
             h1: {
               marginTop: '0',
               marginBottom: '0',
