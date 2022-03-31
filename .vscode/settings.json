@@ -1,4 +1,11 @@
 {
   "css.customData": [".vscode/css-custom-data.json"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // additional RegExp rules for places where Tailwind classes can appear
+  "tailwindCSS.experimental.classRegex": [
+    ["const variants = {([^)]*)}", "\"([^\"]*)\""],
+    ["const variants = {([^)]*)}", "`([^`]*)`"],
+    ["const variants = {([^)]*)}", "'([^']*)'"]
+  ]
 }
