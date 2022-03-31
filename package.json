@@ -9,7 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "mocha --require ./testNullCompiler.js",
+    "test": "mocha",
     "format": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{ts,tsx,js}\"",
     "format:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{ts,tsx,js}\"",
     "lint": "eslint --ext .ts,.tsx src pages",
@@ -20,6 +20,8 @@
     "build-sb": "yarn build-storybook"
   },
   "dependencies": {
+    "@ethereumjs/common": "^2.6.3",
+    "@ethereumjs/tx": "^3.5.1",
     "@ethersproject/abi": "^5.6.0",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/logger": "^5.6.0",
@@ -69,6 +71,7 @@
     "eslint-plugin-sonarjs": "^0.8.0-125",
     "eslint-plugin-storybook": "^0.5.7",
     "eslint-plugin-unused-imports": "^1.1.1",
+    "ethereumjs-util": "^7.1.4",
     "global-jsdom": "^8.4.0",
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",

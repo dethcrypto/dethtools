@@ -90,6 +90,7 @@ const tree: Tree = {
     tools: [
       { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
+      { title: 'Tx Decoder', pageHref: 'tx-decoder', isNew: true },
     ],
   },
 };

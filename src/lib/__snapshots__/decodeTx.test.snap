@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`decodeTx handles EIP-1559 tx input 1`] = `
+Object {
+  "accessList": Array [],
+  "chainId": "0x1",
+  "data": "0x",
+  "gasLimit": "0x5208",
+  "maxFeePerGas": "0x71c42979e",
+  "maxPriorityFeePerGas": "0x59682f00",
+  "nonce": "0x39",
+  "r": "0x5a5ee2b0994acdd28f43b8fc2594cd702ada33f1f319308352e401e9b493ef9",
+  "s": "0x11dd2830018dbf05a7f37860d6cff9f530b073836985005083469a86d805a7a2",
+  "to": "0xc9e7a3937cf24ed932b69c4545a20a5966a73fb5",
+  "v": "0x1",
+  "value": "0x3311fc80a570000",
+}
+`;
+
+exports[`decodeTx handles EIP2930 transaction 1`] = `
+Object {
+  "accessList": Array [
+    Object {
+      "address": "0x0101010101010101010101010101010101010101",
+      "storageKeys": Array [
+        "0x0101010101010101010101010101010101010101010101010101010101010101",
+      ],
+    },
+  ],
+  "chainId": "0x2",
+  "data": "0x010200",
+  "gasLimit": "0x0",
+  "gasPrice": "0x0",
+  "nonce": "0x0",
+  "r": "0xbb8dbe4eff3c08f6bf5113cbe1b362417d8871c272a766f492d8c5ef7dc91fd3",
+  "s": "0xf7c002813490c3ca8afbb779a9ffd2aad4e0e980b55212f1584cf39fe7576c4",
+  "to": "0x0101010101010101010101010101010101010101",
+  "v": "0x0",
+  "value": "0x0",
+}
+`;
+
+exports[`decodeTx handles legacy tx input 1`] = `
+Object {
+  "data": "0x",
+  "gasLimit": "0x16dea",
+  "gasPrice": "0x46c7cfe00",
+  "nonce": "0xa",
+  "r": "0xc7eaaa9c21f59adf8ad43ed66cf5ef9ee1c317bd4d32cd65401e7aaca47cfa",
+  "s": "0x387d79c65b90be6260d09dcfb780f29dd8133b9b1ceb20b83b7e442b4bfc30cb",
+  "to": "0xd1310c1e038bc12865d3d3997275b3e4737c6302",
+  "v": "0x26",
+  "value": "0xb503be34d9fe800",
+}
+`;
