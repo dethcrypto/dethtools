@@ -9,9 +9,7 @@ export default {
 } as ComponentMeta<typeof Button>;
 
 export const Primary: ComponentStory<typeof Button> = () => (
-  <Button className="bg-gradient-to-r from-deth-pink to-deth-purple ">
-    Hello!
-  </Button>
+  <Button variant="primary">Hello!</Button>
 );
 export const Secondary: ComponentStory<typeof Button> = () => (
   <Button className="bg-deth-gray-600 text-deth-gray-300"> Hello! </Button>

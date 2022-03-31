@@ -2,7 +2,7 @@ import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
-import { Button } from '../src/components/Button';
+import { Button } from '../src/components/lib/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
