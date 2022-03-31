@@ -126,22 +126,8 @@ export default function CalldataDecoder() {
         <div className="flex text-lg">
           <button
             role="tab"
-            aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
-            }`}
-            onClick={() => {
-              setTab('abi');
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
-
-          <button
-            role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
+            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600
             p-1 text-center ${
               tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
@@ -151,6 +137,20 @@ export default function CalldataDecoder() {
             }}
           >
             4 bytes
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={tab === 'abi'}
+            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            }`}
+            onClick={() => {
+              setTab('abi');
+              setDecodeResults(undefined);
+            }}
+          >
+            ABI
           </button>
         </div>
 
