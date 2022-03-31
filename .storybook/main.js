@@ -6,8 +6,8 @@ module.exports = {
   stories: [
     '../**/*.stories.mdx',
     '../**/*.stories.@(ts|tsx)',
-    '../components/**/*.stories.mdx',
-    '../components/**/*.stories.@(ts|tsx)',
+    '../src/components/**/*.stories.mdx',
+    '../src/components/**/*.stories.@(ts|tsx)',
   ],
   staticDirs: ['../public'],
   addons: [
