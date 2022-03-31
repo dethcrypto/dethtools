@@ -152,19 +152,6 @@ export default function CalldataDecoder() {
           >
             4 bytes
           </button>
-          <button
-            role="tab"
-            aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-2xl border border-gray-400 bg-gray-50 p-4 text-center hover:bg-black hover:text-white ${
-              tab === 'abi' ? 'bg-black text-white' : 'bg-gray-50'
-            }`}
-            onClick={() => {
-              setTab('abi');
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
         </div>
 
         {tab === 'abi' && (
