@@ -13,9 +13,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "."
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.test.ts", "next.config.js", ".eslintrc.js", "public/static/svg/address.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.test.ts", "./*.js"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
