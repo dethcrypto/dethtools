@@ -27,6 +27,7 @@ export default function CalldataDecoder({
   fetchAndDecode = fetchAndDecodeWithCalldata,
 }: CalldataDecoderProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
 
   const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
   const [decodeResults, setDecodeResults] = useState<
@@ -47,6 +48,8 @@ export default function CalldataDecoder({
   );
 
   async function handleDecodeCalldata() {
+    setError(undefined);
+
     if (!encodedCalldata) return;
 
     assert(signatureHash, 'signatureHash must be defined');
@@ -58,11 +61,6 @@ export default function CalldataDecoder({
 
       try {
         decodeResults = await fetchAndDecode(signatureHash, encodedCalldata);
-
-        console.dir(
-          decodeResults?.map((x) => x.fragment.format()),
-          { depth: 999 },
-        );
       } finally {
         setLoading(false);
       }
@@ -98,6 +96,8 @@ export default function CalldataDecoder({
     (rawAbi || tab === '4-bytes') &&
     encodedCalldata
   );
+
+  const onDecodeClick = () => void handleDecodeCalldata().catch(setError);
 
   return (
     <ToolLayout>
@@ -169,9 +169,7 @@ export default function CalldataDecoder({
       </div>
 
       <Button
-        onClick={() =>
-          void handleDecodeCalldata().catch((e) => console.error(e))
-        }
+        onClick={onDecodeClick}
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
@@ -192,6 +190,9 @@ export default function CalldataDecoder({
         )}
       </section>
 
+      {error && (
+        <pre className="font-mono">Failed to decode data: {error.message}</pre>
+      )}
       {loading ? (
         <Spinner className="mx-auto pt-6" />
       ) : (
