@@ -5,19 +5,31 @@ export interface ButtonProps extends ComponentPropsWithRef<'button'> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, ...rest }, ref) => {
+  ({ className, variant = 'primary', ...rest }, ref) => {
     return (
       <button
+        {...rest}
         ref={ref}
-        className={`bg-black cursor-pointer rounded-md px-1 py-4 text-sm text-white
-      disabled:cursor-not-allowed disabled:bg-gray-600 ${props.className}`}
+        className={
+          'bg-black cursor-pointer rounded-md px-4 py-3 text-white ' +
+          'disabled:cursor-not-allowed disabled:bg-gray-600 ' +
+          'transition-shadow ' +
+          'hover:outline hover:outline-2 ' +
+          variants[variant] +
+          (className ? ` ${className}` : '')
+        }
       />
     );
   },
 );
 
-const variants = {
-  primary: 'bg-gradient-to-r from-deth-pink to-deth-purple',
-  secondary: 'bg-deth-gray-600 text-deth-gray-300',
-  tertiary: 'border border-deth-gray-400 bg-deth-gray-900',
+/** @internal */
+export const variants = {
+  primary:
+    'bg-gradient-to-r from-pink to-purple hover:outline-gray-50 ' +
+    'hover:shadow-lg hover:shadow-pink/25',
+  secondary:
+    'bg-gray-600 text-gray-300 ' + 'hover:shadow-lg hover:shadow-white/10',
+  tertiary: 'border border-gray-600 bg-gray-900 text-gray-400',
+  text: '',
 };

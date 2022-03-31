@@ -1,26 +1,34 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { ComponentStory } from '@storybook/react';
 import React from 'react';
 
-import { Button } from './Button';
+import { Button, variants } from './Button';
+import { meta } from '.storybook/utils';
 
-export default {
-  title: 'Button',
-  component: Button,
-} as ComponentMeta<typeof Button>;
+export default meta(Button, {
+  argTypes: {
+    variant: {
+      options: Object.keys(variants),
+    },
+    children: {
+      type: 'string',
+    },
+    onClick: { action: 'clicked' },
+  },
+});
 
-export const Primary: ComponentStory<typeof Button> = () => (
-  <Button variant="primary">Hello!</Button>
-);
-export const Secondary: ComponentStory<typeof Button> = () => (
-  <Button className="bg-deth-gray-600 text-deth-gray-300"> Hello! </Button>
-);
+const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
-export const Tertiary: ComponentStory<typeof Button> = () => (
-  <Button className="border border-deth-gray-400 bg-deth-gray-900">
-    Hello!
-  </Button>
-);
+export const Primary = Template.bind({});
+Primary.args = { variant: 'primary', children: 'Primary' };
 
-export const Link: ComponentStory<typeof Button> = () => (
-  <Button className="bg-deth-gray-900"> Hello! </Button>
-);
+export const Secondary = Template.bind({});
+Secondary.args = { variant: 'secondary', children: 'Secondary' };
+
+export const Tertiary = Template.bind({});
+Tertiary.args = { variant: 'tertiary', children: 'Tertiary' };
+
+export const Text = Template.bind({});
+Text.args = {
+  variant: 'text',
+  children: 'Is it just text? Or is it a button?',
+};
