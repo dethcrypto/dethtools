@@ -7,13 +7,13 @@ on:
       - main
 
 jobs:
-  lint:
+  build_and_check:
     strategy:
       matrix:
         node: ['14.x']
     runs-on: ubuntu-latest
 
-    name: Lint and format
+    name: Lint and Test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -32,34 +32,8 @@ jobs:
 
       - run: yarn --no-progress --non-interactive --frozen-lockfile
 
-      - run: yarn build
-      - run: yarn lint
+      - name: 'TypeCheck, Lint and Build'
+        # NextJS typechecks and lints before the build
+        run: yarn build
       - run: yarn format
-
-  test:
-    strategy:
-      matrix:
-        node: ['14.x']
-    runs-on: ubuntu-latest
-
-    name: Test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Cache Yarn dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-          key:
-            ${{ runner.OS }}-${{ matrix.node }}-yarn-cache-${{
-            hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.OS }}-${{ matrix.node }}-yarn-cache-
-
-      - run: yarn --no-progress --non-interactive --frozen-lockfile
-
-      - run: yarn build
       - run: yarn test
