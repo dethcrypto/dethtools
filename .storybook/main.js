@@ -1,15 +1,11 @@
+// @ts-check
 // .storybook/main.js
 
 const path = require('path');
 const tsconfig = require('../tsconfig.json');
 
 module.exports = {
-  stories: [
-    '../**/*.stories.mdx',
-    '../**/*.stories.@(ts|tsx)',
-    '../src/components/**/*.stories.mdx',
-    '../src/components/**/*.stories.@(ts|tsx)',
-  ],
+  stories: ['../src/**/*.stories.{ts,tsx,mdx}'],
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-links',
