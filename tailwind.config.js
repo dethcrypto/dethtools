@@ -8,27 +8,42 @@ module.exports = {
   content: ['./{pages,src}/**/*.{tx,tsx}'],
   darkMode: 'class',
   theme: {
-    extend: {
-      colors: {
-        primary: colors.teal,
-        gray: colors.neutral,
-        'deth-pink': '#FF34F0',
-        'deth-purple': '#9B37FF',
-        'deth-error': '#FF3459',
-        'deth-success': '#4ADE80',
-        'deth-white': '#FFFFFF',
-        'deth-gray': {
-          100: '#F2EFF6',
-          200: '#F2EFF6',
-          300: '#AAA4B6',
-          400: '#938D9E',
-          500: '#55515B',
-          600: '#353239',
-          700: '#222025',
-          800: '#19181C',
-          900: '#171619',
-        },
+    colors: {
+      primary: colors.teal,
+      'deth-pink': '#FF34F0',
+      pink: '#FF34F0',
+      'deth-purple': '#9B37FF',
+      purple: '#9B37FF',
+      'deth-error': '#FF3459',
+      error: '#FF3459',
+      'deth-success': '#4ADE80',
+      success: '#4ADE80',
+      'deth-white': '#FFFFFF',
+      white: '#FFFFFF',
+      'deth-gray': {
+        100: '#F2EFF6',
+        200: '#F2EFF6',
+        300: '#AAA4B6',
+        400: '#938D9E',
+        500: '#55515B',
+        600: '#353239',
+        700: '#222025',
+        800: '#19181C',
+        900: '#171619',
       },
+      gray: {
+        100: '#F2EFF6',
+        200: '#F2EFF6',
+        300: '#AAA4B6',
+        400: '#938D9E',
+        500: '#55515B',
+        600: '#353239',
+        700: '#222025',
+        800: '#19181C',
+        900: '#171619',
+      },
+    },
+    extend: {
       typography: (theme) => ({
         DEFAULT: {
           css: {
