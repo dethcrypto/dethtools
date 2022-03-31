@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi';
+import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
@@ -103,7 +104,7 @@ export default function EventDecoder() {
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       setTopics(
                         topics.map((topic, id) =>
-                          i === id ? event.target.value : topic,
+                          i === id ? addHexPrefix(event.target.value) : topic,
                         ),
                       );
                     }}
@@ -135,7 +136,7 @@ export default function EventDecoder() {
             placeholder="e.g 0x0..."
             className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setData(event.target.value)
+              setData(addHexPrefix(event.target.value))
             }
           />
         </section>
