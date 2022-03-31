@@ -171,9 +171,9 @@ export default function CalldataDecoder() {
       <section className="pt-4">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
-            <h3 className="text-md pb-4 font-semibold">
+            <p className="text-md pb-4 font-semibold">
               Possible decoded calldata:
-            </h3>
+            </p>
           ) : (
             'No results found'
           )
@@ -193,8 +193,8 @@ export default function CalldataDecoder() {
             <div>
               {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-green-600">Signature hash</p>
-                  <code data-testid="signature-hash">{signatureHash}</code>
+                  <p className="font-bold text-purple-400">Signature hash</p>
+                  <b data-testid="signature-hash">{signatureHash}</b>
                 </div>
               )}
             </div>

@@ -51,17 +51,43 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
     return (
       <span>
         <code>
-          {node.name ? (
-            <b className="text-deth-pink"> {node.name} </b>
+          {node.type.match(/[[*\]]/) ? (
+            <div>
+              {node.name ? (
+                <b className="text-deth-pink">{node.name} </b>
+              ) : (
+                <b className="text-pink-400">unknown name </b>
+              )}
+
+              <b id="node-type" className=" text-purple-400">
+                {node.type}
+              </b>
+
+              <code id="node-value">
+                {' '}
+                {node.value?.split(',').map((str, i) => {
+                  return (
+                    <div key={i}>
+                      {' '}
+                      <code className="text-deth-gray-600">[{i}]</code> {str}{' '}
+                    </div>
+                  );
+                })}{' '}
+              </code>
+            </div>
           ) : (
-            <b className="text-pink-600">unknown</b>
+            <div>
+              {node.name ? (
+                <b className="text-pink-400">{node.name} </b>
+              ) : (
+                <b className="text-pink-400">unknown name </b>
+              )}
+              <b id="node-type" className=" text-purple-400">
+                {node.type}
+              </b>{' '}
+              {node.value}
+            </div>
           )}
-        </code>
-        <code>
-          <b id="node-type" className=" text-purple-600">
-            {node.type}
-          </b>
-          <code id="node-value"> {node.value} </code>
         </code>
       </span>
     );
@@ -69,12 +95,13 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
 
   return (
     <section>
-      <b className=""> {node.name} </b>
-      <ul className="pb-1 pt-2">
+      <b className="text-purple-400">struct</b> {node.name}
+      {':'}
+      <ul className="pb-1 pt-1">
         {node.components.map((node, index) => (
-          <p key={index} className="border-l pl-6">
+          <div key={index} className="border-l border-deth-gray-600 pl-3">
             <CalldataTreeNode node={node} />
-          </p>
+          </div>
         ))}
       </ul>
     </section>
@@ -97,9 +124,10 @@ export function DecodedCalldataTree({
     <output className="mb-2 bg-red-600">
       <pre className="bg-deth-gray-900">
         <section>
-          <code className="font-bold text-purple-600">{fnType}</code>
-          <code>{fnName}</code>
+          <code className="font-bold text-purple-400">{fnType} </code>
+          <code>{fnName} </code>
         </section>
+
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />
