@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi';
+import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
@@ -12,7 +13,6 @@ import {
   EventProps,
 } from '../src/lib/decodeEvent';
 import { parseAbi } from '../src/lib/parseAbi';
-import { prefixHexIf0xMissing } from '../src/lib/prefixHex';
 import { assert } from '../src/misc/assert';
 
 interface Topic {
@@ -117,7 +117,7 @@ export default function EventDecoder() {
                           t.id === topic.id
                             ? {
                                 ...t,
-                                value: prefixHexIf0xMissing(event.target.value),
+                                value: addHexPrefix(event.target.value),
                               }
                             : t,
                         ),
@@ -140,7 +140,7 @@ export default function EventDecoder() {
             placeholder="e.g 0x0..."
             className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setData(prefixHexIf0xMissing(event.target.value))
+              setData(addHexPrefix(event.target.value))
             }
           />
         </section>

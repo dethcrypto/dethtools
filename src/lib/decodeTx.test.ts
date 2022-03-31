@@ -14,10 +14,10 @@ describe(decodeTx.name, () => {
     );
 
     expect(actual.tx).toBeA(Transaction);
-    expect(actual.tx).toMatchSnapshot();
     expect(actual.senderAddr).toEqual(
       '0x67835910d32600471f388a137bbff3eb07993c04',
     );
+    expect(actual.tx).toMatchSnapshot();
   });
 
   it('handles EIP-1559 tx input', () => {
@@ -26,10 +26,10 @@ describe(decodeTx.name, () => {
     );
 
     expect(actual.tx).toBeA(FeeMarketEIP1559Transaction);
-    expect(actual.tx).toMatchSnapshot();
     expect(actual.senderAddr).toEqual(
       '0xa784398ad2a43b8ba13b0eb64664778f088bf6d2',
     );
+    expect(actual.tx).toMatchSnapshot();
   });
 
   it('handles EIP2930 transaction', () => {
