@@ -36,6 +36,30 @@ describe(TxDecoder.name, () => {
     );
   });
 
+  it('convert raw tx input to proper format', async () => {
+    const root = render(<TxDecoder />);
+
+    const rawTxField = (await root.findByLabelText(
+      /raw transaction/i,
+    )) as HTMLInputElement;
+
+    fireEvent.change(rawTxField, {
+      target: {
+        value: '123',
+      },
+    });
+
+    expect(rawTxField.value).toEqual(expect.stringMatching('123'));
+
+    const decodeButton = (await root.findByText('Decode')) as HTMLButtonElement;
+
+    fireEvent.click(decodeButton);
+
+    expect(
+      await root.findByText('Unable to decode transaction with 0x0123 value'),
+    );
+  });
+
   it('displays error on wrong value', async () => {
     const root = render(<TxDecoder />);
 
@@ -55,6 +79,8 @@ describe(TxDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    expect(await root.findByText('Unable to decode transaction'));
+    expect(
+      await root.findByText('Unable to decode transaction with 0x0A value'),
+    );
   });
 });

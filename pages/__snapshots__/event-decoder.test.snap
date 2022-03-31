@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventDecoder works with non-0x prefixed values 1`] = `"<b class=\\"font-bold text-purple-600\\"> \\"0\\"</b>:0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85 "`;
+
+exports[`EventDecoder works with non-0x prefixed values 2`] = `"<b class=\\"font-bold text-purple-600\\"> \\"1\\"</b>:0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67 "`;
+
+exports[`EventDecoder works with non-0x prefixed values 3`] = `"<b class=\\"font-bold text-purple-600\\"> \\"2\\"</b>:0 "`;

@@ -5,6 +5,8 @@ import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/Button';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
+import { prefixHexIf0xMissing } from '../src/lib/prefixHex';
+import { toEvenHex } from '../src/lib/toEvenHex';
 
 export default function TxDecoder() {
   const [error, setError] = useState<string>();
@@ -43,7 +45,7 @@ export default function TxDecoder() {
           placeholder="e.g 0x0..."
           className="mb-2 mr-auto h-10 w-full rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setRawTx(event.target.value);
+            setRawTx(toEvenHex(prefixHexIf0xMissing(event.target.value)));
           }}
         />
       </section>
@@ -64,7 +66,9 @@ export default function TxDecoder() {
         placeholder="Output"
       >
         {error ? (
-          <p className="text-deth-error">{error}</p>
+          <p className="text-deth-error">
+            {error} with {rawTx} value
+          </p>
         ) : (
           <output>
             <p>{decodeResults && 'decode results:'}</p>

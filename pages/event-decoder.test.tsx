@@ -173,4 +173,64 @@ describe(EventDecoder.name, () => {
     );
     expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching('0'));
   });
+
+  it('works with non-0x prefixed values', async () => {
+    const root = render(<EventDecoder />);
+
+    fireEvent.click(root.getByText('4 bytes'));
+
+    const dataField = (await root.findByLabelText('data')) as HTMLInputElement;
+    const topic0Field = (await root.findByLabelText(
+      'topic0',
+    )) as HTMLInputElement;
+    const topic1Field = (await root.findByLabelText(
+      'topic1',
+    )) as HTMLInputElement;
+    const topic2Field = (await root.findByLabelText(
+      'topic2',
+    )) as HTMLInputElement;
+
+    fireEvent.change(dataField, {
+      target: {
+        value:
+          '0000000000000000000000000000000000000000000000000000000000000000',
+      },
+    });
+    fireEvent.change(topic0Field, {
+      target: {
+        value:
+          '8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+      },
+    });
+    fireEvent.change(topic1Field, {
+      target: {
+        value:
+          '0000000000000000000000005853ed4f26a3fcea565b3fbc698bb19cdf6deb85',
+      },
+    });
+    fireEvent.change(topic2Field, {
+      target: {
+        value:
+          '000000000000000000000000e1be5d3f34e89de342ee97e6e90d405884da6c67',
+      },
+    });
+
+    const decodeButton = (await root.findByText('Decode')) as HTMLButtonElement;
+
+    fireEvent.click(decodeButton);
+
+    expect(
+      await root.findByText(
+        '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+      ),
+    );
+
+    const arg0 = await waitFor(() => root.findByText('"0"'));
+    const arg1 = await waitFor(() => root.findByText('"1"'));
+    const arg2 = await waitFor(() => root.findByText('"2"'));
+
+    expect(arg0.parentElement!.innerHTML).toMatchSnapshot();
+    expect(arg1.parentElement!.innerHTML).toMatchSnapshot();
+    expect(arg2.parentElement!.innerHTML).toMatchSnapshot();
+  });
 });

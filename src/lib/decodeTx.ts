@@ -7,13 +7,7 @@ export interface DecodedTx {
 }
 
 export function decodeTx(rawTx: string): DecodedTx {
-  let prefixed = rawTx.trim();
-
-  if (rawTx.trim().substring(0, 2) !== '0x') {
-    prefixed = '0x' + rawTx.trim();
-  }
-
-  const txDataBuffer = toBuffer(prefixed);
+  const txDataBuffer = toBuffer(rawTx);
 
   const tx = TransactionFactory.fromSerializedData(txDataBuffer);
   const senderAddr = tx.getSenderAddress().toString();
