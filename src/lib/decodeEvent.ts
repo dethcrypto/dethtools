@@ -9,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { Logger } from '@ethersproject/logger';
 
 import { combinations as generateCombinations } from '../misc/combinations';
+import { isHex } from './decodeHex';
 
 const logger = new Logger(version);
 
@@ -44,6 +45,8 @@ export function decodeEvent(
   iface: Interface,
   eventProps: EventProps,
 ): DecodedEventResult {
+  if (!isHex(eventProps.data)) eventProps.data = '0x' + eventProps.data;
+
   try {
     const decoded = iface.parseLog(eventProps);
     /**
