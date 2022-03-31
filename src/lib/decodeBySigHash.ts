@@ -9,7 +9,7 @@ import { parseAbi } from './parseAbi';
 export async function decodeWithEventProps(
   sigHash: string,
   eventProps: EventProps,
-): Promise<any[] | undefined> {
+): Promise<DecodedEventResult[] | undefined> {
   const data = await getSignaturesByTopic(sigHash);
   if (data) {
     // force indexing basing on topic count
