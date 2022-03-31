@@ -146,7 +146,7 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
+            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600
             p-1 text-center ${
               tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
@@ -160,7 +160,7 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600 p-1 text-center ${
+            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600 p-1 text-center ${
               tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
             onClick={() => {
