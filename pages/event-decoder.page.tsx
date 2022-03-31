@@ -141,7 +141,7 @@ export default function EventDecoder() {
         </section>
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-col">
         <div className="flex text-lg">
           <button
             role="tab"
