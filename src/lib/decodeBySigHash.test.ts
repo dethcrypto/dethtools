@@ -3,9 +3,9 @@ import { expect } from 'earljs';
 
 import {
   decodeByCalldata,
-  fetchAndDecodeWithCalldata,
   decodeWithEventProps,
   fetch4BytesData,
+  fetchAndDecodeWithCalldata,
   fetchSignaturesByCalldata,
   parse4BytesResToIfaces,
 } from './decodeBySigHash';
