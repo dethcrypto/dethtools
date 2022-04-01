@@ -63,13 +63,14 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
                 {node.type}
               </b>
 
-              <code id="node-value">
+              <code>
                 {' '}
                 {node.value?.split(',').map((str, i) => {
                   return (
                     <div key={i}>
                       {' '}
-                      <code className="text-deth-gray-600">[{i}]</code> {str}{' '}
+                      <code className="text-deth-gray-600">[{i}]</code>{' '}
+                      <code id="node-value">{str}</code>
                     </div>
                   );
                 })}{' '}
@@ -85,7 +86,7 @@ function CalldataTreeNode({ node }: { node: TreeNode }) {
               <b id="node-type" className=" text-purple-400">
                 {node.type}
               </b>{' '}
-              {node.value}
+              <b id="node-value">{node.value}</b>
             </div>
           )}
         </code>

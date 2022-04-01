@@ -38,14 +38,15 @@ describe(CalldataDecoder.name, () => {
 
     userEvent.click(await root.findByText('Decode'));
 
-    const sigHash = await root.findByTestId('signature-hash');
+    const sigHash = (await root.findByText('Signature hash')!)
+      .nextSibling as HTMLElement;
 
     expect(sigHash.innerHTML).toEqual(expect.stringMatching('0x23b872dd'));
 
     const correctTypes = ['address', 'address', 'uint256'];
     correctTypes.forEach((e, i) => {
       expect(e).toEqual(
-        root.getByTestId(i).querySelector('#node-type')?.innerHTML.trim()!,
+        root.getByTestId(i).querySelector('#node-type')?.innerHTML,
       );
     });
 
@@ -94,7 +95,8 @@ describe(CalldataDecoder.name, () => {
 
     userEvent.click(await root.findByText('Decode'));
 
-    const sigHash = await root.findByTestId('signature-hash');
+    const sigHash = (await root.findByText('Signature hash')!)
+      .nextSibling as HTMLElement;
 
     expect(sigHash.innerHTML).toEqual(expect.stringMatching('0x6a947f74'));
 

@@ -194,7 +194,7 @@ export default function CalldataDecoder() {
               {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-purple-400">Signature hash</p>
-                  <b data-testid="signature-hash">{signatureHash}</b>
+                  <b>{signatureHash}</b>
                 </div>
               )}
             </div>
