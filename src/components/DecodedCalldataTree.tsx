@@ -46,10 +46,16 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
   });
 }
 
-function CalldataTreeNode({ node }: { node: TreeNode }) {
+function CalldataTreeNode({
+  node,
+  className,
+}: {
+  node: TreeNode;
+  className?: string;
+}) {
   if ('value' in node) {
     return (
-      <span>
+      <span className={className}>
         <code>
           {node.type.match(/[[*\]]/) ? (
             <div>

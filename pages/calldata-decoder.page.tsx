@@ -7,7 +7,7 @@ import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
-  decodeWithCalldata,
+  fetchAndDecodeWithCalldata,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
 import {
@@ -19,8 +19,15 @@ import { parseAbi } from '../src/lib/parseAbi';
 import { assert } from '../src/misc/assert';
 import { sigHashSchema } from '../src/misc/sigHashSchema';
 
-export default function CalldataDecoder() {
+export interface CalldataDecoderProps {
+  fetchAndDecode?: typeof fetchAndDecodeWithCalldata;
+}
+
+export default function CalldataDecoder({
+  fetchAndDecode = fetchAndDecodeWithCalldata,
+}: CalldataDecoderProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
 
   const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
   const [decodeResults, setDecodeResults] = useState<
@@ -41,6 +48,8 @@ export default function CalldataDecoder() {
   );
 
   async function handleDecodeCalldata() {
+    setError(undefined);
+
     if (!encodedCalldata) return;
 
     assert(signatureHash, 'signatureHash must be defined');
@@ -51,10 +60,7 @@ export default function CalldataDecoder() {
       let decodeResults: DecodeResult[] | undefined;
 
       try {
-        decodeResults = await decodeWithCalldata(
-          signatureHash,
-          encodedCalldata,
-        );
+        decodeResults = await fetchAndDecode(signatureHash, encodedCalldata);
       } finally {
         setLoading(false);
       }
@@ -90,6 +96,8 @@ export default function CalldataDecoder() {
     (rawAbi || tab === '4-bytes') &&
     encodedCalldata
   );
+
+  const onDecodeClick = () => void handleDecodeCalldata().catch(setError);
 
   return (
     <ToolLayout>
@@ -161,7 +169,7 @@ export default function CalldataDecoder() {
       </div>
 
       <Button
-        onClick={() => void handleDecodeCalldata()}
+        onClick={onDecodeClick}
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
@@ -182,6 +190,9 @@ export default function CalldataDecoder() {
         )}
       </section>
 
+      {error && (
+        <pre className="font-mono">Failed to decode data: {error.message}</pre>
+      )}
       {loading ? (
         <Spinner className="mx-auto pt-6" />
       ) : (
