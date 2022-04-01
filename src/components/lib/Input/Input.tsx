@@ -42,7 +42,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...rest}
         />
         <div className="whitespace-normal pt-2">
-          {error && <p className="text-error">{error}</p>}
+          {error && (
+            <p role="alert" aria-atomic="true" className="text-error">
+              {error}
+            </p>
+          )}
         </div>
       </div>
     );
