@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
 import { Input } from '../src/components/lib/Input';
