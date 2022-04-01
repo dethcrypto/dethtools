@@ -9,7 +9,6 @@ import { ToolLayout } from '../src/layout/ToolLayout';
 import {
   decodeWithEventProps,
   fetch4BytesData,
-  HexSigType,
 } from '../src/lib/decodeBySigHash';
 import {
   DecodedEventResult,
@@ -113,10 +112,7 @@ export default function EventDecoder() {
                       const topicValue = event.clipboardData.getData('Text');
                       const sigHash = topicValue;
                       if (sigHash) {
-                        void fetch4BytesData(
-                          sigHash,
-                          HexSigType.EventSignatures,
-                        );
+                        void fetch4BytesData(sigHash, 'event-signatures');
                       }
                     }}
                   />

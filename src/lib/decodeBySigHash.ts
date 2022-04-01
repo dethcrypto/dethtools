@@ -46,10 +46,7 @@ export type FetchResult = {
 
 // @internal
 // there are more types, but we don't need them for now
-export enum HexSigType {
-  Signatures = 'signatures',
-  EventSignatures = 'event-signatures',
-}
+export type HexSigType = 'signatures' | 'event-signatures';
 
 type Bytes4Cache = {
   [sigType in HexSigType]: {
@@ -61,8 +58,8 @@ type Bytes4Cache = {
 };
 
 const bytes4Cache: Bytes4Cache = {
-  [HexSigType.Signatures]: {},
-  [HexSigType.EventSignatures]: {},
+  signatures: {},
+  'event-signatures': {},
 };
 
 // @internal
@@ -93,20 +90,18 @@ function urlTo(hexSigType: HexSigType): string {
 
 // @internal
 export async function getSignaturesByCalldata(sigHash: string) {
-  return getBytes4Data(sigHash, HexSigType.Signatures);
+  return getBytes4Data(sigHash, 'signatures');
 }
 
 // @internal
 export async function getSignaturesByTopic(sigHash: string) {
-  return getBytes4Data(sigHash, HexSigType.EventSignatures);
+  return getBytes4Data(sigHash, 'event-signatures');
 }
 
 // @internal
 export function parse4BytesResToIfaces(
   data: FetchResult[],
   defaultKeyword: string = 'function',
-  // @notice how many params should be changed to indexed (basing on given topic count)
-  indexArgs?: number,
 ): Interface[] {
   const ifaces: Interface[] = [];
 

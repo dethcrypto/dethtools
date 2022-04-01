@@ -7,9 +7,8 @@ import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
-  decodeWithCalldata,
   fetch4BytesData,
-  HexSigType,
+  fetchAndDecodeWithCalldata,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
 import {
@@ -125,7 +124,7 @@ export default function CalldataDecoder({
           const encodedCalldata = event.clipboardData.getData('Text');
           const sigHash = sigHashFromCalldata(encodedCalldata);
           if (sigHash) {
-            void fetch4BytesData(sigHash, HexSigType.Signatures);
+            void fetch4BytesData(sigHash, 'signatures');
           }
         }}
       />
