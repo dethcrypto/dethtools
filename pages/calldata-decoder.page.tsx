@@ -2,8 +2,8 @@ import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
-import { Button } from '../src/components/Button';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
+import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
@@ -204,7 +204,7 @@ export default function CalldataDecoder({
             <div>
               {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-green-600">Signature hash</p>
+                  <p className="text-green-600 font-bold">Signature hash</p>
                   <code data-testid="signature-hash">{signatureHash}</code>
                 </div>
               )}

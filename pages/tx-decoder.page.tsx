@@ -2,7 +2,7 @@ import { TypedTransaction } from '@ethereumjs/tx';
 import { ChangeEvent, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
-import { Button } from '../src/components/Button';
+import { Button } from '../src/components/lib/Button';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
 import { toEvenHex } from '../src/lib/toEvenHex';

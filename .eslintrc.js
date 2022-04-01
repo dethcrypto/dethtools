@@ -164,5 +164,8 @@ module.exports = {
     'no-only-tests/no-only-tests': 'error',
 
     'react/jsx-key': 'warn',
+
+    'storybook/no-redundant-story-name': 'off',
+    'storybook/prefer-pascal-case': 'off',
   },
 };

@@ -1,5 +1,9 @@
-import '../src/globals.css';
+// @ts-check
 import * as NextImage from 'next/image';
+
+import '../src/globals.css';
+
+import { storybookTheme } from './theme';
 
 const OriginalNextImage = NextImage.default;
 
@@ -18,5 +22,8 @@ export const parameters = {
   },
   previewTabs: {
     'storybook/docs/panel': { index: -1 },
+  },
+  docs: {
+    theme: storybookTheme,
   },
 };

@@ -3,7 +3,7 @@ import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
-import { Button } from '../src/components/Button';
+import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { decodeWithEventProps } from '../src/lib/decodeBySigHash';
@@ -242,7 +242,7 @@ export default function EventDecoder() {
 
                       {Object.entries(d.args).map(([key, value], i) => (
                         <code key={i}>
-                          <b className="font-bold text-purple-600">{` "${key}"`}</b>
+                          <b className="text-purple-600 font-bold">{` "${key}"`}</b>
                           :{value.toString()}{' '}
                         </code>
                       ))}

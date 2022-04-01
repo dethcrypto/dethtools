@@ -6,7 +6,10 @@
 
 html {
   height: 100vh;
-  @apply bg-deth-gray-900;
+
+  font-family: Inconsolata, monospace;
+
+  @apply bg-gray-900;
 }
 
 #__next {
