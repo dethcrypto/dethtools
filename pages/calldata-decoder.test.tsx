@@ -25,6 +25,7 @@ describe(CalldataDecoder.name, () => {
       '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
     );
 
+    userEvent.click(await root.findByText('ABI'));
     const abiField = (await root.findByLabelText(
       'text area for abi',
     )) as HTMLTextAreaElement;
@@ -82,6 +83,7 @@ describe(CalldataDecoder.name, () => {
       '0x6a947f74000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000021c',
     );
 
+    userEvent.click(await root.findByText('ABI'));
     const abiField = (await root.findByLabelText(
       'text area for abi',
     )) as HTMLTextAreaElement;
@@ -116,7 +118,7 @@ describe(CalldataDecoder.name, () => {
     });
   });
 
-  it('types calldata, switches to 4byte mode, enters correct hash signature, clicks decode btn and gets correct results', async () => {
+  it('types calldata, enters correct hash signature, clicks decode btn and gets correct results', async () => {
     const calldata =
       '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000';
 
@@ -158,7 +160,6 @@ describe(CalldataDecoder.name, () => {
 
     expect(calldataField.value).toEqual(calldata);
 
-    userEvent.click(root.getByText('4 bytes'));
     userEvent.click(root.getByText('Decode'));
 
     const decodedCalldataTree0 = await waitFor(() => {

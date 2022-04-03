@@ -1,5 +1,5 @@
 import { Interface, ParamType } from '@ethersproject/abi';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
@@ -7,6 +7,7 @@ import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
+  fetch4BytesData,
   fetchAndDecodeWithCalldata,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
@@ -29,7 +30,7 @@ export default function CalldataDecoder({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
 
-  const [tab, setTab] = useState<'abi' | '4-bytes'>('abi');
+  const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
   const [decodeResults, setDecodeResults] = useState<
     {
       fnName?: string;
@@ -119,28 +120,21 @@ export default function CalldataDecoder({
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value);
         }}
+        onPaste={(event: ClipboardEvent<HTMLTextAreaElement>) => {
+          const encodedCalldata = event.clipboardData.getData('Text');
+          const sigHash = sigHashFromCalldata(encodedCalldata);
+          if (sigHash) {
+            void fetch4BytesData(sigHash, 'signatures');
+          }
+        }}
       />
 
       <div className="flex flex-col">
         <div className="flex text-lg">
           <button
             role="tab"
-            aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
-            }`}
-            onClick={() => {
-              setTab('abi');
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
-
-          <button
-            role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600
+            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600
             p-1 text-center ${
               tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
             }`}
@@ -150,6 +144,20 @@ export default function CalldataDecoder({
             }}
           >
             4 bytes
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={tab === 'abi'}
+            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            }`}
+            onClick={() => {
+              setTab('abi');
+              setDecodeResults(undefined);
+            }}
+          >
+            ABI
           </button>
         </div>
 

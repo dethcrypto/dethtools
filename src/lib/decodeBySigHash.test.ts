@@ -6,7 +6,7 @@ import {
   decodeWithEventProps,
   fetch4BytesData,
   fetchAndDecodeWithCalldata,
-  fetchSignaturesByCalldata,
+  getSignaturesByCalldata,
   parse4BytesResToIfaces,
 } from './decodeBySigHash';
 import { EventProps } from './decodeEvent';
@@ -19,9 +19,9 @@ describe(fetch4BytesData.name, () => {
   });
 });
 
-describe(fetchSignaturesByCalldata.name, () => {
+describe(getSignaturesByCalldata.name, () => {
   it('fetches correct data by signature', async () => {
-    expect(await fetchSignaturesByCalldata('0x23b872dd')).toEqual([
+    expect(await getSignaturesByCalldata('0x23b872dd')).toEqual([
       {
         id: 31781,
         created_at: '2018-05-12T20:40:45.467194Z',

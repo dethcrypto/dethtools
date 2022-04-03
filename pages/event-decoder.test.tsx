@@ -4,9 +4,10 @@ import { expect } from 'earljs';
 import EventDecoder from './event-decoder.page';
 
 describe(EventDecoder.name, () => {
-  it('types abi, fills three topics, presses decode button and gets correct results', async () => {
+  it('types abi, switches to ABI mode, fills three topics, presses decode button and gets correct results', async () => {
     const root = render(<EventDecoder />);
 
+    fireEvent.click(root.getByText('ABI'));
     const abiField = (await root.findByLabelText(
       'text area for abi',
     )) as HTMLTextAreaElement;
@@ -99,8 +100,6 @@ describe(EventDecoder.name, () => {
 
   it('clicks on 4byte button, fills data and three topics and clicks on decode button', async () => {
     const root = render(<EventDecoder />);
-
-    fireEvent.click(root.getByText('4 bytes'));
 
     const dataField = (await root.findByLabelText('data')) as HTMLInputElement;
     const topic0Field = (await root.findByLabelText(

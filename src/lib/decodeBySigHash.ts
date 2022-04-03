@@ -10,7 +10,7 @@ export async function decodeWithEventProps(
   sigHash: string,
   eventProps: EventProps,
 ): Promise<DecodedEventResult[] | undefined> {
-  const data = await fetchSignaturesByTopic(sigHash);
+  const data = await getSignaturesByTopic(sigHash);
   if (data) {
     // force indexing basing on topic count
     const ifaces = parse4BytesResToIfaces(data, 'event');
@@ -22,7 +22,7 @@ export async function fetchAndDecodeWithCalldata(
   sigHash: string,
   calldata: string,
 ): Promise<DecodeResult[] | undefined> {
-  const data = await fetchSignaturesByCalldata(sigHash);
+  const data = await getSignaturesByCalldata(sigHash);
   if (data) {
     const ifaces = parse4BytesResToIfaces(data);
     return decodeByCalldata(ifaces, calldata);
@@ -45,14 +45,42 @@ export type FetchResult = {
 };
 
 // @internal
+// there are more types, but we don't need them for now
+export type HexSigType = 'signatures' | 'event-signatures';
+
+type Bytes4Cache = {
+  [sigType in HexSigType]: {
+    // undefined - not populated
+    // [] - no results
+    // [...] - results
+    [sig: string]: FetchResult[] | undefined;
+  };
+};
+
+const bytes4Cache: Bytes4Cache = {
+  signatures: {},
+  'event-signatures': {},
+};
+
+// @internal
+export async function getBytes4Data(
+  hexSig: string,
+  hexSigType: HexSigType,
+): Promise<FetchResult[] | undefined> {
+  if (bytes4Cache[hexSigType][hexSig] === undefined) {
+    await fetch4BytesData(hexSig, hexSigType);
+  }
+  return bytes4Cache[hexSigType][hexSig];
+}
+
+// @internal
 export async function fetch4BytesData(
   hexSig: string,
   hexSigType: HexSigType,
 ): Promise<FetchResult[] | undefined> {
   const response = await fetch(`${urlTo(hexSigType)}${hexSig}`);
   const json = await response.json();
-
-  return json.results;
+  return (bytes4Cache[hexSigType][hexSig] = json.results);
 }
 
 // @internal
@@ -61,25 +89,19 @@ function urlTo(hexSigType: HexSigType): string {
 }
 
 // @internal
-// there are more types, but we don't need them for now
-type HexSigType = 'signatures' | 'event-signatures';
-
-// @internal
-export async function fetchSignaturesByCalldata(sigHash: string) {
-  return fetch4BytesData(sigHash, 'signatures');
+export async function getSignaturesByCalldata(sigHash: string) {
+  return getBytes4Data(sigHash, 'signatures');
 }
 
 // @internal
-export async function fetchSignaturesByTopic(sigHash: string) {
-  return fetch4BytesData(sigHash, 'event-signatures');
+export async function getSignaturesByTopic(sigHash: string) {
+  return getBytes4Data(sigHash, 'event-signatures');
 }
 
 // @internal
 export function parse4BytesResToIfaces(
   data: FetchResult[],
   defaultKeyword: string = 'function',
-  // @notice how many params should be changed to indexed (basing on given topic count)
-  indexArgs?: number,
 ): Interface[] {
   const ifaces: Interface[] = [];
 
