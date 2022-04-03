@@ -1,6 +1,10 @@
 import { ParamType } from '@ethersproject/abi';
+import { Listbox } from '@headlessui/react';
+import { useEffect, useState } from 'react';
 
 import { Decoded } from '../lib/decodeCalldata';
+import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
+
 interface Node {
   name: ParamType['name'];
   type: ParamType['type'];
@@ -18,6 +22,82 @@ interface Tree extends Node {
 
 type TreeNode = Leaf | Tree;
 
+type FormatType = 'hex' | 'dec';
+
+function NodeBlock({
+  children,
+  className,
+  str,
+}: {
+  str: string;
+  children?: any;
+  className?: string;
+}) {
+  const formats: Array<{ id: number; name: FormatType }> = [
+    { id: 1, name: 'hex' },
+    { id: 2, name: 'dec' },
+  ];
+
+  const [currentFormat, setCurrentFormat] = useState(formats[0]);
+
+  useEffect(() => {
+    if (!isHex(str)) {
+      setCurrentFormat(formats[1]);
+    }
+    // it needs to be called only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function formatNodeValue(format: FormatType, value: string) {
+    if (format === 'dec') return decodeHex(value);
+    else return encodeHex(value);
+  }
+
+  return (
+    <div
+      className={`hover:shadow-pink flex cursor-pointer items-center gap-3
+      overflow-auto rounded-md border border-deth-gray-600
+      duration-200 hover:bg-deth-gray-700 hover:shadow-lg
+      hover:outline hover:outline-2
+    active:bg-deth-gray-800 ${className}`}
+    >
+      <Listbox value={currentFormat} onChange={setCurrentFormat}>
+        <Listbox.Button
+          className={`hover:shadow-pink ml-3 flex cursor-pointer items-center rounded-md
+                      border border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700
+                      hover:shadow-lg hover:outline hover:outline-2
+                    active:bg-deth-gray-800 ${className}`}
+        >
+          {currentFormat.name}
+        </Listbox.Button>
+
+        <Listbox.Options>
+          <div className="flex items-center">
+            {formats
+              .filter((fmt) => fmt.id !== currentFormat.id)
+              .map((fmt) => (
+                <Listbox.Option
+                  as="ul"
+                  className={`hover:shadow-pink m-0 flex cursor-pointer items-center rounded-md
+                    border border-deth-gray-600 p-0 px-2 duration-200
+                    hover:bg-deth-gray-700 hover:shadow-lg hover:outline hover:outline-2
+                  active:bg-deth-gray-800 ${className}`}
+                  key={fmt.id}
+                  value={fmt}
+                >
+                  {fmt.name}
+                </Listbox.Option>
+              ))}
+          </div>
+        </Listbox.Options>
+      </Listbox>
+
+      {children}
+      <b id="node-value">{formatNodeValue(currentFormat.name, str)}</b>
+    </div>
+  );
+}
+
 function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
   return components.map((input, index): TreeNode => {
     if (input.type === 'tuple') {
@@ -28,16 +108,13 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
           'input.type is tuple, but decoded value is not an array',
         );
       }
-
       const { components } = input;
-
       return {
         name: input.name,
         type: input.type,
         components: attachValues(components, value),
       };
     }
-
     return {
       name: input.name,
       type: input.type,
@@ -45,6 +122,11 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
     };
   });
 }
+
+// Test if node.type contains [*] pattern,
+// where * is any asterisk, and [] must
+// occur, thus we know if type is an array.
+const isNodeArray = new RegExp(/[[*\]]/);
 
 function CalldataTreeNode({
   node,
@@ -57,43 +139,38 @@ function CalldataTreeNode({
     return (
       <span className={className}>
         <code>
-          {node.type.match(/[[*\]]/) ? (
-            <div>
-              {node.name ? (
-                <b className="text-deth-pink">{node.name} </b>
-              ) : (
-                <b className="text-pink-400">unknown name </b>
-              )}
+          {node.type.match(isNodeArray) ? (
+            <div className="my-4 rounded-lg border border-deth-gray-600 p-3">
+              <p id="node-type" className="pt-2 pb-4 text-purple-400">
+                {node.name ? (
+                  <b className="text-deth-pink">{node.name} </b>
+                ) : (
+                  <b className="text-pink-400">unknown name </b>
+                )}
+                {node.type}
+              </p>
 
+              <section className="flex flex-wrap gap-2">
+                {node.value?.split(',').map((str, i) => {
+                  return (
+                    <NodeBlock className="basis shrink grow" str={str} key={i}>
+                      <code className="text-deth-gray-600">[{i}] </code>
+                    </NodeBlock>
+                  );
+                })}
+              </section>
+            </div>
+          ) : (
+            <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
+              {node.name ? (
+                <b className="text-pink-400">{node.name}</b>
+              ) : (
+                <b className="text-pink-400">unknown name</b>
+              )}
               <b id="node-type" className=" text-purple-400">
                 {node.type}
               </b>
-
-              <code>
-                {' '}
-                {node.value?.split(',').map((str, i) => {
-                  return (
-                    <div key={i}>
-                      {' '}
-                      <code className="text-deth-gray-600">[{i}]</code>{' '}
-                      <code id="node-value">{str}</code>
-                    </div>
-                  );
-                })}{' '}
-              </code>
-            </div>
-          ) : (
-            <div>
-              {node.name ? (
-                <b className="text-pink-400">{node.name} </b>
-              ) : (
-                <b className="text-pink-400">unknown name </b>
-              )}
-              <b id="node-type" className=" text-purple-400">
-                {node.type}
-              </b>{' '}
-              <b id="node-value">{node.value}</b>
-            </div>
+            </NodeBlock>
           )}
         </code>
       </span>
@@ -104,7 +181,7 @@ function CalldataTreeNode({
     <section>
       <b className="text-purple-400">struct</b> {node.name}
       {':'}
-      <ul className="pb-1 pt-1">
+      <ul className="pb-1">
         {node.components.map((node, index) => (
           <div key={index} className="border-l border-deth-gray-600 pl-3">
             <CalldataTreeNode node={node} />
@@ -128,12 +205,12 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="mb-2 bg-red-600">
+    <output className="mb-2 bg-deth-error">
       <pre className="bg-deth-gray-900">
-        <section>
+        <p>
           <code className="font-bold text-purple-400">{fnType} </code>
           <code>{fnName} </code>
-        </section>
+        </p>
 
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>

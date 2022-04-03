@@ -236,7 +236,7 @@ export default function EventDecoder() {
                 return (
                   <section key={i}>
                     <div className="flex flex-col gap-2 pb-4">
-                      {d.fullSignature}
+                      <code>{d.fullSignature}</code>
 
                       <code>{'{'}</code>
 

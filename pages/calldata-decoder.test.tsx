@@ -49,7 +49,7 @@ describe(CalldataDecoder.name, () => {
     const correctTypes = ['address', 'address', 'uint256'];
     correctTypes.forEach((e, i) => {
       expect(e).toEqual(
-        root.getByTestId(i).querySelector('#node-type')?.innerHTML,
+        root.getByTestId(i).querySelector('#node-type')!.innerHTML,
       );
     });
 
