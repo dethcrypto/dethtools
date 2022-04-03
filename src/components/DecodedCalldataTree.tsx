@@ -55,18 +55,18 @@ function NodeBlock({
 
   return (
     <div
-      className={`hover:shadow-pink flex cursor-pointer items-center gap-3
-      overflow-auto rounded-md border border-deth-gray-600
-      duration-200 hover:bg-deth-gray-700 hover:shadow-lg
+      className={`flex cursor-pointer items-center gap-3 overflow-auto
+      rounded-md border border-deth-gray-600 duration-200
+      hover:bg-deth-gray-700 hover:shadow-md hover:shadow-pink/25
       hover:outline hover:outline-2
     active:bg-deth-gray-800 ${className}`}
     >
       <Listbox value={currentFormat} onChange={setCurrentFormat}>
         <Listbox.Button
-          className={`hover:shadow-pink ml-3 flex cursor-pointer items-center rounded-md
-                      border border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700
-                      hover:shadow-lg hover:outline hover:outline-2
-                    active:bg-deth-gray-800 ${className}`}
+          className={`ml-3 flex cursor-pointer items-center rounded-md border
+                      border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+                      hover:shadow-pink/25 hover:outline hover:outline-2
+                      active:bg-deth-gray-800 ${className}`}
         >
           {currentFormat.name}
         </Listbox.Button>
@@ -78,9 +78,10 @@ function NodeBlock({
               .map((fmt) => (
                 <Listbox.Option
                   as="ul"
-                  className={`hover:shadow-pink m-0 flex cursor-pointer items-center rounded-md
-                    border border-deth-gray-600 p-0 px-2 duration-200
-                    hover:bg-deth-gray-700 hover:shadow-lg hover:outline hover:outline-2
+                  className={`m-0 flex cursor-pointer items-center rounded-md
+                    border border-deth-gray-600 p-0
+                    px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+                  hover:shadow-pink/25 hover:outline hover:outline-2
                   active:bg-deth-gray-800 ${className}`}
                   key={fmt.id}
                   value={fmt}
@@ -141,7 +142,7 @@ function CalldataTreeNode({
         <code>
           {node.type.match(isNodeArray) ? (
             <div className="my-4 rounded-lg border border-deth-gray-600 p-3">
-              <p id="node-type" className="pt-2 pb-4 text-purple-400">
+              <p id="node-type" className="text-purple-400 pt-2 pb-4">
                 {node.name ? (
                   <b className="text-deth-pink">{node.name} </b>
                 ) : (
@@ -208,10 +209,10 @@ export function DecodedCalldataTree({
     <output className="mb-2 bg-deth-error">
       <pre className="bg-deth-gray-900">
         <p>
-          <code className="font-bold text-purple-400">{fnType} </code>
+          <code className="text-purple-400 font-bold">{fnType} </code>
           <code>{fnName} </code>
         </p>
-        
+
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />

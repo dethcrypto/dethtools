@@ -212,12 +212,12 @@ export default function CalldataDecoder({
             <div>
               {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div
-                  className="hover:shadow-pink m-0 flex cursor-pointer items-center gap-2 rounded-md
-                    border border-deth-gray-600 py-1 px-3 duration-200
-                  hover:bg-deth-gray-700 hover:shadow-lg hover:outline hover:outline-2
-                  active:bg-deth-gray-800"
+                  className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
+                    border-deth-gray-600 py-1 px-3 duration-200 hover:bg-deth-gray-700
+                      hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
+                    active:bg-deth-gray-800"
                 >
-                  <p className="font-bold text-purple-400">Signature hash</p>
+                  <p className="text-purple-400 font-bold">Signature hash</p>
                   <b>{signatureHash}</b>
                 </div>
               )}
