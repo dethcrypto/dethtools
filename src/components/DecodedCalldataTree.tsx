@@ -211,7 +211,7 @@ export function DecodedCalldataTree({
           <code className="font-bold text-purple-400">{fnType} </code>
           <code>{fnName} </code>
         </p>
-
+        
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />

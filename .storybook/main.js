@@ -1,14 +1,11 @@
+// @ts-check
 // .storybook/main.js
 
 const path = require('path');
+const tsconfig = require('../tsconfig.json');
 
 module.exports = {
-  stories: [
-    '../**/*.stories.mdx',
-    '../**/*.stories.@(ts|tsx)',
-    '../src/components/**/*.stories.mdx',
-    '../src/components/**/*.stories.@(ts|tsx)',
-  ],
+  stories: ['../src/**/*.stories.{ts,tsx,mdx}'],
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-links',
@@ -26,10 +23,10 @@ module.exports = {
     builder: 'webpack5',
   },
   webpackFinal: (config) => {
-    config.resolve.roots = [
-      path.resolve(__dirname, '../public'),
-      'node_modules',
-    ];
+    config.resolve.modules.push(
+      path.resolve(__dirname, '..', tsconfig.compilerOptions.baseUrl),
+    );
+
     return config;
   },
 };
