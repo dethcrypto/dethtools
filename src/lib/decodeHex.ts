@@ -12,7 +12,7 @@ export function decodeHex(value: string): string {
 export function encodeHex(value: string): string {
   if (value === '0x') value = '0x0';
   if (!isHex(value)) {
-    return BigNumber.from(value)._hex;
+    return BigNumber.from(value).toHexString();
   } else {
     return value;
   }
