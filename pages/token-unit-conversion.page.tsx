@@ -12,57 +12,77 @@ import { ConversionInput } from '../src/components/ConversionInput';
 import { Input } from '../src/components/lib/Input';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
-import { tokenPrecision } from '../src/lib/convertProperties';
-import { convertTokenUnits } from '../src/lib/convertUnits';
+import { convertUnit } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/unitSchema';
 
 const DEFAULT_DECIMALS = 18;
-type State = { base: string; unit: string };
 
-const entries = Object.entries as <T>(obj: T) => [keyof T, T[keyof T]][];
+type TokenUnitType = 'base' | 'unit';
+
+interface UnitTypeExtended {
+  name: TokenUnitType;
+  value: string;
+}
+
+interface TokenUnitConversionState
+  extends Record<TokenUnitType, { value: string; error?: string }> {}
+
+const initialState: TokenUnitConversionState = {
+  base: { value: '' },
+  unit: { value: '' },
+};
 
 export default function TokenUnitConversion() {
-  const [error, setError] = useState<string>();
-
   const lastUpdate = useRef<UnitTypeExtended>();
 
   const [decimals, setDecimals] = useState(DEFAULT_DECIMALS);
-  const [state, setState] = useState<State>({ base: '', unit: '' });
+  const [state, setState] = useState<TokenUnitConversionState>(initialState);
 
   const handleChangeValue = useMemo(() => {
-    return (value: string, currentType: TokenUnitType) => {
-      value = decodeHex(value);
+    return (newValue: string, currentType: TokenUnitType) => {
+      newValue = decodeHex(newValue);
 
-      setError(undefined);
-      try {
-        unitSchema.parse(value);
-      } catch (e) {
-        setError(JSON.parse(e as string)[0].message);
+      const parsed = unitSchema.safeParse(newValue);
+
+      if (!parsed.success) {
+        setState((prevState) => ({
+          ...prevState,
+          [currentType]: {
+            value: newValue,
+            error: parsed.error.errors[0].message,
+          },
+        }));
+
+        return;
       }
 
+      newValue = parsed.data;
+
       setState((oldState) => {
-        const newState: State = { ...oldState, [currentType]: value };
+        const newState: TokenUnitConversionState = {
+          ...oldState,
+          [currentType]: { value: newValue },
+        };
 
-        for (const [name, unitValue] of entries(newState)) {
-          // todo: fixme
-          tokenPrecision.base = decimals;
+        const otherUnit = currentType === 'base' ? 'unit' : 'base';
 
-          if (name === currentType) continue;
+        const out = convertUnit(newValue, currentType, otherUnit, {
+          unit: 1,
+          base: (isNaN(decimals) ? 0 : decimals) + 1,
+        });
 
-          let out: string = '';
-          if (!error) {
-            out = convertTokenUnits(value, currentType, name)!;
-          }
-          if (isNaN(parseInt(out))) out = unitValue;
-          newState[name] = out;
-        }
-        lastUpdate.current = { name: currentType, value };
+        if (out !== undefined) newState[otherUnit] = { value: out };
+
+        lastUpdate.current = { name: currentType, value: newValue };
+
         return newState;
       });
     };
-  }, [decimals, error]);
+  }, [decimals]);
 
+  // When decimals change, we update the last changed input and preserve
+  // the oldest changed input.
   useEffect(() => {
     if (lastUpdate.current) {
       handleChangeValue(lastUpdate.current.value, lastUpdate.current.name);
@@ -88,14 +108,12 @@ export default function TokenUnitConversion() {
           />
           <ConversionInput
             name="Units"
-            value={state['unit']}
-            error=""
+            {...state['unit']}
             onChange={(e) => handleChangeValue(e.target.value, 'unit')}
           />
           <ConversionInput
             name="Base"
-            value={state['base']}
-            error=""
+            {...state['base']}
             onChange={(e) => handleChangeValue(e.target.value, 'base')}
           />
         </section>
@@ -136,7 +154,7 @@ function UnitElements({
             id="decimals"
             type="number"
             min={0}
-            placeholder={tokenPrecision.base.toString()}
+            placeholder="0"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setDecimal(event.target.value);
             }}
@@ -171,11 +189,4 @@ function UnitElements({
       })}
     </Fragment>
   );
-}
-
-type TokenUnitType = 'base' | 'unit';
-
-interface UnitTypeExtended {
-  name: TokenUnitType;
-  value: string;
 }
