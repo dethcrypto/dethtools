@@ -8,6 +8,6 @@ export const unitSchema = z.preprocess(
       message:
         "The value mustn't contain letters or any special signs except dot",
     })
-    .min(1, { message: 'The value must be bigger or equal to 1' })
-    .max(26, { message: 'The value must be less or equal to 26' }),
+    .min(1, { message: 'The value must be longer than 1 digit' })
+    .max(26, { message: 'The value must be shorter than 26 digits' }),
 );

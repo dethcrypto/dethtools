@@ -12,6 +12,10 @@ html {
   @apply bg-gray-900;
 }
 
+*::selection {
+  @apply bg-purple/50;
+}
+
 #__next {
   height: 100vh;
 }

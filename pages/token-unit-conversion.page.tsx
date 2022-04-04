@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
+import { Input } from '../src/components/lib/Input';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
@@ -149,11 +150,11 @@ function UnitElements({
                 <label htmlFor={name}>{name}</label>
               </div>
 
-              <input
+              <Input
                 id={name}
                 placeholder={value ? value.toString() : '0'}
                 value={value}
-                type="string"
+                type="text"
                 onChange={(event) => {
                   onChange(event.target.value, name);
                 }}

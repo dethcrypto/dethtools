@@ -1,55 +1,70 @@
-import { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
+import { Input } from '../src/components/lib/Input';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/unitSchema';
 
-type State = { wei: string; gwei: string; eth: string };
+type EthUnitConversionState = Record<
+  UnitType,
+  { value: string; error?: string }
+>;
+
+const powers = {
+  wei: -18,
+  gwei: -9,
+  eth: -1,
+};
+
+const initialState: EthUnitConversionState = {
+  wei: { value: '' },
+  gwei: { value: '' },
+  eth: { value: '' },
+};
 
 export default function EthUnitConversion() {
-  const [error, setError] = useState<string | undefined>();
-  const [state, setState] = useState<State>({ wei: '', gwei: '', eth: '' });
+  const [state, setState] = useState<EthUnitConversionState>(initialState);
 
-  const units: UnitTypeExtended[] = [
-    { name: 'wei', powFormat: '10-18', value: state.wei },
-    { name: 'gwei', powFormat: '10-9', value: state.gwei },
-    { name: 'eth', powFormat: '10-1', value: state.eth },
-  ];
+  function handleChangeValue(newValue: string, currentType: UnitType) {
+    newValue = decodeHex(newValue);
 
-  function handleChangeValue(value: string, currentType: UnitType) {
-    value = decodeHex(value);
+    const parsed = unitSchema.safeParse(newValue);
 
-    const result = unitSchema.safeParse(value);
-    if (!result.success) {
-      setError(result.error.errors[0].message);
-    } else {
-      value = result.data;
-      setError(undefined);
+    if (!parsed.success) {
+      setState((prevState) => ({
+        ...prevState,
+        [currentType]: {
+          value: newValue,
+          error: parsed.error.errors[0].message,
+        },
+      }));
+
+      return;
     }
 
-    setState((s) => ({ ...s, [currentType]: value }));
+    newValue = parsed.data;
 
-    for (const unit of units) {
-      if (unit.name === currentType) continue;
+    setState((oldState) => {
+      const newState = { ...oldState };
 
-      let out: string = '';
-      if (parseFloat(value) >= 0) {
-        out = convertEthUnits(value, currentType, unit.name)!;
+      for (const unit of UnitType.values) {
+        if (unit === currentType) newState[unit] = { value: newValue };
+        else if (parseFloat(newValue) >= 0) {
+          const out = convertEthUnits(newValue, currentType, unit)!;
+          if (!isNaN(parseInt(out))) newState[unit] = { value: out };
+        }
       }
-      if (isNaN(parseInt(out))) {
-        out = unit.value;
-      }
 
-      setState((s) => ({ ...s, [unit.name]: out }));
-    }
+      return newState;
+    });
   }
 
   return (
     <ToolLayout>
-      <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
+      <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
         <header className="mb-6 flex items-center gap-3 align-middle">
           <CalculatorSvg
             width={32}
@@ -63,68 +78,52 @@ export default function EthUnitConversion() {
             Eth unit conversion
           </h3>
         </header>
-        <UnitElements
-          onChange={handleChangeValue}
-          units={units}
-          error={error}
-        />
+        <section className="flex w-full flex-col gap-5">
+          {UnitType.values.map((unit) => (
+            <ConversionInput
+              key={unit}
+              name={unit}
+              {...state[unit]}
+              onChange={handleChangeValue}
+            />
+          ))}
+        </section>
       </form>
     </ToolLayout>
   );
 }
 
-interface UnitElementsProps {
-  units: UnitTypeExtended[];
-  error: string | undefined;
-  onChange: (value: string, unitType: UnitType) => void;
+interface ConversionInputProps {
+  name: UnitType;
+  value: string;
+  error?: string;
+  onChange: (newValue: string, unit: UnitType) => void;
 }
-function UnitElements({
-  units,
+function ConversionInput({
+  name,
+  value,
   error,
   onChange,
-}: UnitElementsProps): JSX.Element {
+}: ConversionInputProps) {
   return (
-    <Fragment>
-      <p
-        data-testid="error"
-        className="absolute top-2/3 text-sm text-deth-error"
-      >
-        {error}
-      </p>
+    <label htmlFor={name} className="flex flex-col">
+      <div className="mb-2 flex gap-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
+        <span>{name}</span>
+        <p className="text-deth-gray-300">
+          10<sup>{powers[name]}</sup>
+        </p>
+      </div>
 
-      {units.map((unit) => {
-        const { name, value, powFormat } = unit;
-        return (
-          <div key={name} className="mt-5 w-full">
-            <section className="flex flex-col">
-              <div className="mb-2 flex gap-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-                <label htmlFor={name}>{name}</label>
-                <p className="text-deth-gray-300">
-                  {powFormat.slice(0, 2)}
-                  <sup>{powFormat.slice(2, 5)}</sup>
-                </p>
-              </div>
-
-              <input
-                id={name}
-                placeholder={value ? value.toString() : '0'}
-                value={value}
-                type="string"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  onChange(event.target.value, name);
-                }}
-                className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
-              />
-            </section>
-          </div>
-        );
-      })}
-    </Fragment>
+      <Input
+        id={name}
+        type="text"
+        placeholder={value ? value.toString() : '0'}
+        value={value}
+        error={error}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          onChange(event.target.value, name);
+        }}
+      />
+    </label>
   );
-}
-
-interface UnitTypeExtended {
-  name: UnitType;
-  powFormat: string;
-  value: string;
 }

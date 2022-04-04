@@ -79,7 +79,7 @@ describe(TokenUnitConversion.name, () => {
 
     fireEvent.change(baseField, { target: { value: '' } });
     expect(errorField.innerHTML).toEqual(
-      expect.stringMatching(/The value must be bigger or equal to 1/),
+      expect.stringMatching(/The value must be longer than 1 digit/),
     );
   });
 
