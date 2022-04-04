@@ -1,4 +1,11 @@
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { constrain } from '../../../misc/constrain';
 
@@ -22,23 +29,43 @@ const autoCompleteProps = constrain<InputProps>()({
 });
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, error, autoComplete = 'off', ...rest }, ref) => {
+  (
+    {
+      className,
+      error: errorFromProps,
+      autoComplete = 'off',
+      onChange,
+      ...rest
+    },
+    ref,
+  ) => {
+    const [validationMessage, setValidationMessage] = useState<
+      string | undefined
+    >();
+
+    const error = errorFromProps || validationMessage;
+
     return (
       <div>
         <input
           ref={ref}
-          aria-invalid={!!error}
+          aria-invalid={!!errorFromProps}
           {...(autoComplete === 'off' && autoCompleteProps)}
           className={
             'w-full rounded-md border border-gray-600 bg-gray-900 ' +
             'p-3.75 text-lg leading-none text-white focus:outline-none ' +
             'invalid:border-error invalid:caret-error ' +
             'disabled:text-white/50 ' +
-            (error
+            (errorFromProps
               ? 'border-error caret-error '
               : 'focus:border-pink focus:caret-pink ') +
             (className ? ` ${className}` : '')
           }
+          onChange={(event) => {
+            onChange?.(event);
+            const validationMessage = event.target.validationMessage;
+            if (validationMessage) setValidationMessage(validationMessage);
+          }}
           {...rest}
         />
         <div className="whitespace-normal pt-2">
