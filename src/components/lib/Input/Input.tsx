@@ -1,11 +1,4 @@
-import {
-  ComponentPropsWithoutRef,
-  forwardRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ComponentPropsWithoutRef, forwardRef, useState } from 'react';
 
 import { constrain } from '../../../misc/constrain';
 
