@@ -16,7 +16,7 @@ type EthUnitConversionState = Record<
 const powers = {
   wei: -18,
   gwei: -9,
-  eth: -1,
+  eth: undefined,
 };
 
 const initialState: EthUnitConversionState = {
@@ -109,9 +109,11 @@ function ConversionInput({
     <label htmlFor={name} className="flex flex-col">
       <div className="mb-2 flex gap-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
         <span>{name}</span>
-        <p className="text-deth-gray-300">
-          10<sup>{powers[name]}</sup>
-        </p>
+        {powers[name] && (
+          <p className="text-deth-gray-300">
+            10<sup>{powers[name]}</sup>
+          </p>
+        )}
       </div>
 
       <Input
