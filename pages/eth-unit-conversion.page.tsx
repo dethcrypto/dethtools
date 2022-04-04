@@ -120,7 +120,7 @@ function UnitElements({
           </div>
         );
       })}
-      <Tips />
+      <Tips componentName="calculator" />
     </Fragment>
   );
 }
