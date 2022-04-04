@@ -1,9 +1,10 @@
 import { Listbox } from '@headlessui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
 
 type FormatType = 'hex' | 'dec';
+const formatTypes: FormatType[] = ['hex', 'dec'];
 
 export function NodeBlock({
   children,
@@ -14,13 +15,8 @@ export function NodeBlock({
   children?: any;
   className?: string;
 }) {
-  const formats: Array<{ id: number; name: FormatType }> = [
-    { id: 1, name: 'hex' },
-    { id: 2, name: 'dec' },
-  ];
-
-  const [currentFormat, setCurrentFormat] = useState(() =>
-    isHex(str) ? formats[0] : formats[1],
+  const [currentFormat, setCurrentFormat] = useState<FormatType>(() =>
+    isHex(str) ? 'hex' : 'dec',
   );
 
   function formatNodeValue(format: FormatType, value: string) {
@@ -43,13 +39,13 @@ export function NodeBlock({
                       hover:shadow-pink/25 hover:outline hover:outline-2
                       active:bg-deth-gray-800 ${className}`}
         >
-          {currentFormat.name}
+          {currentFormat}
         </Listbox.Button>
 
         <Listbox.Options>
           <div className="flex items-center">
-            {formats
-              .filter((fmt) => fmt.id !== currentFormat.id)
+            {formatTypes
+              .filter((fmt) => fmt !== currentFormat)
               .map((fmt) => (
                 <Listbox.Option
                   as="ul"
@@ -58,10 +54,10 @@ export function NodeBlock({
                     px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
                     hover:shadow-pink/25 hover:outline hover:outline-2
                     active:bg-deth-gray-800 ${className}`}
-                  key={fmt.id}
+                  key={fmt}
                   value={fmt}
                 >
-                  {fmt.name}
+                  {fmt}
                 </Listbox.Option>
               ))}
           </div>
@@ -69,7 +65,7 @@ export function NodeBlock({
       </Listbox>
 
       {children}
-      <b id="node-value">{formatNodeValue(currentFormat.name, str)}</b>
+      <b id="node-value">{formatNodeValue(currentFormat, str)}</b>
     </div>
   );
 }
