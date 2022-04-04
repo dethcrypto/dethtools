@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from 'react';
 import CalculatorSvg from '../public/static/svg/calculator';
 import { Input } from '../src/components/lib/Input';
 import { Tips } from '../src/components/Tips';
+import { calculatorTips } from '../src/components/Tips/calculatorTips';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
@@ -65,7 +66,7 @@ export default function EthUnitConversion() {
 
   return (
     <ToolLayout>
-      <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
+      <form className="flex flex-col items-start sm:mx-4 sm:items-center md:mx-16 md:items-start">
         <header className="mb-6 flex items-center gap-3 align-middle">
           <CalculatorSvg
             width={32}
@@ -89,7 +90,7 @@ export default function EthUnitConversion() {
             />
           ))}
         </section>
-        <Tips tipType="calculator" />
+        <Tips texts={calculatorTips} />
       </form>
     </ToolLayout>
   );
