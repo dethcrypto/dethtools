@@ -1,6 +1,6 @@
 import {
-  ChangeEvent,
-  Fragment,
+  Dispatch,
+  SetStateAction,
   useEffect,
   useMemo,
   useRef,
@@ -9,7 +9,6 @@ import {
 
 import CalculatorSvg from '../public/static/svg/calculator';
 import { ConversionInput } from '../src/components/ConversionInput';
-import { Input } from '../src/components/lib/Input';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
@@ -25,8 +24,10 @@ interface UnitTypeExtended {
   value: string;
 }
 
+type WithError<T> = { value: T; error?: string };
+
 interface TokenUnitConversionState
-  extends Record<TokenUnitType, { value: string; error?: string }> {}
+  extends Record<TokenUnitType, WithError<string>> {}
 
 const initialState: TokenUnitConversionState = {
   base: { value: '' },
@@ -36,7 +37,9 @@ const initialState: TokenUnitConversionState = {
 export default function TokenUnitConversion() {
   const lastUpdate = useRef<UnitTypeExtended>();
 
-  const [decimals, setDecimals] = useState(DEFAULT_DECIMALS);
+  const [decimals, setDecimals] = useState<WithError<number>>({
+    value: DEFAULT_DECIMALS,
+  });
   const [state, setState] = useState<TokenUnitConversionState>(initialState);
 
   const handleChangeValue = useMemo(() => {
@@ -65,11 +68,13 @@ export default function TokenUnitConversion() {
           [currentType]: { value: newValue },
         };
 
+        if (decimals.error) return newState;
+
         const otherUnit = currentType === 'base' ? 'unit' : 'base';
 
         const out = convertUnit(newValue, currentType, otherUnit, {
           unit: 1,
-          base: (isNaN(decimals) ? 0 : decimals) + 1,
+          base: decimals.value + 1,
         });
 
         if (out !== undefined) newState[otherUnit] = { value: out };
@@ -97,24 +102,11 @@ export default function TokenUnitConversion() {
           text={['Calculators', 'Token Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">
-          <ConversionInput
-            name="Decimals"
-            value={decimals}
-            error=""
-            type="number"
-            min={0}
-            max={26}
-            onChange={(e) => setDecimals(e.target.valueAsNumber)}
-          />
-          <ConversionInput
-            name="Units"
-            {...state['unit']}
-            onChange={(e) => handleChangeValue(e.target.value, 'unit')}
-          />
-          <ConversionInput
-            name="Base"
-            {...state['base']}
-            onChange={(e) => handleChangeValue(e.target.value, 'base')}
+          <ConversionInputs
+            decimals={decimals}
+            handleChangeValue={handleChangeValue}
+            setDecimals={setDecimals}
+            state={state}
           />
         </section>
       </form>
@@ -122,71 +114,49 @@ export default function TokenUnitConversion() {
   );
 }
 
-interface UnitElementsProps {
-  units: UnitTypeExtended[];
-  error: string | undefined;
-  onChange: (value: string, unitType: TokenUnitType) => void;
-  setDecimal: (value: string) => void;
+interface ConversionInputsProps {
+  decimals: WithError<number>;
+  setDecimals: Dispatch<SetStateAction<WithError<number>>>;
+  state: TokenUnitConversionState;
+  handleChangeValue: (newValue: string, currentType: TokenUnitType) => void;
 }
 
-function UnitElements({
-  units,
-  error,
-  onChange,
-  setDecimal,
-}: UnitElementsProps): JSX.Element {
+function ConversionInputs({
+  decimals,
+  setDecimals,
+  state,
+  handleChangeValue,
+}: ConversionInputsProps): JSX.Element {
   return (
-    <Fragment>
-      <p
-        data-testid="error"
-        className="absolute top-2/3 text-sm text-deth-error"
-      >
-        {error}
-      </p>
+    <>
+      <ConversionInput
+        name="Decimals"
+        value={decimals.value}
+        error={decimals.error}
+        type="number"
+        min={0}
+        max={26}
+        onChange={(e) => {
+          let error = e.target.validationMessage;
 
-      <div className="mt-5 w-full">
-        <div className="flex flex-col">
-          <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-            <label htmlFor="decimals">decimals</label>
-          </div>
+          const value = e.target.valueAsNumber;
+          if (isNaN(value) || value < 0) {
+            error = 'The decimals must be a number between 0 and 26';
+          }
 
-          <input
-            id="decimals"
-            type="number"
-            min={0}
-            placeholder="0"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setDecimal(event.target.value);
-            }}
-            className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
-          />
-        </div>
-      </div>
-
-      {units.map((unit) => {
-        const { name, value } = unit;
-
-        return (
-          <div key={name} className="mt-5 w-full">
-            <div className="flex flex-col">
-              <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-                <label htmlFor={name}>{name}</label>
-              </div>
-
-              <Input
-                id={name}
-                placeholder={value ? value.toString() : '0'}
-                value={value}
-                type="text"
-                onChange={(event) => {
-                  onChange(event.target.value, name);
-                }}
-                className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
-              />
-            </div>
-          </div>
-        );
-      })}
-    </Fragment>
+          setDecimals({ value, error });
+        }}
+      />
+      <ConversionInput
+        name="Units"
+        {...state['unit']}
+        onChange={(e) => handleChangeValue(e.target.value, 'unit')}
+      />
+      <ConversionInput
+        name="Base"
+        {...state['base']}
+        onChange={(e) => handleChangeValue(e.target.value, 'base')}
+      />
+    </>
   );
 }
