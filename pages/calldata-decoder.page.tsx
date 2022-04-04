@@ -5,7 +5,8 @@ import DecoderSvg from '../public/static/svg/decoders';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import {
   fetch4BytesData,
   fetchAndDecodeWithCalldata,
@@ -101,12 +102,11 @@ export default function CalldataDecoder({
   const onDecodeClick = () => void handleDecodeCalldata().catch(setError);
 
   return (
-    <ToolLayout>
-      <header className="mb-6 flex items-center gap-3 align-middle">
-        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl">Calldata Decoder</h3>
-      </header>
+    <ToolContainer>
+      <ToolHeader
+        icon={<DecoderSvg height={19} width={19} />}
+        text={['Decoders', 'Calldata Decoder']}
+      />
 
       <label htmlFor="calldata" className="pt-2 text-lg font-bold">
         <p>Calldata</p>
@@ -237,6 +237,6 @@ export default function CalldataDecoder({
           </section>
         </section>
       )}
-    </ToolLayout>
+    </ToolContainer>
   );
 }

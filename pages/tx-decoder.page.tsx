@@ -3,7 +3,8 @@ import { ChangeEvent, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/lib/Button';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolHeader } from '../src/components/ToolHeader';
+import { ToolContainer } from '../src/components/ToolContainer';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
 import { toEvenHex } from '../src/lib/toEvenHex';
 
@@ -26,12 +27,8 @@ export default function TxDecoder() {
   }
 
   return (
-    <ToolLayout>
-      <header className="flex items-center gap-3 align-middle">
-        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl">Tx Decoder</h3>
-      </header>
+    <ToolContainer>
+      <ToolHeader icon={<DecoderSvg />} text={['Decoders', 'Tx Decoder']} />
 
       <section className="pt-10">
         <label className="pb-2" htmlFor="tx-input">
@@ -77,6 +74,6 @@ export default function TxDecoder() {
           </output>
         )}
       </section>
-    </ToolLayout>
+    </ToolContainer>
   );
 }

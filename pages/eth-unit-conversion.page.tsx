@@ -1,8 +1,11 @@
-import { ChangeEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { ChangeEvent, useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
+import { ConversionInput } from '../src/components/ConversionInput';
 import { Input } from '../src/components/lib/Input';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolHeader } from '../src/components/ToolHeader';
+import { ToolContainer } from '../src/components/ToolContainer';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
@@ -63,70 +66,31 @@ export default function EthUnitConversion() {
   }
 
   return (
-    <ToolLayout>
+    <ToolContainer>
       <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
-        <header className="mb-6 flex items-center gap-3 align-middle">
-          <CalculatorSvg
-            width={32}
-            height={32}
-            alt="deth ethereum unit conversion calculator icon"
-          />
-          <h3 className="text-sm text-deth-gray-300 sm:text-xl">
-            Calculators /
-          </h3>
-          <h3 className="text-sm text-deth-pink sm:text-xl">
-            Eth unit conversion
-          </h3>
-        </header>
+        <ToolHeader
+          icon={<CalculatorSvg />}
+          text={['Calculators', 'Eth Unit Conversion']}
+        />
         <section className="flex w-full flex-col gap-5">
           {UnitType.values.map((unit) => (
             <ConversionInput
               key={unit}
-              name={unit}
+              name={unit.toUpperCase()}
               {...state[unit]}
-              onChange={handleChangeValue}
+              onChange={(event) => handleChangeValue(event.target.value, unit)}
+              extraLabel={
+                powers[unit] && (
+                  <span className="inline-block text-sm leading-none text-deth-gray-300">
+                    10
+                    <sup className="-top-0.5">{powers[unit]}</sup>
+                  </span>
+                )
+              }
             />
           ))}
         </section>
       </form>
-    </ToolLayout>
-  );
-}
-
-interface ConversionInputProps {
-  name: UnitType;
-  value: string;
-  error?: string;
-  onChange: (newValue: string, unit: UnitType) => void;
-}
-function ConversionInput({
-  name,
-  value,
-  error,
-  onChange,
-}: ConversionInputProps) {
-  return (
-    <label htmlFor={name} className="flex flex-col gap-2">
-      <div className="flex h-4 gap-1 leading-none">
-        <span className="uppercase">{name}</span>
-        {powers[name] && (
-          <span className="inline-block text-sm leading-none text-deth-gray-300">
-            10
-            <sup className="-top-0.5">{powers[name]}</sup>
-          </span>
-        )}
-      </div>
-
-      <Input
-        id={name}
-        type="text"
-        placeholder={value ? value.toString() : '0'}
-        value={value}
-        error={error}
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          onChange(event.target.value, name);
-        }}
-      />
-    </label>
+    </ToolContainer>
   );
 }

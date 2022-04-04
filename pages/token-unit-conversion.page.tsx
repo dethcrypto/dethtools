@@ -8,15 +8,16 @@ import {
 } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
+import { ConversionInput } from '../src/components/ConversionInput';
 import { Input } from '../src/components/lib/Input';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import { tokenPrecision } from '../src/lib/convertProperties';
 import { convertTokenUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
-import { decimalSchema } from '../src/misc/decimalSchema';
 import { unitSchema } from '../src/misc/unitSchema';
 
-const DEFAULT_DECIMAL = '18';
+const DEFAULT_DECIMALS = 18;
 type State = { base: string; unit: string };
 
 const entries = Object.entries as <T>(obj: T) => [keyof T, T[keyof T]][];
@@ -26,7 +27,7 @@ export default function TokenUnitConversion() {
 
   const lastUpdate = useRef<UnitTypeExtended>();
 
-  const [decimal, setDecimal] = useState('');
+  const [decimals, setDecimals] = useState(DEFAULT_DECIMALS);
   const [state, setState] = useState<State>({ base: '', unit: '' });
 
   const handleChangeValue = useMemo(() => {
@@ -36,7 +37,6 @@ export default function TokenUnitConversion() {
       setError(undefined);
       try {
         unitSchema.parse(value);
-        decimalSchema.parse(decimal || DEFAULT_DECIMAL);
       } catch (e) {
         setError(JSON.parse(e as string)[0].message);
       }
@@ -45,7 +45,9 @@ export default function TokenUnitConversion() {
         const newState: State = { ...oldState, [currentType]: value };
 
         for (const [name, unitValue] of entries(newState)) {
-          tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL);
+          // todo: fixme
+          tokenPrecision.base = decimals;
+
           if (name === currentType) continue;
 
           let out: string = '';
@@ -59,7 +61,7 @@ export default function TokenUnitConversion() {
         return newState;
       });
     };
-  }, [decimal, error]);
+  }, [decimals, error]);
 
   useEffect(() => {
     if (lastUpdate.current) {
@@ -67,35 +69,38 @@ export default function TokenUnitConversion() {
     }
   }, [handleChangeValue]);
 
-  const units: UnitTypeExtended[] = [
-    { name: 'unit', value: state.unit },
-    { name: 'base', value: state.base },
-  ];
-
   return (
-    <ToolLayout>
+    <ToolContainer>
       <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
-        <header className="flex items-center gap-3 align-middle">
-          <CalculatorSvg
-            width={32}
-            height={32}
-            alt="deth token unit conversion calculator icon"
-          />
-          <h3 className="text-sm text-deth-gray-300 sm:text-xl">
-            Calculators ﹥
-          </h3>
-          <h3 className="text-sm text-deth-pink sm:text-xl">
-            Token unit conversion
-          </h3>
-        </header>
-        <UnitElements
-          units={units}
-          error={error}
-          onChange={handleChangeValue}
-          setDecimal={setDecimal}
+        <ToolHeader
+          icon={<CalculatorSvg />}
+          text={['Calculators', 'Token Unit Conversion']}
         />
+        <section className="flex w-full flex-col gap-5">
+          <ConversionInput
+            name="Decimals"
+            value={decimals}
+            error=""
+            type="number"
+            min={0}
+            max={26}
+            onChange={(e) => setDecimals(e.target.valueAsNumber)}
+          />
+          <ConversionInput
+            name="Units"
+            value={state['unit']}
+            error=""
+            onChange={(e) => handleChangeValue(e.target.value, 'unit')}
+          />
+          <ConversionInput
+            name="Base"
+            value={state['base']}
+            error=""
+            onChange={(e) => handleChangeValue(e.target.value, 'base')}
+          />
+        </section>
       </form>
-    </ToolLayout>
+    </ToolContainer>
   );
 }
 
