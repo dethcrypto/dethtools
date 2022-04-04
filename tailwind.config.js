@@ -6,6 +6,9 @@ module.exports = {
     optimizeUniversalDefaults: true,
   },
   content: ['./{pages,src}/**/*.{tx,tsx}'],
+  // We'll always in dark mode until we implement light mode.
+  // We're using `next-themes` which reads the set color mode from local storage
+  // and infers a default from `prefers-color-scheme`.
   darkMode: 'class',
   theme: {
     colors: {
@@ -106,6 +109,9 @@ module.exports = {
           },
         },
       }),
+      spacing: {
+        3.75: '0.9375rem', // We often need (16px (1rem) - 1px) to correct for 1px border.
+      },
     },
   },
   variants: {},
