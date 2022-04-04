@@ -20,13 +20,13 @@ function getRandomIntInclusive(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function Tips({ componentName }: { componentName?: TipCategory }) {
+export function Tips({ tipType }: { tipType?: TipCategory }) {
   const [state, setState] = useState<string>(() => {
-    return generateTip(componentName || '');
+    return generateTip(tipType || '');
   });
 
-  function generateTip(componentName: string): string {
-    switch (componentName) {
+  function generateTip(tipType: string): string {
+    switch (tipType) {
       case 'calculator':
         return tips.calculator[
           getRandomIntInclusive(0, tips.general.length - 1)
@@ -40,7 +40,7 @@ export function Tips({ componentName }: { componentName?: TipCategory }) {
     <section className="mt-10 w-full max-w-xs">
       <output
         className="flex cursor-pointer items-center gap-3 rounded-md p-3 text-gray-400 duration-200 hover:bg-gray-600 active:scale-95 active:bg-gray-700"
-        onClick={() => setState(generateTip(componentName || ''))}
+        onClick={() => setState(generateTip(tipType || ''))}
       >
         <div>
           <BulbSvg className="animate-pulse" />
