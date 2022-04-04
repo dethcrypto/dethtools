@@ -1,6 +1,7 @@
 import { ChangeEvent, Fragment, useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
+import { Tips } from '../src/components/Tips';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
@@ -119,6 +120,7 @@ function UnitElements({
           </div>
         );
       })}
+      <Tips />
     </Fragment>
   );
 }
