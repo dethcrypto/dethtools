@@ -19,15 +19,9 @@ export function NodeBlock({
     { id: 2, name: 'dec' },
   ];
 
-  const [currentFormat, setCurrentFormat] = useState(formats[0]);
-
-  useEffect(() => {
-    if (!isHex(str)) {
-      setCurrentFormat(formats[1]);
-    }
-    // it needs to be called only once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [currentFormat, setCurrentFormat] = useState(() =>
+    isHex(str) ? formats[0] : formats[1],
+  );
 
   function formatNodeValue(format: FormatType, value: string) {
     if (format === 'dec') return decodeHex(value);
