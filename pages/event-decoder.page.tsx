@@ -4,6 +4,7 @@ import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/lib/Button';
+import { NodeBlock } from '../src/components/NodeBlock';
 import { Spinner } from '../src/components/Spinner';
 import { ToolLayout } from '../src/layout/ToolLayout';
 import {
@@ -194,9 +195,9 @@ export default function EventDecoder() {
       <section className="pt-4">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
-            <h3 className="text-md pb-4 font-semibold">
+            <p className="text-md pb-4 font-semibold">
               Possible decoded calldata:
-            </h3>
+            </p>
           ) : (
             'No results found'
           )
@@ -212,33 +213,35 @@ export default function EventDecoder() {
           className="relative mb-16 rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-8"
           placeholder="Output"
         >
-          <section className="flex flex-col gap-4">
-            <div>
-              {signatureHash && (
-                <div className="flex flex-wrap items-center gap-2 break-all">
-                  <p className="font-bold ">Signature hash</p>
-                  <code data-testid="signature-hash">{signatureHash}</code>
+          <section className="flex flex-col gap-4 break-words">
+            {signatureHash && (
+              <NodeBlock
+                className="my-2"
+                str={(signatureHash as string) || '0x0'}
+              >
+                <div className="flex items-center gap-2">
+                  <p className="truncate">Signature hash</p>
                 </div>
-              )}
-            </div>
+              </NodeBlock>
+            )}
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i}>
-                    <div className="flex flex-col gap-2 pb-4">
-                      {d.fullSignature}
-
-                      <code>{'{'}</code>
-
+                    <div className="flex flex-col gap-2">
+                      <p>{d.fullSignature}</p>
+                      <p>{'{'}</p>
                       {Object.entries(d.args).map(([key, value], i) => (
-                        <code key={i}>
-                          <b className="text-purple-600 font-bold">{` "${key}"`}</b>
-                          :{value.toString()}{' '}
-                        </code>
+                        <NodeBlock
+                          className="my-1"
+                          str={value.toString()}
+                          key={i}
+                        >
+                          <p className="text-purple-600">{` "${key}"`}</p>
+                        </NodeBlock>
                       ))}
-
-                      <code>{'}'}</code>
+                      <p>{'}'}</p>
                     </div>
                   </section>
                 );

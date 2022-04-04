@@ -228,6 +228,14 @@ describe(EventDecoder.name, () => {
     const arg1 = await waitFor(() => root.findByText('"1"'));
     const arg2 = await waitFor(() => root.findByText('"2"'));
 
+    expect(arg0.parentElement!.innerHTML).toEqual(
+      expect.stringMatching(/0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85/),
+    );
+    expect(arg1.parentElement!.innerHTML).toEqual(
+      expect.stringMatching(/0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67/),
+    );
+    expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching(/0/));
+
     expect(arg0.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg1.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg2.parentElement!.innerHTML).toMatchSnapshot();
