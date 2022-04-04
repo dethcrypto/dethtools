@@ -1,10 +1,10 @@
 import { TypedTransaction } from '@ethereumjs/tx';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/lib/Button';
-import { ToolHeader } from '../src/components/ToolHeader';
 import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
 import { toEvenHex } from '../src/lib/toEvenHex';
 
@@ -40,9 +40,7 @@ export default function TxDecoder() {
           type="text"
           placeholder="e.g 0x0..."
           className="mb-2 mr-auto h-10 w-full rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setRawTx(toEvenHex(event.target.value));
-          }}
+          onChange={(event) => setRawTx(toEvenHex(event.target.value))}
         />
       </section>
 

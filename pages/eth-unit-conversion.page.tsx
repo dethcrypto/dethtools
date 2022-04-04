@@ -1,11 +1,9 @@
-import { useRouter } from 'next/router';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
 import { ConversionInput } from '../src/components/ConversionInput';
-import { Input } from '../src/components/lib/Input';
-import { ToolHeader } from '../src/components/ToolHeader';
 import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
