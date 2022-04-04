@@ -1,5 +1,5 @@
 import { Listbox } from '@headlessui/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
 
@@ -12,7 +12,7 @@ export function NodeBlock({
   str,
 }: {
   str: string;
-  children?: any;
+  children?: React.ReactNode;
   className?: string;
 }) {
   const [currentFormat, setCurrentFormat] = useState<FormatType>(() =>
