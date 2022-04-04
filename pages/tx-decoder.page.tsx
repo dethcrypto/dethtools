@@ -61,7 +61,7 @@ export default function TxDecoder() {
       </section>
 
       <section
-        className="relative mb-16 max-w-xl rounded-md border border-deth-gray-600 bg-deth-gray-900 p-8"
+        className="relative rounded-md border border-deth-gray-600 bg-deth-gray-900 p-8"
         placeholder="Output"
       >
         {error ? (
