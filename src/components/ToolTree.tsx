@@ -2,6 +2,7 @@ import { Disclosure } from '@headlessui/react';
 
 import CalculatorSvg from '../../public/static/svg/calculator';
 import DecoderSvg from '../../public/static/svg/decoders';
+import EncoderSvg from '../../public/static/svg/encoders';
 import MinusSvg from '../../public/static/svg/minus';
 import PlusSvg from '../../public/static/svg/plus';
 import { MyLink } from '../components/MyLink';
@@ -91,6 +92,16 @@ const tree: Tree = {
       { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
       { title: 'Tx Decoder', pageHref: 'tx-decoder', isNew: true },
+    ],
+  },
+  encoders: {
+    icon: <EncoderSvg height={20} width={20} />,
+    tools: [
+      {
+        title: 'Constructor Encoder',
+        pageHref: 'constructor-encoder',
+        isNew: true,
+      },
     ],
   },
 };

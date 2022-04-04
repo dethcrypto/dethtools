@@ -7,8 +7,7 @@ export interface InputProps extends ComponentPropsWithoutRef<'input'> {
 }
 
 /**
- * Most inputs in the application will serve as numeric value inputs
- * without need for autocomplete or spellcheck.
+ * Inputs in the application will have no need for autocomplete or spellcheck.
  *
  * Whenever `autoComplete` prop on `Input` is not set to a value other than
  * `"off"`, we also use all of the other props below.
