@@ -102,10 +102,9 @@ export default function TokenUnitConversion() {
           text={['Calculators', 'Token Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">
+          <DecimalsInput decimals={decimals} setDecimals={setDecimals} />
           <ConversionInputs
-            decimals={decimals}
             handleChangeValue={handleChangeValue}
-            setDecimals={setDecimals}
             state={state}
           />
         </section>
@@ -114,39 +113,45 @@ export default function TokenUnitConversion() {
   );
 }
 
-interface ConversionInputsProps {
+interface DecimalsInputProps {
   decimals: WithError<number>;
   setDecimals: Dispatch<SetStateAction<WithError<number>>>;
+}
+
+function DecimalsInput({ decimals, setDecimals }: DecimalsInputProps) {
+  return (
+    <ConversionInput
+      name="Decimals"
+      value={decimals.value}
+      error={decimals.error}
+      type="number"
+      min={0}
+      max={26}
+      onChange={(e) => {
+        let error = e.target.validationMessage;
+
+        const value = e.target.valueAsNumber;
+        if (isNaN(value) || value < 0) {
+          error = 'The decimals must be a number between 0 and 26';
+        }
+
+        setDecimals({ value, error });
+      }}
+    />
+  );
+}
+
+interface ConversionInputsProps {
   state: TokenUnitConversionState;
   handleChangeValue: (newValue: string, currentType: TokenUnitType) => void;
 }
 
 function ConversionInputs({
-  decimals,
-  setDecimals,
   state,
   handleChangeValue,
 }: ConversionInputsProps): JSX.Element {
   return (
     <>
-      <ConversionInput
-        name="Decimals"
-        value={decimals.value}
-        error={decimals.error}
-        type="number"
-        min={0}
-        max={26}
-        onChange={(e) => {
-          let error = e.target.validationMessage;
-
-          const value = e.target.valueAsNumber;
-          if (isNaN(value) || value < 0) {
-            error = 'The decimals must be a number between 0 and 26';
-          }
-
-          setDecimals({ value, error });
-        }}
-      />
       <ConversionInput
         name="Units"
         {...state['unit']}
