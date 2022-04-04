@@ -106,13 +106,14 @@ function ConversionInput({
   onChange,
 }: ConversionInputProps) {
   return (
-    <label htmlFor={name} className="flex flex-col">
-      <div className="mb-2 flex gap-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-        <span>{name}</span>
+    <label htmlFor={name} className="flex flex-col gap-2">
+      <div className="flex h-4 gap-1 leading-none">
+        <span className="uppercase">{name}</span>
         {powers[name] && (
-          <p className="text-deth-gray-300">
-            10<sup>{powers[name]}</sup>
-          </p>
+          <span className="inline-block text-sm leading-none text-deth-gray-300">
+            10
+            <sup className="-top-0.5">{powers[name]}</sup>
+          </span>
         )}
       </div>
 
