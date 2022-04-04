@@ -1,8 +1,8 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
-import DecoderSvg from '../public/static/svg/decoders';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
+import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
 import { ToolContainer } from '../src/components/ToolContainer';
@@ -104,7 +104,7 @@ export default function CalldataDecoder({
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecoderSvg height={19} width={19} />}
+        icon={<DecodersIcon height={19} width={19} />}
         text={['Decoders', 'Calldata Decoder']}
       />
 

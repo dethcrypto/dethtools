@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import CalculatorSvg from '../public/static/svg/calculator';
 import { ConversionInput } from '../src/components/ConversionInput';
+import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { UnitType } from '../src/lib/convertProperties';
@@ -67,7 +67,7 @@ export default function EthUnitConversion() {
     <ToolContainer>
       <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
         <ToolHeader
-          icon={<CalculatorSvg />}
+          icon={<CalculatorIcon />}
           text={['Calculators', 'Eth Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">

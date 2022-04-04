@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function BurgerIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={40}
@@ -15,7 +15,5 @@ function SvgComponent(props) {
         fill="#FF34F0"
       />
     </svg>
-  )
+  );
 }
-
-export default SvgComponent

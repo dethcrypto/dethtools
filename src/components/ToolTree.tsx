@@ -1,10 +1,10 @@
 import { Disclosure } from '@headlessui/react';
 
-import CalculatorSvg from '../../public/static/svg/calculator';
-import DecoderSvg from '../../public/static/svg/decoders';
-import MinusSvg from '../../public/static/svg/minus';
-import PlusSvg from '../../public/static/svg/plus';
 import { MyLink } from '../components/MyLink';
+import { CalculatorIcon } from './icons/CalculatorIcon';
+import { DecodersIcon } from './icons/DecodersIcon';
+import { MinusIcon } from './icons/MinusIcon';
+import { PlusIcon } from './icons/PlusIcon';
 
 function ToolTreeElements({ className }: { className?: string }) {
   return (
@@ -19,9 +19,9 @@ function ToolTreeElements({ className }: { className?: string }) {
                   <p className="uppercase text-deth-gray-300"> {key} </p>
                 </div>
                 {open ? (
-                  <MinusSvg width={18} height={18} />
+                  <MinusIcon width={18} height={18} />
                 ) : (
-                  <PlusSvg width={18} height={18} />
+                  <PlusIcon width={18} height={18} />
                 )}
               </Disclosure.Button>
 
@@ -79,14 +79,14 @@ export function ToolTree({
 
 const tree: Tree = {
   calculators: {
-    icon: <CalculatorSvg height={20} width={20} />,
+    icon: <CalculatorIcon height={20} width={20} />,
     tools: [
       { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
       { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
     ],
   },
   decoders: {
-    icon: <DecoderSvg height={20} width={20} />,
+    icon: <DecodersIcon height={20} width={20} />,
     tools: [
       { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },

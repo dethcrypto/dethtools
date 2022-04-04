@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={15}
@@ -11,14 +11,12 @@ function SvgComponent(props) {
       {...props}
     >
       <path
-        d="M2.787 7.486l9.426.001"
+        d="M7.5 2.773v4.714m0 0v4.712m0-4.712H2.787m4.713 0h4.713"
         stroke="#AAA4B6"
         strokeMiterlimit={10}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
-
-export default SvgComponent

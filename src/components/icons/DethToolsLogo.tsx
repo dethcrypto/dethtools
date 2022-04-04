@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function DethToolsLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={162}
@@ -30,7 +30,5 @@ function SvgComponent(props) {
         d="M32.9043 9.02609H34.78424V21.369889999999998H32.9043z"
       />
     </svg>
-  )
+  );
 }
-
-export default SvgComponent

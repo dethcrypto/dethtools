@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import BurgerSvg from '../../public/static/svg/burger';
-import DethToolsSvg from '../../public/static/svg/deth-tools';
-import DiscordSvg from '../../public/static/svg/discord';
-import GithubSvg from '../../public/static/svg/github';
-import LogoSvg from '../../public/static/svg/logo';
-import TwitterSvg from '../../public/static/svg/twitter';
+import { BurgerIcon } from './icons/BurgerIcon';
+import { DethToolsLogo } from './icons/DethToolsLogo';
+import { DiscordIcon } from './icons/DiscordIcon';
+import { GithubIcon } from './icons/GithubIcon';
+import { TwitterIcon } from './icons/TwitterIcon';
+import { Logo } from './Logo';
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -41,26 +41,30 @@ export function Navigation({
   return (
     <nav className="mx-auto flex h-20 items-center justify-between px-8 pt-6 pb-4 sm:px-0">
       <section className="flex cursor-pointer items-center gap-4">
-        <LogoSvg width={36} height={36} alt="deth tools logo" />
-        {width > 480 && (
-          <DethToolsSvg width={164} height={164} alt="deth tools logo text" />
-        )}
+        <Logo width={36} height={36} />
+        {width > 480 && <DethToolsLogo width={164} height={164} />}
         <p> WIP </p>
       </section>
 
       <section className="flex items-center gap-4">
         {width > 480 ? (
           <section className="flex gap-3">
-            <GithubSvg width={26} height={26} alt="github icon" />
-            <TwitterSvg width={26} height={26} alt="twitter icon" />
-            <DiscordSvg width={26} height={26} alt="discord icon" />
+            <a href="#" aria-label="GitHub">
+              <GithubIcon width={26} height={26} />
+            </a>
+            <a href="#" aria-label="Twitter">
+              <TwitterIcon width={26} height={26} />
+            </a>
+            <a href="#" aria-label="Discord">
+              <DiscordIcon width={26} height={26} />
+            </a>
           </section>
         ) : (
-          <BurgerSvg
+          <BurgerIcon
             width={36}
             height={36}
             onClick={() => handleShowMobileTree(width)}
-            alt="mobile burger menu"
+            // alt="mobile burger menu" <-- TODO
           />
         )}
       </section>

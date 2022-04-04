@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function SvgComponent(props) {
+export function CalculatorIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       width={19}
@@ -17,5 +17,3 @@ function SvgComponent(props) {
     </svg>
   );
 }
-
-export default SvgComponent;

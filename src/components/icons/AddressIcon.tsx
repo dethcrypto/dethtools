@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function SvgComponent(props) {
+export function AddressIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={18}
@@ -17,5 +17,3 @@ function SvgComponent(props) {
     </svg>
   );
 }
-
-export default SvgComponent;

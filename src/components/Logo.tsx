@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function Logo(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       width={36}
@@ -658,7 +658,5 @@ function SvgComponent(props) {
         </linearGradient>
       </defs>
     </svg>
-  )
+  );
 }
-
-export default SvgComponent

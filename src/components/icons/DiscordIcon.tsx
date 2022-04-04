@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function DiscordIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={23}
@@ -26,7 +26,5 @@ function SvgComponent(props) {
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }
-
-export default SvgComponent
