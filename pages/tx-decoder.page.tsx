@@ -39,7 +39,7 @@ export default function TxDecoder() {
           id="tx-input"
           type="text"
           placeholder="e.g 0x0..."
-          className="mb-2 mr-auto h-10 w-full rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
+          className="mb-2 mr-auto h-10 w-full rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
           onChange={(event) => setRawTx(toEvenHex(event.target.value))}
         />
       </section>
@@ -56,11 +56,11 @@ export default function TxDecoder() {
       </section>
 
       <section
-        className="relative mb-16 max-w-xl rounded-md border border-deth-gray-600 bg-deth-gray-900 p-8"
+        className="relative mb-16 max-w-xl rounded-md border border-gray-600 bg-gray-900 p-8"
         placeholder="Output"
       >
         {error ? (
-          <p className="text-deth-error">
+          <p className="text-error">
             {error} with {rawTx} value
           </p>
         ) : (

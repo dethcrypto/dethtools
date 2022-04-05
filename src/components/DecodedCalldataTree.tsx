@@ -62,10 +62,10 @@ function CalldataTreeNode({
       <span className={className}>
         <code>
           {node.type.match(isNodeArray) ? (
-            <div className="my-4 rounded-lg border border-deth-gray-600 p-3">
+            <div className="my-4 rounded-lg border border-gray-600 p-3">
               <p id="node-type" className="text-purple-400 pt-2 pb-4">
                 {node.name ? (
-                  <b className="text-deth-pink">{node.name} </b>
+                  <b className="text-pink">{node.name} </b>
                 ) : (
                   <b className="text-pink-400">unknown name </b>
                 )}
@@ -76,7 +76,7 @@ function CalldataTreeNode({
                 {node.value?.split(',').map((str, i) => {
                   return (
                     <NodeBlock className="basis shrink grow" str={str} key={i}>
-                      <code className="text-deth-gray-600">[{i}] </code>
+                      <code className="text-gray-600">[{i}] </code>
                     </NodeBlock>
                   );
                 })}
@@ -105,7 +105,7 @@ function CalldataTreeNode({
       {':'}
       <ul className="pb-1">
         {node.components.map((node, index) => (
-          <div key={index} className="border-l border-deth-gray-600 pl-3">
+          <div key={index} className="border-l border-gray-600 pl-3">
             <CalldataTreeNode node={node} />
           </div>
         ))}
@@ -127,8 +127,8 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="mb-2 bg-deth-error">
-      <pre className="bg-deth-gray-900">
+    <output className="mb-2 bg-error">
+      <pre className="bg-gray-900">
         <p>
           <code className="text-purple-400 font-bold">{fnType} </code>
           <code>{fnName} </code>

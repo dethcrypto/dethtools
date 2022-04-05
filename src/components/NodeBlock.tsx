@@ -27,17 +27,17 @@ export function NodeBlock({
   return (
     <div
       className={`flex cursor-pointer items-center gap-3 overflow-auto
-      rounded-md border border-deth-gray-600 duration-200
-      hover:bg-deth-gray-700 hover:shadow-md hover:shadow-pink/25
+      rounded-md border border-gray-600 duration-200
+      hover:bg-gray-700 hover:shadow-md hover:shadow-pink/25
       hover:outline hover:outline-2
-    active:bg-deth-gray-800 ${className}`}
+    active:bg-gray-800 ${className}`}
     >
       <Listbox value={currentFormat} onChange={setCurrentFormat}>
         <Listbox.Button
           className={`ml-3 flex cursor-pointer items-center rounded-md border
-                      border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+                      border-gray-600 px-2 duration-200 hover:bg-gray-700 hover:shadow-md
                       hover:shadow-pink/25 hover:outline hover:outline-2
-                      active:bg-deth-gray-800 ${className}`}
+                      active:bg-gray-800 ${className}`}
         >
           {currentFormat}
         </Listbox.Button>
@@ -50,10 +50,10 @@ export function NodeBlock({
                 <Listbox.Option
                   as="ul"
                   className={`m-0 flex cursor-pointer items-center rounded-md
-                    border border-deth-gray-600 p-0
-                    px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+                    border border-gray-600 p-0
+                    px-2 duration-200 hover:bg-gray-700 hover:shadow-md
                     hover:shadow-pink/25 hover:outline hover:outline-2
-                    active:bg-deth-gray-800 ${className}`}
+                    active:bg-gray-800 ${className}`}
                   key={fmt}
                   value={fmt}
                 >

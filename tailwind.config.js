@@ -14,27 +14,11 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       primary: colors.teal,
-      'deth-pink': '#FF34F0',
       pink: '#FF34F0',
-      'deth-purple': '#9B37FF',
       purple: '#9B37FF',
-      'deth-error': '#FF3459',
       error: '#FF3459',
-      'deth-success': '#4ADE80',
       success: '#4ADE80',
-      'deth-white': '#FFFFFF',
       white: '#FFFFFF',
-      'deth-gray': {
-        100: '#F2EFF6',
-        200: '#F2EFF6',
-        300: '#AAA4B6',
-        400: '#938D9E',
-        500: '#55515B',
-        600: '#353239',
-        700: '#222025',
-        800: '#19181C',
-        900: '#171619',
-      },
       gray: {
         100: '#F2EFF6',
         200: '#F2EFF6',
@@ -51,14 +35,14 @@ module.exports = {
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            color: theme('colors.deth-white'),
+            color: theme('colors.white'),
             h1: {
               marginTop: '0',
               marginBottom: '0',
               fontSize: '32px',
               fontWeight: 'light',
               letterSpacing: theme('letterSpacing.tight'),
-              color: theme('colors.deth-pink'),
+              color: theme('colors.pink'),
             },
             h2: {
               marginTop: '0',
@@ -79,13 +63,13 @@ module.exports = {
               marginTop: '0',
               marginBottom: '0',
               fontSize: '20px',
-              color: theme('colors.deth-gray.800'),
+              color: theme('colors.gray.800'),
             },
             p: {
               marginTop: '0',
               marginBottom: '0',
               fontSize: '14px',
-              color: theme('colors.deth-white'),
+              color: theme('colors.white'),
             },
             a: {
               marginTop: '0',
@@ -95,7 +79,7 @@ module.exports = {
             code: {
               marginTop: '0',
               fontSize: '15px',
-              color: theme('colors.deth-white'),
+              color: theme('colors.white'),
             },
             pre: {
               marginTop: '0',
@@ -103,8 +87,8 @@ module.exports = {
               fontSize: '12px',
               fontWeight: 'light',
               border: 'none',
-              color: theme('colors.deth-gray.300'),
-              backgroundColor: theme('colors.deth-gray.900'),
+              color: theme('colors.gray.300'),
+              backgroundColor: theme('colors.gray.900'),
             },
           },
         },
