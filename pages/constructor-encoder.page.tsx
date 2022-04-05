@@ -1,7 +1,6 @@
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
-import _ from 'lodash';
 import { ChangeEvent, useState } from 'react';
 
 import DecoderSvg from '../public/static/svg/decoders';
@@ -27,7 +26,7 @@ export default function ConstructorEncoder() {
       setError('Please provide ABI');
       return;
     }
-    if (_.some(values, _.isUndefined)) {
+    if (values.some(val => val === '')) {
       setError('Some values are empty');
       return;
     }
@@ -40,7 +39,7 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled = !rawAbi || _.some(values, _.isUndefined);
+  const encodeButtonDisabled = !rawAbi || values.some(val => val === '');
 
   const onAbiChange = (rawAbi: string) => {
     setError(undefined);
