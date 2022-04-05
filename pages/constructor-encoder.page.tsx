@@ -6,7 +6,8 @@ import { ChangeEvent, useState } from 'react';
 import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import { encodeConstructor } from '../src/lib/encodeContructor';
 import { parseAbi } from '../src/lib/parseAbi';
 
@@ -26,7 +27,7 @@ export default function ConstructorEncoder() {
       setError('Please provide ABI');
       return;
     }
-    if (values.some(val => val === '')) {
+    if (values.some((val) => val === '')) {
       setError('Some values are empty');
       return;
     }
@@ -39,7 +40,7 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled = !rawAbi || values.some(val => val === '');
+  const encodeButtonDisabled = !rawAbi || values.some((val) => val === '');
 
   const onAbiChange = (rawAbi: string) => {
     setError(undefined);
@@ -83,14 +84,11 @@ export default function ConstructorEncoder() {
   };
 
   return (
-    <ToolLayout>
-      <header className="mb-6 flex items-center gap-3 align-middle">
-        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Encoders /</h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl">
-          Constructor Encoder
-        </h3>
-      </header>
+    <ToolContainer>
+      <ToolHeader
+        icon={<DecoderSvg />}
+        text={['Encoders', 'Constructor Encoder']}
+      />
 
       <label htmlFor="abi" className="pt-2 text-lg font-bold">
         <p>ABI</p>
@@ -165,6 +163,6 @@ export default function ConstructorEncoder() {
           <p> Encoded output will appear here </p>
         )}
       </section>
-    </ToolLayout>
+    </ToolContainer>
   );
 }
