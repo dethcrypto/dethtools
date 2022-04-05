@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { BurgerIcon } from './icons/BurgerIcon';
 import { DethToolsLogo } from './icons/DethToolsLogo';
 import { DiscordIcon } from './icons/DiscordIcon';
 import { GithubIcon } from './icons/GithubIcon';
+import { HamburgerIcon } from './icons/HamburgerIcon';
 import { TwitterIcon } from './icons/TwitterIcon';
 import { Logo } from './Logo';
 
@@ -48,38 +48,41 @@ export function Navigation({
 
       <section className="flex items-center">
         {width > 480 ? (
-          <section className="flex">
-            <a
-              href="https://github.com/dethcrypto/dethtools"
-              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
-              aria-label="GitHub"
-            >
-              <GithubIcon width={26} height={26} />
-            </a>
-            <a
-              href="https://twitter.com/dethcrypto"
-              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
-              aria-label="Twitter"
-            >
-              <TwitterIcon width={26} height={26} />
-            </a>
-            <a
-              href="https://discord.gg/ATcDz5xEY6"
-              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
-              aria-label="Discord"
-            >
-              <DiscordIcon width={26} height={26} />
-            </a>
-          </section>
+          <SocialIcons />
         ) : (
-          <BurgerIcon
-            width={36}
-            height={36}
-            onClick={() => handleShowMobileTree(width)}
-            // alt="mobile burger menu" <-- TODO
-          />
+          <button onClick={() => handleShowMobileTree(width)} aria-label="menu">
+            <HamburgerIcon width={36} height={36} />
+          </button>
         )}
       </section>
     </nav>
+  );
+}
+
+function SocialIcons() {
+  return (
+    <section className="flex">
+      <a
+        href="https://github.com/dethcrypto/dethtools"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="GitHub"
+      >
+        <GithubIcon width={26} height={26} />
+      </a>
+      <a
+        href="https://twitter.com/dethcrypto"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="Twitter"
+      >
+        <TwitterIcon width={26} height={26} />
+      </a>
+      <a
+        href="https://discord.gg/ATcDz5xEY6"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="Discord"
+      >
+        <DiscordIcon width={26} height={26} />
+      </a>
+    </section>
   );
 }
