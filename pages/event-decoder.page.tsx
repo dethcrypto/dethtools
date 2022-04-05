@@ -6,7 +6,8 @@ import DecoderSvg from '../public/static/svg/decoders';
 import { Button } from '../src/components/lib/Button';
 import { NodeBlock } from '../src/components/NodeBlock';
 import { Spinner } from '../src/components/Spinner';
-import { ToolLayout } from '../src/layout/ToolLayout';
+import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
 import {
   decodeWithEventProps,
   fetch4BytesData,
@@ -79,12 +80,11 @@ export default function EventDecoder() {
   }
 
   return (
-    <ToolLayout>
-      <header className="flex items-center gap-3 align-middle">
-        <DecoderSvg width={30} height={30} alt="deth calldata decoder icon" />
-        <h3 className="text-sm text-deth-gray-300 sm:text-xl">Decoders /</h3>
-        <h3 className="text-sm text-deth-pink sm:text-xl">Event Decoder</h3>
-      </header>
+    <ToolContainer>
+      <ToolHeader
+        icon={<DecoderSvg width={19} height={19} />}
+        text={['Decoders', 'Event Decoder']}
+      />
 
       <div className="relative">
         <section className="mb-3">
@@ -250,6 +250,6 @@ export default function EventDecoder() {
           </section>
         </section>
       )}
-    </ToolLayout>
+    </ToolContainer>
   );
 }

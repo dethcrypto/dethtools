@@ -53,8 +53,8 @@ describe(TokenUnitConversion.name, () => {
 
   it('sets correct unit input, then adds chars, thus freezes calculation results in base field', async () => {
     const root = render(<TokenUnitConversion />);
-    const unitField = (await root.findByLabelText('unit')) as HTMLInputElement;
-    const baseField = (await root.findByLabelText('base')) as HTMLInputElement;
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: '12444444000000000.55' } });
     expect(unitField.value).toEqual('12444444000000000.55');
@@ -69,15 +69,16 @@ describe(TokenUnitConversion.name, () => {
 
   it('types letters and special signs to one of the fields and error gets displayed', async () => {
     const root = render(<TokenUnitConversion />);
-    const errorField = await root.findByTestId('error');
-    const baseField = (await root.findByLabelText('base')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '140fa,@' } });
+    let errorField = await root.findByRole('alert');
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(/The value mustn't contain letters/),
     );
 
     fireEvent.change(baseField, { target: { value: '' } });
+    errorField = await root.findByRole('alert');
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(/The value must be longer than 1 digit/),
     );
@@ -111,14 +112,13 @@ describe(TokenUnitConversion.name, () => {
     )) as HTMLInputElement;
     const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
-    const errorField = await root.findByTestId('error');
 
     fireEvent.change(decimalsField, { target: { value: '-3' } });
     fireEvent.change(unitField, { target: { value: '15' } });
 
-    expect(decimalsField.value).toEqual('-3');
+    const errorField = await root.findByRole('alert');
     expect(errorField.innerHTML).toEqual(
-      expect.stringMatching('The decimal value must be bigger or equal to 0'),
+      expect.stringMatching('The decimals must be a number between 0 and 26'),
     );
     expect(baseField.value).toEqual('');
   });
