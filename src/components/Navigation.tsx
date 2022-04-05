@@ -46,16 +46,28 @@ export function Navigation({
         <p> WIP </p>
       </section>
 
-      <section className="flex items-center gap-4">
+      <section className="flex items-center">
         {width > 480 ? (
-          <section className="flex gap-3">
-            <a href="#" aria-label="GitHub">
+          <section className="flex">
+            <a
+              href="https://github.com/dethcrypto/dethtools"
+              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+              aria-label="GitHub"
+            >
               <GithubIcon width={26} height={26} />
             </a>
-            <a href="#" aria-label="Twitter">
+            <a
+              href="https://twitter.com/dethcrypto"
+              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+              aria-label="Twitter"
+            >
               <TwitterIcon width={26} height={26} />
             </a>
-            <a href="#" aria-label="Discord">
+            <a
+              href="https://discord.gg/ATcDz5xEY6"
+              className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+              aria-label="Discord"
+            >
               <DiscordIcon width={26} height={26} />
             </a>
           </section>
