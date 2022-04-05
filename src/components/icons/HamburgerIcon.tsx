@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export function BurgerIcon(props: React.SVGProps<SVGSVGElement>) {
+export function HamburgerIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={40}
