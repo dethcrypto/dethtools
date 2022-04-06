@@ -99,8 +99,8 @@ export default function ConstructorEncoder() {
         aria-label="text area for constructor abi"
         value={rawAbi || ''}
         placeholder="e.g function transferFrom(address, ..)"
-        className="flex h-48 w-full break-words rounded-b-md border-t-0
-            border-deth-gray-600 bg-deth-gray-900 p-5"
+        className="border-deth-gray-600 bg-deth-gray-900 flex h-48 w-full break-words
+            rounded-b-md border-t-0 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           onAbiChange(event.target.value);
         }}
@@ -123,7 +123,7 @@ export default function ConstructorEncoder() {
                   value={values[i]}
                   error={errors[i]}
                   placeholder="e.g 0x0..."
-                  className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
+                  className="border-deth-gray-600 bg-deth-gray-900 mb-2 mr-auto h-10 w-3/5 rounded-md border text-sm focus:outline-none"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     const value = event.target.value;
                     setSingleValue(i, value);
