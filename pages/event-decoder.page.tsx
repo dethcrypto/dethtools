@@ -100,7 +100,7 @@ export default function EventDecoder() {
                     id={`${i}`}
                     type="text"
                     placeholder="e.g 0x0..."
-                    className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
+                    className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       setTopics(
                         topics.map((topic, id) =>
@@ -131,7 +131,7 @@ export default function EventDecoder() {
             id="data"
             type="text"
             placeholder="e.g 0x0..."
-            className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-deth-gray-600 bg-deth-gray-900 text-sm focus:outline-none"
+            className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setData(addHexPrefix(event.target.value))
             }
@@ -144,10 +144,8 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600
-            p-1 text-center ${
-              tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
-            }`}
+            className={`flex-1 cursor-pointer rounded-tl-md border-gray-600
+            p-1 text-center ${tab === '4-bytes' ? 'bg-pink' : 'bg-gray-600'}`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -158,8 +156,8 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            className={`flex-1 cursor-pointer rounded-tr-md border-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-pink' : 'bg-gray-600'
             }`}
             onClick={() => {
               setTab('abi');
@@ -177,7 +175,7 @@ export default function EventDecoder() {
             value={rawAbi || ''}
             placeholder="e.g function transferFrom(address, ..)"
             className="flex h-48 w-full break-words rounded-b-md border-t-0
-            border-deth-gray-600 bg-deth-gray-900 p-5"
+            border-gray-600 bg-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setRawAbi(event.target.value);
             }}
@@ -210,7 +208,7 @@ export default function EventDecoder() {
         <Spinner className="mx-auto pt-12" />
       ) : (
         <section
-          className="relative mb-16 rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-8"
+          className="relative mb-16 rounded-xl border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
           <section className="flex flex-col gap-4 break-words">

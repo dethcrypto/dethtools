@@ -116,7 +116,7 @@ export default function CalldataDecoder({
         id="calldata"
         value={encodedCalldata || ''}
         placeholder="e.g 0x23b8..3b2"
-        className="h-20 break-words rounded-xl border border-deth-gray-600 bg-deth-gray-900 p-5"
+        className="h-20 break-words rounded-xl border border-gray-600 bg-gray-900 p-5"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value);
         }}
@@ -134,10 +134,8 @@ export default function CalldataDecoder({
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-deth-gray-600
-            p-1 text-center ${
-              tab === '4-bytes' ? 'bg-deth-pink' : 'bg-deth-gray-600'
-            }`}
+            className={`flex-1 cursor-pointer rounded-tl-md border-gray-600
+            p-1 text-center ${tab === '4-bytes' ? 'bg-pink' : 'bg-gray-600'}`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -149,8 +147,8 @@ export default function CalldataDecoder({
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-deth-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-deth-pink' : 'bg-deth-gray-600'
+            className={`flex-1 cursor-pointer rounded-tr-md border-gray-600 p-1 text-center ${
+              tab === 'abi' ? 'bg-pink' : 'bg-gray-600'
             }`}
             onClick={() => {
               setTab('abi');
@@ -168,7 +166,7 @@ export default function CalldataDecoder({
             value={rawAbi || ''}
             placeholder="e.g function transferFrom(address, ..)"
             className="flex h-48 w-full break-words rounded-b-md border-t-0
-            border-deth-gray-600 bg-deth-gray-900 p-5"
+            border-gray-600 bg-gray-900 p-5"
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
               setRawAbi(event.target.value);
             }}
@@ -205,7 +203,7 @@ export default function CalldataDecoder({
         <Spinner className="mx-auto pt-6" />
       ) : (
         <section
-          className="relative mb-16 rounded-md border border-deth-gray-600 bg-deth-gray-900 p-8"
+          className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
           <section className="flex flex-col gap-4">
@@ -213,9 +211,9 @@ export default function CalldataDecoder({
               {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
                 <div
                   className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
-                    border-deth-gray-600 py-1 px-3 duration-200 hover:bg-deth-gray-700
+                    border-gray-600 py-1 px-3 duration-200 hover:bg-gray-700
                       hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
-                    active:bg-deth-gray-800"
+                    active:bg-gray-800"
                 >
                   <p className="text-purple-400 font-bold">Signature hash</p>
                   <b>{signatureHash}</b>

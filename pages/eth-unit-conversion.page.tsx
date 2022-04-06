@@ -79,7 +79,7 @@ export default function EthUnitConversion() {
               onChange={(event) => handleChangeValue(event.target.value, unit)}
               extraLabel={
                 powers[unit] && (
-                  <span className="inline-block text-sm leading-none text-deth-gray-300">
+                  <span className="inline-block text-sm leading-none text-gray-300">
                     10
                     <sup className="-top-0.5">{powers[unit]}</sup>
                   </span>
