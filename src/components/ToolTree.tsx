@@ -93,6 +93,16 @@ const tree: Tree = {
       { title: 'Tx Decoder', pageHref: 'tx-decoder', isNew: true },
     ],
   },
+  encoders: {
+    icon: <EncoderSvg height={20} width={20} />,
+    tools: [
+      {
+        title: 'Constructor Encoder',
+        pageHref: 'constructor-encoder',
+        isNew: true,
+      },
+    ],
+  },
 };
 
 interface Tool {

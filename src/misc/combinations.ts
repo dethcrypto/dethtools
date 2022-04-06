@@ -1,7 +1,5 @@
-import _ from 'lodash';
-
 export function combinations(length: number, count: number): number[][] {
-  const arr = _.range(0, length);
+  const arr = Array.from({ length }).map((_, i) => i);
   if (count > length) {
     return [];
   }
