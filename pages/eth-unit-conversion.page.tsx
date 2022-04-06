@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
 import { ConversionInput } from '../src/components/ConversionInput';
+import { Tips } from '../src/components/Tips';
+import { calculatorTips } from '../src/components/Tips/calculatorTips';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { UnitType } from '../src/lib/convertProperties';
@@ -88,6 +90,7 @@ export default function EthUnitConversion() {
             />
           ))}
         </section>
+        <Tips texts={calculatorTips} />
       </form>
     </ToolContainer>
   );
