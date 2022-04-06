@@ -65,7 +65,7 @@ export default function EthUnitConversion() {
 
   return (
     <ToolContainer>
-      <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
+      <form className="flex w-full flex-col items-start sm:mr-auto sm:items-center md:items-start">
         <ToolHeader
           icon={<CalculatorSvg />}
           text={['Calculators', 'Eth Unit Conversion']}

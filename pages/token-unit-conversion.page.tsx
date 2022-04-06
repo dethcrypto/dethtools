@@ -96,7 +96,7 @@ export default function TokenUnitConversion() {
 
   return (
     <ToolContainer>
-      <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
+      <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
         <ToolHeader
           icon={<CalculatorSvg />}
           text={['Calculators', 'Token Unit Conversion']}
