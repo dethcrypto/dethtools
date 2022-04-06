@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function SvgComponent(props) {
+export function EncodersIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="32"
@@ -21,5 +21,3 @@ function SvgComponent(props) {
     </svg>
   );
 }
-
-export default SvgComponent;

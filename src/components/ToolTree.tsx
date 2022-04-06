@@ -3,6 +3,7 @@ import { Disclosure } from '@headlessui/react';
 import { MyLink } from '../components/MyLink';
 import { CalculatorIcon } from './icons/CalculatorIcon';
 import { DecodersIcon } from './icons/DecodersIcon';
+import { EncodersIcon } from './icons/EncodersIcon';
 import { MinusIcon } from './icons/MinusIcon';
 import { PlusIcon } from './icons/PlusIcon';
 
@@ -94,7 +95,7 @@ const tree: Tree = {
     ],
   },
   encoders: {
-    icon: <EncoderSvg height={20} width={20} />,
+    icon: <EncodersIcon height={20} width={20} />,
     tools: [
       {
         title: 'Constructor Encoder',
