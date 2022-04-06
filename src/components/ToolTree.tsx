@@ -2,6 +2,7 @@ import { Disclosure } from '@headlessui/react';
 
 import CalculatorSvg from '../../public/static/svg/calculator';
 import DecoderSvg from '../../public/static/svg/decoders';
+import EncoderSvg from '../../public/static/svg/encoders';
 import MinusSvg from '../../public/static/svg/minus';
 import PlusSvg from '../../public/static/svg/plus';
 import { MyLink } from '../components/MyLink';
@@ -16,7 +17,7 @@ function ToolTreeElements({ className }: { className?: string }) {
               <Disclosure.Button className="mt-6 flex items-center justify-between">
                 <div className="flex gap-3">
                   {value.icon}
-                  <p className="uppercase text-deth-gray-300"> {key} </p>
+                  <p className="uppercase text-gray-300"> {key} </p>
                 </div>
                 {open ? (
                   <MinusSvg width={18} height={18} />
@@ -32,14 +33,14 @@ function ToolTreeElements({ className }: { className?: string }) {
                 >
                   <MyLink
                     href={`/${tool.pageHref}`}
-                    className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-deth-gray-600 hover:text-white"
+                    className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-gray-600 hover:text-white"
                   >
                     {tool.isNew && (
-                      <p className="mr-4 animate-pulse rounded-lg bg-deth-purple px-2 font-semibold text-deth-white duration-700">
+                      <p className="mr-4 animate-pulse rounded-lg bg-purple px-2 font-semibold text-white duration-700">
                         NEW
                       </p>
                     )}
-                    <p className="text-deth-white">{tool.title}</p>
+                    <p className="text-white">{tool.title}</p>
                   </MyLink>
                 </Disclosure.Panel>
               ))}
@@ -64,7 +65,7 @@ export function ToolTree({
     <>
       {isShowMobileTree && isMobile ? (
         <section
-          className={`absolute top-0 left-0 z-10 mt-32 h-full w-full bg-deth-gray-900 ${className}`}
+          className={`absolute top-0 left-0 z-10 mt-32 h-full w-full bg-gray-900 ${className}`}
         >
           <ToolTreeElements className="mx-8 mt-8" />
         </section>
@@ -91,6 +92,16 @@ const tree: Tree = {
       { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
       { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
       { title: 'Tx Decoder', pageHref: 'tx-decoder', isNew: true },
+    ],
+  },
+  encoders: {
+    icon: <EncoderSvg height={20} width={20} />,
+    tools: [
+      {
+        title: 'Constructor Encoder',
+        pageHref: 'constructor-encoder',
+        isNew: true,
+      },
     ],
   },
 };

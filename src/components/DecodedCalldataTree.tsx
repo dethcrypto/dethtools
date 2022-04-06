@@ -1,6 +1,8 @@
 import { ParamType } from '@ethersproject/abi';
 
 import { Decoded } from '../lib/decodeCalldata';
+import { NodeBlock } from './NodeBlock';
+
 interface Node {
   name: ParamType['name'];
   type: ParamType['type'];
@@ -28,16 +30,13 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
           'input.type is tuple, but decoded value is not an array',
         );
       }
-
       const { components } = input;
-
       return {
         name: input.name,
         type: input.type,
         components: attachValues(components, value),
       };
     }
-
     return {
       name: input.name,
       type: input.type,
@@ -45,6 +44,11 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
     };
   });
 }
+
+// Test if node.type contains [*] pattern,
+// where * is any asterisk, and [] must
+// occur, thus we know if type is an array.
+const isNodeArray = new RegExp(/[[*\]]/);
 
 function CalldataTreeNode({
   node,
@@ -57,28 +61,53 @@ function CalldataTreeNode({
     return (
       <span className={className}>
         <code>
-          {node.name ? (
-            <b className="text-deth-pink"> {node.name} </b>
+          {node.type.match(isNodeArray) ? (
+            <div className="my-4 rounded-lg border border-gray-600 p-3">
+              <p id="node-type" className="text-purple-400 pt-2 pb-4">
+                {node.name ? (
+                  <b className="text-pink">{node.name} </b>
+                ) : (
+                  <b className="text-pink-400">unknown name </b>
+                )}
+                {node.type}
+              </p>
+
+              <section className="flex flex-wrap gap-2">
+                {node.value?.split(',').map((str, i) => {
+                  return (
+                    <NodeBlock className="basis shrink grow" str={str} key={i}>
+                      <code className="text-gray-600">[{i}] </code>
+                    </NodeBlock>
+                  );
+                })}
+              </section>
+            </div>
           ) : (
-            <b className="text-pink-600">unknown</b>
+            <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
+              {node.name ? (
+                <b className="text-pink-400">{node.name}</b>
+              ) : (
+                <b className="text-pink-400">unknown name</b>
+              )}
+              <b id="node-type" className=" text-purple-400">
+                {node.type}
+              </b>
+            </NodeBlock>
           )}
-        </code>{' '}
-        <code>
-          <b id="node-type" className=" text-purple-600">
-            {node.type}
-          </b>
-          <code id="node-value"> {node.value} </code>
         </code>
       </span>
     );
   }
 
   return (
-    <section className={className}>
-      <b className=""> {node.name} </b>
-      <ul className="pb-1 pt-2">
+    <section>
+      <b className="text-purple-400">struct</b> {node.name}
+      {':'}
+      <ul className="pb-1">
         {node.components.map((node, index) => (
-          <CalldataTreeNode key={index} node={node} className="border-l pl-6" />
+          <div key={index} className="border-l border-gray-600 pl-3">
+            <CalldataTreeNode node={node} />
+          </div>
         ))}
       </ul>
     </section>
@@ -98,12 +127,13 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="bg-red-600 mb-2">
-      <pre className="bg-deth-gray-900">
-        <section>
-          <code className="text-purple-600 font-bold">{fnType}</code>{' '}
-          <code>{fnName}</code>
-        </section>
+    <output className="mb-2 bg-error">
+      <pre className="bg-gray-900">
+        <p>
+          <code className="text-purple-400 font-bold">{fnType} </code>
+          <code>{fnName} </code>
+        </p>
+
         {tree.map((node, index) => (
           <div data-testid={index} key={index}>
             <CalldataTreeNode node={node} />

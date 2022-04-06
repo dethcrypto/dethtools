@@ -21,10 +21,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <main className="prose mx-auto mt-12 h-full max-w-4xl">
+    <main className="mx-auto mt-12 h-full max-w-4xl">
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Navigation handleShowMobileTree={handleShowMobileTree} />
-        <div className="mt-6 flex min-h-full max-w-6xl gap-12 rounded-md bg-deth-gray-700 p-12 align-top">
+        <div className="mt-6 flex min-h-full max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
           <ToolTree isShowMobileTree={isShowMobileTree} isMobile={isMobile} />
           <Component className="max-w-1/2 " {...pageProps} />
         </div>

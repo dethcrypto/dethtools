@@ -5,7 +5,8 @@ import { convertEthUnits, unitPrecisionToValue } from './convertUnits';
 describe('unitPrecisionToValue', () => {
   it('productes accurate values', () => {
     expect(unitPrecisionToValue(-1)).toEqual('0');
-    expect(unitPrecisionToValue(1)).toEqual('1');
+    expect(unitPrecisionToValue(0)).toEqual('1');
+    expect(unitPrecisionToValue(1)).toEqual('10');
     expect(unitPrecisionToValue(9)).toEqual('1000000000');
     expect(unitPrecisionToValue(18)).toEqual('1000000000000000000');
   });
