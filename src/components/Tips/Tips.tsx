@@ -1,5 +1,6 @@
-import LightbulbIcon from 'public/static/svg/bulb';
 import { useState } from 'react';
+
+import LightbulbIcon from '../../../public/static/svg/bulb';
 
 function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min);
