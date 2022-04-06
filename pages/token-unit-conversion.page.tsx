@@ -74,7 +74,7 @@ export default function TokenUnitConversion() {
 
   return (
     <ToolLayout>
-      <form className="mx-auto flex flex-col items-start sm:items-center md:items-start">
+      <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
         <header className="flex items-center gap-3 align-middle">
           <CalculatorSvg
             width={32}

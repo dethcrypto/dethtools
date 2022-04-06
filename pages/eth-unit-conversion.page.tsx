@@ -64,7 +64,7 @@ export default function EthUnitConversion() {
 
   return (
     <ToolLayout>
-      <form className="flex flex-col items-start sm:mx-4 sm:items-center  md:mx-16 md:items-start">
+      <form className="flex w-full flex-col items-start sm:mr-auto sm:items-center md:items-start">
         <header className="mb-6 flex items-center gap-3 align-middle">
           <CalculatorSvg
             width={32}

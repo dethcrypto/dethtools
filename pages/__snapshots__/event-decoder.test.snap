@@ -1,22 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EventDecoder works with non-0x prefixed values 1`] = `
-"<button class=\\"ml-3 flex cursor-pointer items-center rounded-md border
-                      border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+"<button class=\\"ml-3 grow-0 cursor-pointer items-center rounded-md
+                      py-0.5 px-1 duration-200 hover:bg-deth-gray-700 hover:shadow-md
                       hover:shadow-pink/25 hover:outline hover:outline-2
                       active:bg-deth-gray-800 my-1\\" id=\\"headlessui-listbox-button-47\\" type=\\"button\\" aria-haspopup=\\"true\\" aria-expanded=\\"false\\">hex</button><p class=\\"text-purple-600\\"> \\"0\\"</p><b id=\\"node-value\\">0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85</b>"
 `;
 
 exports[`EventDecoder works with non-0x prefixed values 2`] = `
-"<button class=\\"ml-3 flex cursor-pointer items-center rounded-md border
-                      border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+"<button class=\\"ml-3 grow-0 cursor-pointer items-center rounded-md
+                      py-0.5 px-1 duration-200 hover:bg-deth-gray-700 hover:shadow-md
                       hover:shadow-pink/25 hover:outline hover:outline-2
                       active:bg-deth-gray-800 my-1\\" id=\\"headlessui-listbox-button-49\\" type=\\"button\\" aria-haspopup=\\"true\\" aria-expanded=\\"false\\">hex</button><p class=\\"text-purple-600\\"> \\"1\\"</p><b id=\\"node-value\\">0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67</b>"
 `;
 
 exports[`EventDecoder works with non-0x prefixed values 3`] = `
-"<button class=\\"ml-3 flex cursor-pointer items-center rounded-md border
-                      border-deth-gray-600 px-2 duration-200 hover:bg-deth-gray-700 hover:shadow-md
+"<button class=\\"ml-3 grow-0 cursor-pointer items-center rounded-md
+                      py-0.5 px-1 duration-200 hover:bg-deth-gray-700 hover:shadow-md
                       hover:shadow-pink/25 hover:outline hover:outline-2
                       active:bg-deth-gray-800 my-1\\" id=\\"headlessui-listbox-button-51\\" type=\\"button\\" aria-haspopup=\\"true\\" aria-expanded=\\"false\\">dec</button><p class=\\"text-purple-600\\"> \\"2\\"</p><b id=\\"node-value\\">0</b>"
 `;
