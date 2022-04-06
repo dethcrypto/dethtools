@@ -1,6 +1,6 @@
 import {
-  ChangeEvent,
-  Fragment,
+  Dispatch,
+  SetStateAction,
   useEffect,
   useMemo,
   useRef,
@@ -8,169 +8,160 @@ import {
 } from 'react';
 
 import CalculatorSvg from '../public/static/svg/calculator';
-import { Input } from '../src/components/lib/Input';
-import { ToolLayout } from '../src/layout/ToolLayout';
-import { tokenPrecision } from '../src/lib/convertProperties';
-import { convertTokenUnits } from '../src/lib/convertUnits';
+import { ConversionInput } from '../src/components/ConversionInput';
+import { ToolContainer } from '../src/components/ToolContainer';
+import { ToolHeader } from '../src/components/ToolHeader';
+import { convertUnit } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
-import { decimalSchema } from '../src/misc/decimalSchema';
 import { unitSchema } from '../src/misc/unitSchema';
 
-const DEFAULT_DECIMAL = '18';
-type State = { base: string; unit: string };
-
-const entries = Object.entries as <T>(obj: T) => [keyof T, T[keyof T]][];
-
-export default function TokenUnitConversion() {
-  const [error, setError] = useState<string>();
-
-  const lastUpdate = useRef<UnitTypeExtended>();
-
-  const [decimal, setDecimal] = useState('');
-  const [state, setState] = useState<State>({ base: '', unit: '' });
-
-  const handleChangeValue = useMemo(() => {
-    return (value: string, currentType: TokenUnitType) => {
-      value = decodeHex(value);
-
-      setError(undefined);
-      try {
-        unitSchema.parse(value);
-        decimalSchema.parse(decimal || DEFAULT_DECIMAL);
-      } catch (e) {
-        setError(JSON.parse(e as string)[0].message);
-      }
-
-      setState((oldState) => {
-        const newState: State = { ...oldState, [currentType]: value };
-
-        for (const [name, unitValue] of entries(newState)) {
-          tokenPrecision.base = parseInt(decimal || DEFAULT_DECIMAL);
-          if (name === currentType) continue;
-
-          let out: string = '';
-          if (!error) {
-            out = convertTokenUnits(value, currentType, name)!;
-          }
-          if (isNaN(parseInt(out))) out = unitValue;
-          newState[name] = out;
-        }
-        lastUpdate.current = { name: currentType, value };
-        return newState;
-      });
-    };
-  }, [decimal, error]);
-
-  useEffect(() => {
-    if (lastUpdate.current) {
-      handleChangeValue(lastUpdate.current.value, lastUpdate.current.name);
-    }
-  }, [handleChangeValue]);
-
-  const units: UnitTypeExtended[] = [
-    { name: 'unit', value: state.unit },
-    { name: 'base', value: state.base },
-  ];
-
-  return (
-    <ToolLayout>
-      <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
-        <header className="flex items-center gap-3 align-middle">
-          <CalculatorSvg
-            width={32}
-            height={32}
-            alt="deth token unit conversion calculator icon"
-          />
-          <h3 className="text-sm text-deth-gray-300 sm:text-xl">
-            Calculators ﹥
-          </h3>
-          <h3 className="text-sm text-deth-pink sm:text-xl">
-            Token unit conversion
-          </h3>
-        </header>
-        <UnitElements
-          units={units}
-          error={error}
-          onChange={handleChangeValue}
-          setDecimal={setDecimal}
-        />
-      </form>
-    </ToolLayout>
-  );
-}
-
-interface UnitElementsProps {
-  units: UnitTypeExtended[];
-  error: string | undefined;
-  onChange: (value: string, unitType: TokenUnitType) => void;
-  setDecimal: (value: string) => void;
-}
-
-function UnitElements({
-  units,
-  error,
-  onChange,
-  setDecimal,
-}: UnitElementsProps): JSX.Element {
-  return (
-    <Fragment>
-      <p
-        data-testid="error"
-        className="absolute top-2/3 text-sm text-deth-error"
-      >
-        {error}
-      </p>
-
-      <div className="mt-5 w-full">
-        <div className="flex flex-col">
-          <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-            <label htmlFor="decimals">decimals</label>
-          </div>
-
-          <input
-            id="decimals"
-            type="number"
-            min={0}
-            placeholder={tokenPrecision.base.toString()}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setDecimal(event.target.value);
-            }}
-            className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
-          />
-        </div>
-      </div>
-
-      {units.map((unit) => {
-        const { name, value } = unit;
-
-        return (
-          <div key={name} className="mt-5 w-full">
-            <div className="flex flex-col">
-              <div className="mb-2 py-1 text-left text-xs font-medium uppercase tracking-wider">
-                <label htmlFor={name}>{name}</label>
-              </div>
-
-              <Input
-                id={name}
-                placeholder={value ? value.toString() : '0'}
-                value={value}
-                type="text"
-                onChange={(event) => {
-                  onChange(event.target.value, name);
-                }}
-                className="rounded-md border border-deth-gray-600 bg-deth-gray-900 p-3 text-lg"
-              />
-            </div>
-          </div>
-        );
-      })}
-    </Fragment>
-  );
-}
+const DEFAULT_DECIMALS = 18;
 
 type TokenUnitType = 'base' | 'unit';
 
 interface UnitTypeExtended {
   name: TokenUnitType;
   value: string;
+}
+
+type WithError<T> = { value: T; error?: string };
+
+interface TokenUnitConversionState
+  extends Record<TokenUnitType, WithError<string>> {}
+
+const initialState: TokenUnitConversionState = {
+  base: { value: '' },
+  unit: { value: '' },
+};
+
+export default function TokenUnitConversion() {
+  const lastUpdate = useRef<UnitTypeExtended>();
+
+  const [decimals, setDecimals] = useState<WithError<number>>({
+    value: DEFAULT_DECIMALS,
+  });
+  const [state, setState] = useState<TokenUnitConversionState>(initialState);
+
+  const handleChangeValue = useMemo(() => {
+    return (newValue: string, currentType: TokenUnitType) => {
+      newValue = decodeHex(newValue);
+
+      const parsed = unitSchema.safeParse(newValue);
+
+      if (!parsed.success) {
+        setState((prevState) => ({
+          ...prevState,
+          [currentType]: {
+            value: newValue,
+            error: parsed.error.errors[0].message,
+          },
+        }));
+
+        return;
+      }
+
+      newValue = parsed.data;
+
+      setState((oldState) => {
+        const newState: TokenUnitConversionState = {
+          ...oldState,
+          [currentType]: { value: newValue },
+        };
+
+        if (decimals.error) return newState;
+
+        const otherUnit = currentType === 'base' ? 'unit' : 'base';
+
+        const out = convertUnit(newValue, currentType, otherUnit, {
+          unit: 1,
+          base: decimals.value + 1,
+        });
+
+        if (out !== undefined) newState[otherUnit] = { value: out };
+
+        lastUpdate.current = { name: currentType, value: newValue };
+
+        return newState;
+      });
+    };
+  }, [decimals]);
+
+  // When decimals change, we update the last changed input and preserve
+  // the oldest changed input.
+  useEffect(() => {
+    if (lastUpdate.current) {
+      handleChangeValue(lastUpdate.current.value, lastUpdate.current.name);
+    }
+  }, [handleChangeValue]);
+
+  return (
+    <ToolContainer>
+      <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
+        <ToolHeader
+          icon={<CalculatorSvg />}
+          text={['Calculators', 'Token Unit Conversion']}
+        />
+        <section className="flex w-full flex-col gap-5">
+          <DecimalsInput decimals={decimals} setDecimals={setDecimals} />
+          <ConversionInputs
+            handleChangeValue={handleChangeValue}
+            state={state}
+          />
+        </section>
+      </form>
+    </ToolContainer>
+  );
+}
+
+interface DecimalsInputProps {
+  decimals: WithError<number>;
+  setDecimals: Dispatch<SetStateAction<WithError<number>>>;
+}
+
+function DecimalsInput({ decimals, setDecimals }: DecimalsInputProps) {
+  return (
+    <ConversionInput
+      name="Decimals"
+      value={decimals.value}
+      error={decimals.error}
+      type="number"
+      min={0}
+      max={26}
+      onChange={(e) => {
+        let error = e.target.validationMessage;
+
+        const value = e.target.valueAsNumber;
+        if (isNaN(value) || value < 0) {
+          error = 'The decimals must be a number between 0 and 26';
+        }
+
+        setDecimals({ value, error });
+      }}
+    />
+  );
+}
+
+interface ConversionInputsProps {
+  state: TokenUnitConversionState;
+  handleChangeValue: (newValue: string, currentType: TokenUnitType) => void;
+}
+
+function ConversionInputs({
+  state,
+  handleChangeValue,
+}: ConversionInputsProps): JSX.Element {
+  return (
+    <>
+      <ConversionInput
+        name="Units"
+        {...state['unit']}
+        onChange={(e) => handleChangeValue(e.target.value, 'unit')}
+      />
+      <ConversionInput
+        name="Base"
+        {...state['base']}
+        onChange={(e) => handleChangeValue(e.target.value, 'base')}
+      />
+    </>
+  );
 }

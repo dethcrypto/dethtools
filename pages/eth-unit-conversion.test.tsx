@@ -3,36 +3,39 @@ import { expect } from 'earljs';
 
 import EthUnitConversion from './eth-unit-conversion.page';
 
+const WEI_IN_GWEI = 1e9;
+const WEI_IN_ETHER = 1e18;
+
 describe(EthUnitConversion.name, () => {
   it('sets wei field and gets a correct value in the rest of fields', async () => {
     const root = render(<EthUnitConversion />);
 
-    const weiField = (await root.findByLabelText(/^wei/)) as HTMLInputElement;
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
 
     fireEvent.change(weiField, {
-      target: { value: '10000000001000002333343' },
+      target: { value: WEI_IN_ETHER.toString(10) },
     });
 
-    expect(weiField.value).toEqual('10000000001000002333343');
+    expect(weiField.value).toEqual('1000000000000000000');
 
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
-    const ethField = (await root.findByLabelText(/eth/)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
+    const ethField = (await root.findByLabelText(/eth/i)) as HTMLInputElement;
 
-    expect(gweiField.value).toEqual('10000000001000.002333343');
-    expect(ethField.value).toEqual('10000.000001000002333343');
+    expect(gweiField.value).toEqual(WEI_IN_GWEI.toString(10));
+    expect(ethField.value).toEqual('1');
   });
 
   it('sets gwei field and gets a correct value in the rest of fields', async () => {
     const root = render(<EthUnitConversion />);
 
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
 
     fireEvent.change(gweiField, { target: { value: '14000' } });
 
     expect(gweiField.value).toEqual('14000');
 
-    const weiField = (await root.findByLabelText(/^wei/)) as HTMLInputElement;
-    const ethField = (await root.findByLabelText(/eth/)) as HTMLInputElement;
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
+    const ethField = (await root.findByLabelText(/eth/i)) as HTMLInputElement;
 
     expect(weiField.value).toEqual('14000000000000');
     expect(ethField.value).toEqual('0.000014');
@@ -41,14 +44,14 @@ describe(EthUnitConversion.name, () => {
   it('sets eth field and gets a correct value in the rest of fields', async () => {
     const root = render(<EthUnitConversion />);
 
-    const ethField = (await root.findByLabelText(/eth/)) as HTMLInputElement;
+    const ethField = (await root.findByLabelText(/eth/i)) as HTMLInputElement;
 
     fireEvent.change(ethField, { target: { value: '0.014' } });
 
     expect(ethField.value).toEqual('0.014');
 
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
-    const weiField = (await root.findByLabelText(/^wei/)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
 
     expect(gweiField.value).toEqual('14000000');
     expect(weiField.value).toEqual('14000000000000000');
@@ -56,9 +59,9 @@ describe(EthUnitConversion.name, () => {
 
   it('sets correct gwei input, then adds chars, thus freezes calculation results in other fields', async () => {
     const root = render(<EthUnitConversion />);
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
-    const weiField = (await root.findByLabelText(/^wei/)) as HTMLInputElement;
-    const ethField = (await root.findByLabelText(/eth/)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
+    const ethField = (await root.findByLabelText(/eth/i)) as HTMLInputElement;
 
     fireEvent.change(gweiField, { target: { value: '140005.54' } });
     expect(gweiField.value).toEqual('140005.54');
@@ -73,7 +76,7 @@ describe(EthUnitConversion.name, () => {
 
   it('displays error message when user types a special character', async () => {
     const root = render(<EthUnitConversion />);
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
 
     fireEvent.change(gweiField, { target: { value: '140fa,@' } });
 
@@ -93,8 +96,8 @@ describe(EthUnitConversion.name, () => {
 
   it('types negative number and error gets displayed', async () => {
     const root = render(<EthUnitConversion />);
-    const weiField = (await root.findByLabelText(/^wei/)) as HTMLInputElement;
-    const gweiField = (await root.findByLabelText(/gwei/)) as HTMLInputElement;
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
 
     fireEvent.change(gweiField, { target: { value: '-12' } });
 
