@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react';
 
-function SvgComponent(props) {
+export function OthersIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={15}
@@ -15,7 +15,5 @@ function SvgComponent(props) {
         fill="#AAA4B6"
       />
     </svg>
-  )
+  );
 }
-
-export default SvgComponent

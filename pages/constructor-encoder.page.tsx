@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useState } from 'react';
 
-import DecoderSvg from '../public/static/svg/decoders';
+import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
 import { ToolContainer } from '../src/components/ToolContainer';
@@ -86,7 +86,7 @@ export default function ConstructorEncoder() {
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecoderSvg />}
+        icon={<DecodersIcon />}
         text={['Encoders', 'Constructor Encoder']}
       />
 

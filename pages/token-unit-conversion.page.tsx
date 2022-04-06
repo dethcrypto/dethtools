@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react';
 
-import CalculatorSvg from '../public/static/svg/calculator';
 import { ConversionInput } from '../src/components/ConversionInput';
+import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
@@ -98,7 +98,7 @@ export default function TokenUnitConversion() {
     <ToolContainer>
       <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
         <ToolHeader
-          icon={<CalculatorSvg />}
+          icon={<CalculatorIcon />}
           text={['Calculators', 'Token Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">

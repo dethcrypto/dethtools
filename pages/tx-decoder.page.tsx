@@ -1,7 +1,7 @@
 import { TypedTransaction } from '@ethereumjs/tx';
 import { useState } from 'react';
 
-import DecoderSvg from '../public/static/svg/decoders';
+import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
@@ -28,7 +28,7 @@ export default function TxDecoder() {
 
   return (
     <ToolContainer>
-      <ToolHeader icon={<DecoderSvg />} text={['Decoders', 'Tx Decoder']} />
+      <ToolHeader icon={<DecodersIcon />} text={['Decoders', 'Tx Decoder']} />
 
       <section className="pt-10">
         <label className="pb-2" htmlFor="tx-input">

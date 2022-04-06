@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import BurgerSvg from '../../public/static/svg/burger';
-import DethToolsSvg from '../../public/static/svg/deth-tools';
-import DiscordSvg from '../../public/static/svg/discord';
-import GithubSvg from '../../public/static/svg/github';
-import LogoSvg from '../../public/static/svg/logo';
-import TwitterSvg from '../../public/static/svg/twitter';
+import { DethToolsLogo } from './icons/DethToolsLogo';
+import { DiscordIcon } from './icons/DiscordIcon';
+import { GithubIcon } from './icons/GithubIcon';
+import { HamburgerIcon } from './icons/HamburgerIcon';
+import { TwitterIcon } from './icons/TwitterIcon';
+import { Logo } from './Logo';
 
 function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -41,29 +41,48 @@ export function Navigation({
   return (
     <nav className="mx-auto flex h-20 items-center justify-between px-8 pt-6 pb-4 sm:px-0">
       <section className="flex cursor-pointer items-center gap-4">
-        <LogoSvg width={36} height={36} alt="deth tools logo" />
-        {width > 480 && (
-          <DethToolsSvg width={164} height={164} alt="deth tools logo text" />
-        )}
+        <Logo width={36} height={36} />
+        {width > 480 && <DethToolsLogo width={164} height={164} />}
         <p> WIP </p>
       </section>
 
-      <section className="flex items-center gap-4">
+      <section className="flex items-center">
         {width > 480 ? (
-          <section className="flex gap-3">
-            <GithubSvg width={26} height={26} alt="github icon" />
-            <TwitterSvg width={26} height={26} alt="twitter icon" />
-            <DiscordSvg width={26} height={26} alt="discord icon" />
-          </section>
+          <SocialIcons />
         ) : (
-          <BurgerSvg
-            width={36}
-            height={36}
-            onClick={() => handleShowMobileTree(width)}
-            alt="mobile burger menu"
-          />
+          <button onClick={() => handleShowMobileTree(width)} aria-label="menu">
+            <HamburgerIcon width={36} height={36} />
+          </button>
         )}
       </section>
     </nav>
+  );
+}
+
+function SocialIcons() {
+  return (
+    <section className="flex">
+      <a
+        href="https://github.com/dethcrypto/dethtools"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="GitHub"
+      >
+        <GithubIcon width={26} height={26} />
+      </a>
+      <a
+        href="https://twitter.com/dethcrypto"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="Twitter"
+      >
+        <TwitterIcon width={26} height={26} />
+      </a>
+      <a
+        href="https://discord.gg/ATcDz5xEY6"
+        className="-my-2 p-2 text-gray-400 hover:text-gray-200"
+        aria-label="Discord"
+      >
+        <DiscordIcon width={26} height={26} />
+      </a>
+    </section>
   );
 }
