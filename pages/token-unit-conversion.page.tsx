@@ -98,7 +98,7 @@ export default function TokenUnitConversion() {
     <ToolContainer>
       <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
         <ToolHeader
-          icon={<CalculatorIcon />}
+          icon={<CalculatorIcon width={19} height={19} />}
           text={['Calculators', 'Token Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">

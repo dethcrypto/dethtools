@@ -86,7 +86,7 @@ export default function ConstructorEncoder() {
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecodersIcon />}
+        icon={<DecodersIcon width={19} height={19} />}
         text={['Encoders', 'Constructor Encoder']}
       />
 

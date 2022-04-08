@@ -28,7 +28,10 @@ export default function TxDecoder() {
 
   return (
     <ToolContainer>
-      <ToolHeader icon={<DecodersIcon />} text={['Decoders', 'Tx Decoder']} />
+      <ToolHeader
+        icon={<DecodersIcon width={19} height={19} />}
+        text={['Decoders', 'Tx Decoder']}
+      />
 
       <section className="pt-10">
         <label className="pb-2" htmlFor="tx-input">

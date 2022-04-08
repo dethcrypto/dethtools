@@ -69,7 +69,7 @@ export default function EthUnitConversion() {
     <ToolContainer>
       <form className="flex w-full flex-col items-start sm:mr-auto sm:items-center md:items-start">
         <ToolHeader
-          icon={<CalculatorIcon />}
+          icon={<CalculatorIcon width={19} height={19} />}
           text={['Calculators', 'Eth Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">
