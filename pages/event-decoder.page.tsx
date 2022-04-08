@@ -1,13 +1,13 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
-import { Tips } from '../src/components/Tips';
-import { decoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { NodeBlock } from '../src/components/NodeBlock';
 import { Spinner } from '../src/components/Spinner';
+import { Tips } from '../src/components/Tips';
+import { decoderTips } from '../src/components/Tips/calculatorTips';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import {

@@ -1,12 +1,12 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
-import { Tips } from '../src/components/Tips';
-import { decoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { Spinner } from '../src/components/Spinner';
+import { Tips } from '../src/components/Tips';
+import { decoderTips } from '../src/components/Tips/calculatorTips';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import {

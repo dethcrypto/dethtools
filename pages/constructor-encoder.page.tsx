@@ -2,12 +2,12 @@ import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useState } from 'react';
-import { Tips } from '../src/components/Tips';
-import { encoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
+import { Tips } from '../src/components/Tips';
+import { encoderTips } from '../src/components/Tips/calculatorTips';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { encodeConstructor } from '../src/lib/encodeContructor';
@@ -61,7 +61,7 @@ export default function ConstructorEncoder() {
         setValues(new Array(iface.deploy.inputs.length).fill(''));
         setErrors(new Array(iface.deploy.inputs.length).fill(''));
       } else {
-        setError(`ABI parsing failed`);
+        setError(`ABI parsing failed: Unexpected end of JSON input`);
       }
     } catch (_) {
       setError('Provided ABI is incorrect');
