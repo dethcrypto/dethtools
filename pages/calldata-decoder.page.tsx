@@ -216,17 +216,19 @@ export default function CalldataDecoder({
         >
           <section className="flex flex-col gap-4">
             <div>
-              {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
-                <div
-                  className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
+              {signatureHash &&
+                decodeResults &&
+                sigHashSchema.safeParse(signatureHash).success && (
+                  <div
+                    className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
                     border-gray-600 py-1 px-3 duration-200 hover:bg-gray-700
                       hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
                     active:bg-gray-800"
-                >
-                  <p className="text-purple-400 font-bold">Signature hash</p>
-                  <b>{signatureHash}</b>
-                </div>
-              )}
+                  >
+                    <p className="text-purple-400 font-bold">Signature hash</p>
+                    <b>{signatureHash}</b>
+                  </div>
+                )}
             </div>
 
             <div className="items-left flex flex-col text-ellipsis font-semibold">

@@ -231,7 +231,7 @@ export default function EventDecoder() {
           placeholder="Output"
         >
           <section className="flex flex-col gap-4 break-words">
-            {signatureHash && (
+            {signatureHash && decodeResults && (
               <NodeBlock
                 className="my-2"
                 str={(signatureHash as string) || '0x0'}
