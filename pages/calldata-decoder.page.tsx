@@ -1,5 +1,7 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import { Tips } from 'src/components/Tips';
+import { decoderTips } from 'src/components/Tips/calculatorTips';
 
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -250,6 +252,7 @@ export default function CalldataDecoder({
           </section>
         </section>
       )}
+      <Tips texts={decoderTips} />
     </ToolContainer>
   );
 }

@@ -6,6 +6,8 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Tips } from '../src/components/Tips';
+import { calculatorTips } from '../src/components/Tips/calculatorTips';
 
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
@@ -109,6 +111,7 @@ export default function TokenUnitConversion() {
           />
         </section>
       </form>
+      <Tips texts={calculatorTips} />
     </ToolContainer>
   );
 }

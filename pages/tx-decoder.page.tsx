@@ -1,5 +1,6 @@
 import { TypedTransaction } from '@ethereumjs/tx';
 import { useState } from 'react';
+import { decoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -7,6 +8,7 @@ import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
 import { toEvenHex } from '../src/lib/toEvenHex';
+import { Tips } from '../src/components/Tips';
 
 export default function TxDecoder() {
   const [error, setError] = useState<string>();
@@ -77,6 +79,7 @@ export default function TxDecoder() {
           </output>
         )}
       </section>
+      <Tips texts={decoderTips} />
     </ToolContainer>
   );
 }

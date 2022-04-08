@@ -1,6 +1,8 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import { Tips } from '../src/components/Tips';
+import { decoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -267,6 +269,7 @@ export default function EventDecoder() {
           </section>
         </section>
       )}
+      <Tips texts={decoderTips} />
     </ToolContainer>
   );
 }

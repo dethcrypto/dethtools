@@ -2,6 +2,8 @@ import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useState } from 'react';
+import { Tips } from '../src/components/Tips';
+import { encoderTips } from '../src/components/Tips/calculatorTips';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -180,6 +182,7 @@ export default function ConstructorEncoder() {
           )
         )}
       </section>
+      <Tips texts={encoderTips} />
     </ToolContainer>
   );
 }
