@@ -33,12 +33,16 @@ export default function ConstructorEncoder() {
       setError('Some values are empty');
       return;
     }
-    const iface = parseAbi(rawAbi) as Interface;
     try {
-      const encoded = encodeConstructor(iface, values as string[]);
-      setEncodedResult(stripHexPrefix(encoded).match(/.{1,64}/g) as string[]);
+      const iface = parseAbi(rawAbi) as Interface;
+      try {
+        const encoded = encodeConstructor(iface, values as string[]);
+        setEncodedResult(stripHexPrefix(encoded).match(/.{1,64}/g) as string[]);
+      } catch (e) {
+        setError(`${(e as any).code} ${(e as any).argument}`);
+      }
     } catch (e) {
-      setError(`${(e as any).code} ${(e as any).argument}`);
+      setError('Provided ABI is incorrect: ' + (e as Error).message);
     }
   }
 
@@ -47,13 +51,20 @@ export default function ConstructorEncoder() {
   const onAbiChange = (rawAbi: string) => {
     setError(undefined);
     setRawAbi(rawAbi);
-    const iface = parseAbi(rawAbi);
-    if (iface instanceof Interface) {
-      setIface(iface);
-      setValues(new Array(iface.deploy.inputs.length).fill(''));
-      setErrors(new Array(iface.deploy.inputs.length).fill(''));
-    } else {
-      setError(`ABI parsing failed: ${iface.message}`);
+
+    try {
+      const parsed = parseAbi(rawAbi);
+      if (parsed instanceof Interface) {
+        const iface = parsed;
+        setIface(iface);
+
+        setValues(new Array(iface.deploy.inputs.length).fill(''));
+        setErrors(new Array(iface.deploy.inputs.length).fill(''));
+      } else {
+        setError(`ABI parsing failed`);
+      }
+    } catch (_) {
+      setError('Provided ABI is incorrect');
     }
   };
 
@@ -134,6 +145,14 @@ export default function ConstructorEncoder() {
               </div>
             </section>
           ))}
+      </section>
+
+      <section className="pt-1 pb-6">
+        {rawAbi?.includes('constructor') && values.length === 0 && (
+          <p className="text-md pb-4 font-semibold">
+            Constructor doesn't contain any arguments
+          </p>
+        )}
       </section>
 
       <Button
