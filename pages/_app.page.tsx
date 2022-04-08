@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <main className="mx-auto mt-12 h-full max-w-6xl">
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Navigation handleShowMobileTree={handleShowMobileTree} />
-        <div className="mt-6 flex h-3/4 max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
+        <div className="mt-6 flex h-auto max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
           <ToolTree
             className="border-r border-gray-600 pr-8"
             isShowMobileTree={isShowMobileTree}

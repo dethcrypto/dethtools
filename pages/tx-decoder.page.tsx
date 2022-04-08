@@ -26,35 +26,37 @@ export default function TxDecoder() {
     if (decoded) setDecodeResults(decoded);
   }
 
+  const decodeButtonDisabled = !rawTx;
+
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecodersIcon width={19} height={19} />}
+        icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Tx Decoder']}
       />
 
-      <section className="pt-10">
-        <label className="pb-2" htmlFor="tx-input">
-          raw transaction
-        </label>
+      <section>
+        <label htmlFor="tx-input">raw transaction</label>
 
         <input
           id="tx-input"
           type="text"
           placeholder="e.g 0x0..."
-          className="mb-2 mr-auto h-10 w-full rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
+          className="mb-2 mt-1 mr-auto h-10 w-full rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
           onChange={(event) => setRawTx(toEvenHex(event.target.value))}
         />
       </section>
 
       <Button
         onClick={() => void handleDecodeCalldata()}
-        title={'Please fill in the calldata'}
+        className="mt-4"
+        disabled={decodeButtonDisabled}
+        title={decodeButtonDisabled ? 'Please fill in the tx field' : undefined}
       >
         Decode
       </Button>
 
-      <section className="pt-4">
+      <section className="pt-8 pb-3">
         {!decodeResults && <p> Decoded output will appear here </p>}
       </section>
 

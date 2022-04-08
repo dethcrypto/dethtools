@@ -79,15 +79,21 @@ export default function EventDecoder() {
     setDecodeResults([decodeResult]);
   }
 
+  const decodeButtonDisabled = !(
+    topics &&
+    data &&
+    (rawAbi || tab === '4-bytes')
+  );
+
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecodersIcon width={19} height={19} />}
+        icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Event Decoder']}
       />
 
       <div className="relative">
-        <section className="mb-3">
+        <section className="mb-4">
           {topics &&
             topics.map((_topic, i) => (
               <section className="flex items-center gap-2" key={i}>
@@ -100,7 +106,7 @@ export default function EventDecoder() {
                     id={`${i}`}
                     type="text"
                     placeholder="e.g 0x0..."
-                    className="mb-2 mr-auto h-10 w-3/5 rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
+                    className="mb-2 mr-auto h-12 w-full rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       setTopics(
                         topics.map((topic, id) =>
@@ -122,7 +128,7 @@ export default function EventDecoder() {
             ))}
         </section>
 
-        <section className="flex flex-1 flex-col">
+        <section className="mb-6 flex flex-1 flex-col">
           <label className="pb-1" htmlFor="data">
             data
           </label>
@@ -131,7 +137,7 @@ export default function EventDecoder() {
             id="data"
             type="text"
             placeholder="e.g 0x0..."
-            className="mb-4 mr-auto h-10 w-3/5 rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
+            className="mb-4 mr-auto h-12 w-full rounded-md border border-gray-600 bg-gray-900 text-sm focus:outline-none"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setData(addHexPrefix(event.target.value))
             }
@@ -144,8 +150,12 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-gray-600
-            p-1 text-center ${tab === '4-bytes' ? 'bg-pink' : 'bg-gray-600'}`}
+            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+              tab === '4-bytes'
+                ? 'rounded-l-md bg-pink'
+                : 'rounded-tl-md bg-gray-600'
+            }`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -156,8 +166,11 @@ export default function EventDecoder() {
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-pink' : 'bg-gray-600'
+            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+              tab === 'abi'
+                ? 'rounded-tr-md bg-pink'
+                : 'rounded-r-md bg-gray-600'
             }`}
             onClick={() => {
               setTab('abi');
@@ -185,12 +198,18 @@ export default function EventDecoder() {
 
       <Button
         onClick={() => void handleDecodeCalldata()}
-        title={'Please fill in the calldata'}
+        className="mt-6"
+        disabled={decodeButtonDisabled}
+        title={
+          decodeButtonDisabled
+            ? 'Please fill in the topics, data and abi if this tab is selected'
+            : undefined
+        }
       >
         Decode
       </Button>
 
-      <section className="pt-4">
+      <section className="pt-8 pb-3">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
             <p className="text-md pb-4 font-semibold">
@@ -208,7 +227,7 @@ export default function EventDecoder() {
         <Spinner className="mx-auto pt-12" />
       ) : (
         <section
-          className="relative mb-16 rounded-xl border border-gray-600 bg-gray-900 p-8"
+          className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
           <section className="flex flex-col gap-4 break-words">

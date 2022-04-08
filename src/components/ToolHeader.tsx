@@ -11,11 +11,11 @@ export function ToolHeader({ icon, text }: ToolHeaderProps) {
     <header className="mb-8 flex items-center gap-3 align-middle md:mb-11">
       {icon}
       {dir.map((str, i) => (
-        <span key={i} className="text-sm text-gray-300 sm:text-xl">
+        <span key={i} className="text-xl text-gray-300 sm:text-lg">
           {str} /
         </span>
       ))}
-      <h3 className="text-sm text-pink sm:text-xl">{last}</h3>
+      <h3 className="text-2xl text-pink sm:text-xl">{last}</h3>
     </header>
   );
 }
