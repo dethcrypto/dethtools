@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <main className="mx-auto mt-12 h-full max-w-6xl">
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Navigation handleShowMobileTree={handleShowMobileTree} />
-        <div className="mt-6 flex min-h-full max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
+        <div className="mt-6 flex h-3/4 max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
           <ToolTree
             className="border-r border-gray-600 pr-8"
             isShowMobileTree={isShowMobileTree}
@@ -32,6 +32,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           />
           <Component className="max-w-1/2 " {...pageProps} />
         </div>
+        <footer className="mt-12 flex h-12 cursor-default items-center justify-center rounded-md bg-gray-700 px-8 py-4">
+          <p>Made by Deth Crypto with ❤️</p>
+        </footer>
       </ThemeProvider>
     </main>
   );
