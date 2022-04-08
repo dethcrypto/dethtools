@@ -60,11 +60,15 @@ function CalldataTreeNode({
   if ('value' in node) {
     return (
       <span className={className}>
-        <code>
+        <div>
           {node.type.match(isNodeArray) ? (
-            <div className="my-4 rounded-lg border border-gray-600 p-3">
+            <div className="my-4 rounded-lg border border-gray-600 p-3 text-sm">
               <p id="node-type" className="text-purple-400 pt-2 pb-4">
-                {node.name ? <b className="text-pink">{node.name} </b> : ' '}
+                {node.name ? (
+                  <code className="text-pink">{node.name} </code>
+                ) : (
+                  ' '
+                )}
                 {node.type}
               </p>
 
@@ -81,23 +85,23 @@ function CalldataTreeNode({
           ) : (
             <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
               {node.name ? (
-                <b className="text-pink-400">{node.name}</b>
+                <code className="text-pink-400">{node.name}</code>
               ) : (
-                <b className="text-pink-400">unknown name</b>
+                <code className="text-pink-400">unknown name</code>
               )}
-              <b id="node-type" className=" text-purple-400">
+              <code id="node-type" className=" text-purple-400">
                 {node.type}
-              </b>
+              </code>
             </NodeBlock>
           )}
-        </code>
+        </div>
       </span>
     );
   }
 
   return (
     <section>
-      <b className="text-purple-400">struct</b> {node.name}
+      <code className="text-purple-400">struct</code> {node.name}
       {':'}
       <ul className="pb-1">
         {node.components.map((node, index) => (

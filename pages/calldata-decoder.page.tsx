@@ -231,7 +231,7 @@ export default function CalldataDecoder({
                 )}
             </div>
 
-            <div className="items-left flex flex-col text-ellipsis font-semibold">
+            <div className="items-left flex flex-col text-ellipsis">
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i} data-testid={`decodedCalldataTree${i}`}>
