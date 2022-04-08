@@ -1,4 +1,5 @@
 import { Fragment, Interface } from '@ethersproject/abi';
+import assert from 'assert';
 
 export function decodeCalldata(
   iface: Interface,
@@ -12,6 +13,11 @@ export function decodeCalldata(
   for (const frag of abi) {
     try {
       decoded = iface.decodeFunctionData(frag.name, calldata);
+      const encoded = iface.encodeFunctionData(frag.name, decoded);
+      assert(
+        encoded.length === calldata.length,
+        'Ignore functions that do not fully encode data',
+      );
       fragment = frag;
     } catch (e) {
       // catch error here to avoid error throw,

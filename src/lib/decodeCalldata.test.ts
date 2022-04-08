@@ -6,7 +6,7 @@ import { decodeCalldata } from './decodeCalldata';
 import { parseAbi } from './parseAbi';
 
 describe(decodeCalldata.name, () => {
-  it.only('dont show partial decodings', () => {
+  it('dont show partial decodings', () => {
     const iface = parseAbi('many_msg_babbage(bytes1)') as Interface;
 
     expect(iface).toBeA(Interface);

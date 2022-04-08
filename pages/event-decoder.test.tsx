@@ -235,7 +235,6 @@ describe(EventDecoder.name, () => {
       expect.stringMatching(/0xE1Be5D3f34e89dE342Ee97E6e90D405884dA6c67/),
     );
     expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching(/0/));
-
     expect(arg0.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg1.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg2.parentElement!.innerHTML).toMatchSnapshot();
