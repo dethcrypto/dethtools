@@ -87,7 +87,7 @@ function CalldataTreeNode({
               {node.name ? (
                 <code className="text-pink-400">{node.name}</code>
               ) : (
-                <code className="text-pink-400">unknown name</code>
+                ' '
               )}
               <code id="node-type" className=" text-purple-400">
                 {node.type}
