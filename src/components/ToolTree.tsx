@@ -70,7 +70,7 @@ export function ToolTree({
           <ToolTreeElements className="mx-8 mt-8" />
         </section>
       ) : (
-        <section className={`hidden w-5/12 md:block lg:ml-0 ${className}`}>
+        <section className={`hidden w-4/12 md:block lg:ml-0 ${className}`}>
           <ToolTreeElements />
         </section>
       )}

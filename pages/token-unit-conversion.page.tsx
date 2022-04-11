@@ -9,8 +9,6 @@ import {
 
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
-import { Tips } from '../src/components/Tips';
-import { calculatorTips } from '../src/components/Tips/calculatorTips';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
@@ -111,7 +109,6 @@ export default function TokenUnitConversion() {
           />
         </section>
       </form>
-      <Tips texts={calculatorTips} />
     </ToolContainer>
   );
 }

@@ -32,8 +32,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           />
           <Component className="max-w-1/2 " {...pageProps} />
         </div>
-        <footer className="mt-12 flex h-12 cursor-default items-center justify-center rounded-md bg-gray-700 px-8 py-4">
-          <p>Made by Deth Crypto with ❤️</p>
+
+        <footer className="mt-3 flex h-12 cursor-default items-center justify-center rounded-md bg-gray-900 px-8 py-4 text-gray-500">
+          <p>Made by Deth Crypto with ♥</p>
         </footer>
       </ThemeProvider>
     </main>
