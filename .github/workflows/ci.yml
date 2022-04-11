@@ -32,11 +32,10 @@ jobs:
 
       - run: yarn --no-progress --non-interactive --frozen-lockfile
 
-      - name: 'TypeCheck, Lint and Build'
-        # NextJS typechecks and lints before the build
-        run: yarn build
+      - run: yarn build #next js will lint and typecheck *some* files but to cover everything we run linting and typecheck as separate steps
+      - run: yarn lint
       - run: yarn format
+      - run: yarn typecheck
       - run: yarn test
       - name: 'Build storybook'
-        # NextJS typechecks and lints before the build
         run: yarn build-storybook
