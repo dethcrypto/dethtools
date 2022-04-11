@@ -71,6 +71,12 @@ module.exports = {
               fontSize: '14px',
               color: theme('colors.white'),
             },
+            b: {
+              marginTop: '0',
+              marginBottom: '0',
+              fontSize: '12px',
+              color: theme('colors.white'),
+            },
             a: {
               marginTop: '0',
               fontSize: '15px',

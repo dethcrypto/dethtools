@@ -31,12 +31,16 @@ export default function ConstructorEncoder() {
       setError('Some values are empty');
       return;
     }
-    const iface = parseAbi(rawAbi) as Interface;
     try {
-      const encoded = encodeConstructor(iface, values as string[]);
-      setEncodedResult(stripHexPrefix(encoded).match(/.{1,64}/g) as string[]);
+      const iface = parseAbi(rawAbi) as Interface;
+      try {
+        const encoded = encodeConstructor(iface, values as string[]);
+        setEncodedResult(stripHexPrefix(encoded).match(/.{1,64}/g) as string[]);
+      } catch (e) {
+        setError(`${(e as any).code} ${(e as any).argument}`);
+      }
     } catch (e) {
-      setError(`${(e as any).code} ${(e as any).argument}`);
+      setError('Provided ABI is incorrect: ' + (e as Error).message);
     }
   }
 
@@ -45,13 +49,20 @@ export default function ConstructorEncoder() {
   const onAbiChange = (rawAbi: string) => {
     setError(undefined);
     setRawAbi(rawAbi);
-    const iface = parseAbi(rawAbi);
-    if (iface instanceof Interface) {
-      setIface(iface);
-      setValues(new Array(iface.deploy.inputs.length).fill(''));
-      setErrors(new Array(iface.deploy.inputs.length).fill(''));
-    } else {
-      setError(`ABI parsing failed: ${iface.message}`);
+
+    try {
+      const parsed = parseAbi(rawAbi);
+      if (parsed instanceof Interface) {
+        const iface = parsed;
+        setIface(iface);
+
+        setValues(new Array(iface.deploy.inputs.length).fill(''));
+        setErrors(new Array(iface.deploy.inputs.length).fill(''));
+      } else {
+        setError(`ABI parsing failed: Unexpected end of JSON input`);
+      }
+    } catch (_) {
+      setError('Provided ABI is incorrect');
     }
   };
 
@@ -86,12 +97,12 @@ export default function ConstructorEncoder() {
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecodersIcon />}
+        icon={<DecodersIcon height={24} width={24} />}
         text={['Encoders', 'Constructor Encoder']}
       />
 
-      <label htmlFor="abi" className="pt-2 text-lg font-bold">
-        <p>ABI</p>
+      <label htmlFor="abi">
+        <span>ABI</span>
       </label>
 
       <textarea
@@ -99,8 +110,7 @@ export default function ConstructorEncoder() {
         aria-label="text area for constructor abi"
         value={rawAbi || ''}
         placeholder="e.g function transferFrom(address, ..)"
-        className="border-deth-gray-600 bg-deth-gray-900 flex h-48 w-full break-words
-            rounded-b-md border-t-0 p-5"
+        className="mb-4 h-20 break-words rounded-md border border-gray-600 bg-gray-900 p-4"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           onAbiChange(event.target.value);
         }}
@@ -135,32 +145,58 @@ export default function ConstructorEncoder() {
           ))}
       </section>
 
+      <section className="pt-1 pb-6">
+        {rawAbi?.includes('constructor') && values.length === 0 && (
+          <p className="text-md pb-4 font-semibold">
+            Constructor doesn't contain any arguments
+          </p>
+        )}
+      </section>
+
       <Button
         onClick={onEncodeClick}
+        className="mt-3"
         disabled={encodeButtonDisabled}
         title={encodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
         Decode
       </Button>
 
-      <section className="pt-4">
+      <section className="pt-8 pb-3">
+        {encodedResult ? (
+          encodedResult.length > 0 ? (
+            <p className="text-md pb-4 font-semibold">
+              Possible decoded calldata:
+            </p>
+          ) : (
+            'No results found'
+          )
+        ) : (
+          <p> Decoded output will appear here </p>
+        )}
+      </section>
+
+      <section
+        className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
+        placeholder="Output"
+      >
         {error ? (
           <p className="text-deth-error" data-testid="error">
             {error}
           </p>
-        ) : encodedResult ? (
-          <>
-            <h3 className="text-md flex-wrap pb-4 font-semibold">
-              Encoded constructor:
-            </h3>
-            {encodedResult.map((row, i) => (
-              <p key={i} data-testid={`encodedRow_${i}`}>
-                {row}
-              </p>
-            ))}
-          </>
         ) : (
-          <p> Encoded output will appear here </p>
+          encodedResult && (
+            <>
+              <h3 className="text-md flex-wrap pb-4 font-semibold">
+                Encoded constructor:
+              </h3>
+              {encodedResult.map((row, i) => (
+                <p key={i} data-testid={`encodedRow_${i}`}>
+                  {row}
+                </p>
+              ))}
+            </>
+          )
         )}
       </section>
     </ToolContainer>

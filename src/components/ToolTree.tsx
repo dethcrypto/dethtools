@@ -33,10 +33,10 @@ function ToolTreeElements({ className }: { className?: string }) {
                 >
                   <MyLink
                     href={`/${tool.pageHref}`}
-                    className="mr-auto flex h-10 items-center rounded-lg px-4 hover:bg-gray-600 hover:text-white"
+                    className="flex h-10 items-center justify-between rounded-lg px-4 hover:bg-gray-600 hover:text-white"
                   >
                     {tool.isNew && (
-                      <p className="mr-4 animate-pulse rounded-lg bg-purple px-2 font-semibold text-white duration-700">
+                      <p className="mr-4 rounded-lg bg-purple/25 px-2 tracking-wide text-white duration-700">
                         NEW
                       </p>
                     )}
@@ -70,7 +70,7 @@ export function ToolTree({
           <ToolTreeElements className="mx-8 mt-8" />
         </section>
       ) : (
-        <section className={`hidden w-5/12 md:block lg:ml-0 ${className}`}>
+        <section className={`hidden w-4/12 md:block lg:ml-0 ${className}`}>
           <ToolTreeElements />
         </section>
       )}
@@ -89,9 +89,9 @@ const tree: Tree = {
   decoders: {
     icon: <DecodersIcon height={20} width={20} />,
     tools: [
-      { title: 'Calldata Decoder', pageHref: 'calldata-decoder', isNew: true },
-      { title: 'Event Decoder', pageHref: 'event-decoder', isNew: true },
-      { title: 'Tx Decoder', pageHref: 'tx-decoder', isNew: true },
+      { title: 'Calldata Decoder', pageHref: 'calldata-decoder' },
+      { title: 'Event Decoder', pageHref: 'event-decoder' },
+      { title: 'Tx Decoder', pageHref: 'tx-decoder' },
     ],
   },
   encoders: {
@@ -100,7 +100,6 @@ const tree: Tree = {
       {
         title: 'Constructor Encoder',
         pageHref: 'constructor-encoder',
-        isNew: true,
       },
     ],
   },

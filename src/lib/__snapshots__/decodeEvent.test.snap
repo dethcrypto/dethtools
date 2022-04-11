@@ -2,62 +2,6 @@
 
 exports[`decodeEvent handles case where abi does not contain events 1`] = `[Error: no matching event (argument="topichash", value="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef", code=INVALID_ARGUMENT, version=abi/5.6.0)]`;
 
-exports[`decodeEvent handles case with data without 0x prefix 1`] = `
-Object {
-  "args": Object {
-    "amount": Object {
-      "hex": "0x0de0b6b3a7640000",
-      "type": "BigNumber",
-    },
-    "dst": "0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C",
-    "src": "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-  },
-  "eventFragment": EventFragment {
-    "_isFragment": true,
-    "anonymous": false,
-    "inputs": Array [
-      ParamType {
-        "_isParamType": true,
-        "arrayChildren": null,
-        "arrayLength": null,
-        "baseType": "address",
-        "components": null,
-        "indexed": true,
-        "name": "src",
-        "type": "address",
-      },
-      ParamType {
-        "_isParamType": true,
-        "arrayChildren": null,
-        "arrayLength": null,
-        "baseType": "address",
-        "components": null,
-        "indexed": true,
-        "name": "dst",
-        "type": "address",
-      },
-      ParamType {
-        "_isParamType": true,
-        "arrayChildren": null,
-        "arrayLength": null,
-        "baseType": "uint256",
-        "components": null,
-        "indexed": null,
-        "name": "amount",
-        "type": "uint256",
-      },
-    ],
-    "name": "Transfer",
-    "type": "event",
-  },
-  "fullSignature": "event Transfer(address indexed src, address indexed dst, uint256 amount)",
-  "hasArgumentNames": true,
-  "signature": "Transfer(address,address,uint256)",
-}
-`;
-
-exports[`decodeEvent handles case with too few topics 1`] = `undefined`;
-
 exports[`decodeEvent handles expected case 1`] = `
 Object {
   "args": Object {

@@ -6,6 +6,18 @@ import { decodeCalldata } from './decodeCalldata';
 import { parseAbi } from './parseAbi';
 
 describe(decodeCalldata.name, () => {
+  it('dont show partial decodings', () => {
+    const iface = parseAbi('many_msg_babbage(bytes1)') as Interface;
+
+    expect(iface).toBeA(Interface);
+
+    const decoded = decodeCalldata(
+      iface,
+      '0xa9059cbb000000000000000000000000e5b8ff1ca1c3ef2ac704783d6473ee5a9be7e02d0000000000000000000000000000000000000000000000000000000008510f10',
+    )!;
+
+    expect(decoded).not.toBeDefined();
+  });
   it('handles expected case', () => {
     const iface = parseAbi(
       'function transferFrom(address,address,uint256)',

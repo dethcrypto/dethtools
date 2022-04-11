@@ -104,19 +104,19 @@ export default function CalldataDecoder({
   return (
     <ToolContainer>
       <ToolHeader
-        icon={<DecodersIcon height={19} width={19} />}
+        icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Calldata Decoder']}
       />
 
-      <label htmlFor="calldata" className="pt-2 text-lg font-bold">
-        <p>Calldata</p>
+      <label htmlFor="calldata">
+        <span>Calldata</span>
       </label>
 
       <textarea
         id="calldata"
         value={encodedCalldata || ''}
         placeholder="e.g 0x23b8..3b2"
-        className="h-20 break-words rounded-xl border border-gray-600 bg-gray-900 p-5"
+        className="mb-4 h-20 break-words rounded-md border border-gray-600 bg-gray-900 p-4"
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
           setEncodedCalldata(event.target.value);
         }}
@@ -129,13 +129,17 @@ export default function CalldataDecoder({
         }}
       />
 
-      <div className="flex flex-col">
+      <div className="mt-8 flex flex-col">
         <div className="flex text-lg">
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`flex-1 cursor-pointer rounded-tl-md border-gray-600
-            p-1 text-center ${tab === '4-bytes' ? 'bg-pink' : 'bg-gray-600'}`}
+            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+              tab === '4-bytes'
+                ? 'rounded-l-md bg-pink'
+                : 'rounded-tl-md bg-gray-600'
+            }`}
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -147,8 +151,11 @@ export default function CalldataDecoder({
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`flex-1 cursor-pointer rounded-tr-md border-gray-600 p-1 text-center ${
-              tab === 'abi' ? 'bg-pink' : 'bg-gray-600'
+            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+              tab === 'abi'
+                ? 'rounded-tr-md bg-pink'
+                : 'rounded-r-md bg-gray-600'
             }`}
             onClick={() => {
               setTab('abi');
@@ -176,13 +183,14 @@ export default function CalldataDecoder({
 
       <Button
         onClick={onDecodeClick}
+        className="mt-6"
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
       >
         Decode
       </Button>
 
-      <section className="pt-4">
+      <section className="pt-8 pb-3">
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
             <p className="text-md pb-4 font-semibold">
@@ -208,20 +216,22 @@ export default function CalldataDecoder({
         >
           <section className="flex flex-col gap-4">
             <div>
-              {signatureHash && sigHashSchema.safeParse(signatureHash).success && (
-                <div
-                  className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
+              {signatureHash &&
+                decodeResults &&
+                sigHashSchema.safeParse(signatureHash).success && (
+                  <div
+                    className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
                     border-gray-600 py-1 px-3 duration-200 hover:bg-gray-700
                       hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
                     active:bg-gray-800"
-                >
-                  <p className="text-purple-400 font-bold">Signature hash</p>
-                  <b>{signatureHash}</b>
-                </div>
-              )}
+                  >
+                    <p className="text-purple-400 font-bold">Signature hash</p>
+                    <b>{signatureHash}</b>
+                  </div>
+                )}
             </div>
 
-            <div className="items-left flex flex-col text-ellipsis font-semibold">
+            <div className="items-left flex flex-col text-ellipsis">
               {decodeResults?.map((d, i) => {
                 return (
                   <section key={i} data-testid={`decodedCalldataTree${i}`}>
