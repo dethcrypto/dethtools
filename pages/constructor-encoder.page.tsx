@@ -6,7 +6,6 @@ import { ChangeEvent, useState } from 'react';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
-
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { encodeConstructor } from '../src/lib/encodeContructor';

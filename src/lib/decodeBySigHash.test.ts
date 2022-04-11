@@ -98,10 +98,10 @@ describe(decodeByCalldata.name, () => {
 
     expect(decodedResults.length).toEqual(1);
 
-    expect(decodedResults[0].decoded[0] as string).toEqual(
+    expect(decodedResults[0].decoded[0]).toEqual(
       '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
     );
-    expect(decodedResults[0].decoded[1] as string).toEqual(
+    expect(decodedResults[0].decoded[1]).toEqual(
       '0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C',
     );
     expect((decodedResults[0].decoded[2] as BigNumber)._hex).toEqual(
@@ -121,10 +121,10 @@ describe(fetchAndDecodeWithCalldata.name, async () => {
 
     expect(decodedResults).toBeDefined();
 
-    expect(decodedResults![0].decoded[0] as string).toEqual(
+    expect(decodedResults![0].decoded[0]).toEqual(
       '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
     );
-    expect(decodedResults![0].decoded[1] as string).toEqual(
+    expect(decodedResults![0].decoded[1]).toEqual(
       '0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C',
     );
     expect((decodedResults![0].decoded[2] as BigNumber)._hex).toEqual(
