@@ -44,7 +44,19 @@ export default function TokenUnitConversion() {
 
   const handleChangeValue = useMemo(() => {
     return (newValue: string, currentType: TokenUnitType) => {
-      newValue = decodeHex(newValue);
+      try {
+        newValue = decodeHex(newValue);
+      } catch (_) {
+        setState((prevState) => ({
+          ...prevState,
+          [currentType]: {
+            value: 0,
+            error: 'The pasted hex value format was wrong',
+          },
+        }));
+        // return here to not override error set above
+        return;
+      }
 
       const parsed = unitSchema.safeParse(newValue);
 
