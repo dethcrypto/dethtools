@@ -63,7 +63,7 @@ function CalldataTreeNode({
         <div>
           {node.type.match(isNodeArray) ? (
             <div className="my-4 rounded-lg border border-gray-600 p-3 text-sm">
-              <p id="node-type" className="text-purple-400 pt-2 pb-4">
+              <p id="node-type" className="pt-2 pb-4 text-purple">
                 {node.name ? (
                   <code className="text-pink">{node.name} </code>
                 ) : (
@@ -84,12 +84,8 @@ function CalldataTreeNode({
             </div>
           ) : (
             <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
-              {node.name ? (
-                <code className="text-pink-400">{node.name}</code>
-              ) : (
-                ' '
-              )}
-              <code id="node-type" className=" text-purple-400">
+              {node.name ? <code className="text-pink">{node.name}</code> : ' '}
+              <code id="node-type" className=" text-purple">
                 {node.type}
               </code>
             </NodeBlock>
@@ -127,10 +123,10 @@ export function DecodedCalldataTree({
 }) {
   const tree = attachValues(inputs, decoded);
   return (
-    <output className="mb-2 bg-error">
+    <output className="mb-2 overflow-auto">
       <pre className="bg-gray-900">
-        <p>
-          <code className="text-purple-400 font-bold">{fnType} </code>
+        <p className="mb-2">
+          <code className="font-bold text-purple">{fnType} </code>
           <code>{fnName} </code>
         </p>
 

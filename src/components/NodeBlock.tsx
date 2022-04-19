@@ -42,9 +42,9 @@ export function NodeBlock({
         }}
         className={`my-1 mx-1 flex cursor-pointer items-center gap-3 overflow-auto rounded-md border
       border-gray-600 pr-4 font-mono text-sm
-      duration-200 hover:bg-gray-700 hover:shadow-md
+        duration-200 hover:bg-gray-700 hover:shadow-md
       hover:shadow-pink/25 hover:outline hover:outline-2 active:scale-105
-    active:bg-gray-800 ${className}`}
+      active:bg-gray-800 ${className}`}
       >
         <Listbox value={currentFormat} onChange={setCurrentFormat}>
           <Listbox.Button
@@ -65,10 +65,10 @@ export function NodeBlock({
                   <Listbox.Option
                     as="ul"
                     className={`m-2 flex cursor-pointer items-center rounded-md border
-                    border-gray-600 p-0
+                  border-gray-600 p-0
                     px-2 duration-200 hover:bg-gray-700 hover:shadow-md
-                    hover:shadow-pink/25 hover:outline hover:outline-2
-                    active:bg-gray-800 ${className}`}
+                  hover:shadow-pink/25 hover:outline hover:outline-2
+                  active:bg-gray-800 ${className}`}
                     key={fmt}
                     value={fmt}
                   >
@@ -80,7 +80,9 @@ export function NodeBlock({
         </Listbox>
 
         {children}
-        <code id="node-value">{formatNodeValue(currentFormat, str)}</code>
+        <code id="node-value text-error">
+          {formatNodeValue(currentFormat, str)}
+        </code>
       </div>
       {!copyNotification ? (
         <CopyIcon className="cursor-pointer" />
