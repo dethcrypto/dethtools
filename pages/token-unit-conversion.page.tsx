@@ -89,7 +89,8 @@ export default function TokenUnitConversion() {
           base: decimals.value + 1,
         });
 
-        if (out !== undefined) newState[otherUnit] = { value: out };
+        if (out !== undefined && !isNaN(parseInt(out)))
+          newState[otherUnit] = { value: out };
 
         lastUpdate.current = { name: currentType, value: newValue };
 
