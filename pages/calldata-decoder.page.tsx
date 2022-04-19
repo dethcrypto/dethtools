@@ -29,7 +29,7 @@ export default function CalldataDecoder({
   fetchAndDecode = fetchAndDecodeWithCalldata,
 }: CalldataDecoderProps) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<string>();
 
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
   const [decodeResults, setDecodeResults] = useState<
@@ -53,8 +53,10 @@ export default function CalldataDecoder({
     setError(undefined);
 
     if (!encodedCalldata) return;
-
-    assert(signatureHash, 'signatureHash must be defined');
+    if (!signatureHash) {
+      setError('Signature hash is wrong or undefined');
+      return;
+    }
 
     if (tab === '4-bytes') {
       setLoading(true);
@@ -67,7 +69,10 @@ export default function CalldataDecoder({
         setLoading(false);
       }
 
-      if (!decodeResults) return;
+      if (!decodeResults) {
+        setError('Signature dsadasdas is wrong or undefined');
+        return;
+      }
 
       const mappedResults = decodeResults.map((d) => {
         return {
@@ -99,7 +104,13 @@ export default function CalldataDecoder({
     encodedCalldata
   );
 
-  const onDecodeClick = () => void handleDecodeCalldata().catch(setError);
+  const onDecodeClick = () => {
+    try {
+      void handleDecodeCalldata();
+    } catch (e) {
+      setError('a');
+    }
+  };
 
   return (
     <ToolContainer>
@@ -192,7 +203,7 @@ export default function CalldataDecoder({
 
       <section className="pt-8 pb-3">
         {decodeResults ? (
-          tab === '4-bytes' && decodeResults.length > 0 ? (
+          decodeResults.length > 0 ? (
             <p className="text-md pb-4 font-semibold">
               Possible decoded calldata:
             </p>
@@ -204,9 +215,6 @@ export default function CalldataDecoder({
         )}
       </section>
 
-      {error && (
-        <pre className="font-mono">Failed to decode data: {error.message}</pre>
-      )}
       {loading ? (
         <Spinner className="mx-auto pt-6" />
       ) : (
@@ -215,38 +223,49 @@ export default function CalldataDecoder({
           placeholder="Output"
         >
           <section className="flex flex-col gap-4">
-            <div>
-              {signatureHash &&
-                decodeResults &&
-                sigHashSchema.safeParse(signatureHash).success && (
-                  <div
-                    className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
+            {!error && (
+              <div>
+                {signatureHash &&
+                  decodeResults &&
+                  sigHashSchema.safeParse(signatureHash).success && (
+                    <div
+                      className="m-0 flex cursor-pointer items-center gap-2 rounded-md border
                     border-gray-600 py-1 px-3 duration-200 hover:bg-gray-700
                       hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
                     active:bg-gray-800"
-                  >
-                    <p className="text-purple-400 font-bold">Signature hash</p>
-                    <b>{signatureHash}</b>
-                  </div>
-                )}
-            </div>
-
-            <div className="items-left flex flex-col text-ellipsis">
-              {decodeResults?.map((d, i) => {
-                return (
-                  <section key={i} data-testid={`decodedCalldataTree${i}`}>
-                    <div className="pb-4">
-                      <DecodedCalldataTree
-                        fnName={d.fnName}
-                        fnType={d.fnType}
-                        decoded={d.decoded}
-                        inputs={d.inputs}
-                      />
+                    >
+                      <p className="text-purple-400 font-bold">
+                        Signature hash
+                      </p>
+                      <b>{signatureHash}</b>
                     </div>
-                  </section>
-                );
-              })}
-            </div>
+                  )}
+              </div>
+            )}
+
+            {error ? (
+              <p className="text-error">
+                {error} with `{encodedCalldata?.slice(0, 12)}`... encoded
+                calldata
+              </p>
+            ) : (
+              <div className="items-left flex flex-col text-ellipsis">
+                {decodeResults?.map((d, i) => {
+                  return (
+                    <section key={i} data-testid={`decodedCalldataTree${i}`}>
+                      <div className="pb-4">
+                        <DecodedCalldataTree
+                          fnName={d.fnName}
+                          fnType={d.fnType}
+                          decoded={d.decoded}
+                          inputs={d.inputs}
+                        />
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
           </section>
         </section>
       )}
