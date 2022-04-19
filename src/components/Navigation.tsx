@@ -43,7 +43,6 @@ export function Navigation({
       <section className="flex cursor-pointer items-center gap-4">
         <Logo width={36} height={36} />
         {width > 480 && <DethToolsLogo width={164} height={164} />}
-        <p> WIP </p>
       </section>
 
       <section className="flex items-center">
