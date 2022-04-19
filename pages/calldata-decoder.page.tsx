@@ -87,10 +87,16 @@ export default function CalldataDecoder({
 
     let decodeResult: DecodeResult | undefined;
     try {
-      if (!rawAbi) return;
+      if (!rawAbi) {
+        return;
+      }
       const abi = parseAbi(rawAbi) as Interface;
       decodeResult = decodeCalldata(abi, encodedCalldata);
-    } catch (e) {}
+    } catch (e) {
+      setError(
+        "Provided ABI was in the wrong format or it didn't matched calldata",
+      );
+    }
 
     if (!decodeResult) return;
 
