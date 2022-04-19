@@ -57,22 +57,31 @@ export default function TxDecoder() {
       </Button>
 
       <section className="pt-8 pb-3">
-        {!decodeResults && <p> Decoded output will appear here </p>}
+        {decodeResults ? (
+          rawTx ? (
+            <p className="text-md pb-4 font-semibold">
+              Possible decoded results:
+            </p>
+          ) : (
+            'No results found'
+          )
+        ) : (
+          <p> Decoded output will appear here </p>
+        )}
       </section>
 
       <section
-        className="xl relative rounded-md border border-gray-600 bg-gray-900 p-8"
+        className="xl relative overflow-auto rounded-md border border-gray-600 bg-gray-900 p-8"
         placeholder="Output"
       >
         {error ? (
           <p className="text-error">
-            {error} with {rawTx} value
+            {error} with {rawTx}
           </p>
         ) : (
           <output>
-            <p>{decodeResults && 'decode results:'}</p>
-            <pre className="items-left flex flex-col text-clip font-semibold">
-              <code>{JSON.stringify(decodeResults, null, 2)}</code>
+            <pre className="items-left flex flex-col text-clip text-sm">
+              <p>{JSON.stringify(decodeResults, null, 2)}</p>
             </pre>
           </output>
         )}
