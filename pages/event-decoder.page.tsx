@@ -18,7 +18,6 @@ import {
   EventProps,
 } from '../src/lib/decodeEvent';
 import { parseAbi } from '../src/lib/parseAbi';
-import { assert } from '../src/misc/assert';
 
 export default function EventDecoder() {
   const [loading, setLoading] = useState(false);
