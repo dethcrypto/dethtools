@@ -18,7 +18,6 @@ import {
   DecodeResult,
 } from '../src/lib/decodeCalldata';
 import { parseAbi } from '../src/lib/parseAbi';
-import { assert } from '../src/misc/assert';
 import { sigHashSchema } from '../src/misc/sigHashSchema';
 
 export interface CalldataDecoderProps {
