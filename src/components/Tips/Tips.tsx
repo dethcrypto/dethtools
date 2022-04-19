@@ -22,7 +22,8 @@ export function Tips({ texts }: TipsProps) {
   return (
     <section className="mt-10 w-full">
       <output
-        className="flex cursor-pointer items-center gap-3 rounded-md p-3 text-gray-400 duration-200 hover:bg-gray-600 active:scale-95 active:bg-gray-700"
+        className="flex cursor-pointer items-center gap-3 rounded-md p-3 text-gray-400 duration-200
+        hover:bg-gray-600 active:scale-95 active:bg-gray-700"
         onClick={() => setState(chooseRandom(texts))}
       >
         <div>

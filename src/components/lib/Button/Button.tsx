@@ -5,16 +5,20 @@ export interface ButtonProps extends ComponentPropsWithRef<'button'> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', ...rest }, ref) => {
+  ({ className, variant = 'primary', disabled, ...rest }, ref) => {
     return (
       <button
         {...rest}
+        disabled={disabled}
         ref={ref}
         className={
           'bg-black cursor-pointer rounded-md px-4 py-3 text-white ' +
           'disabled:cursor-not-allowed disabled:bg-gray-600 ' +
           'transition-shadow ' +
           'hover:outline hover:outline-2 ' +
+          (!disabled
+            ? 'transition active:scale-95 active:duration-100 '
+            : ' ') +
           variants[variant] +
           (className ? ` ${className}` : '')
         }
