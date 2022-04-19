@@ -80,6 +80,7 @@ export default function TxDecoder() {
           </p>
         ) : (
           <output>
+            <p>{decodeResults && 'decode results:'}</p>
             <pre className="items-left flex flex-col text-clip text-sm">
               <p>{JSON.stringify(decodeResults, null, 2)}</p>
             </pre>
