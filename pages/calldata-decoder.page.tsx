@@ -225,7 +225,7 @@ export default function CalldataDecoder({
             {!error && (
               <div>
                 {signatureHash &&
-                  decodeResults &&
+                  decodeResults?.length! > 0 &&
                   sigHashSchema.safeParse(signatureHash).success && (
                     <div
                       className="m-0 flex cursor-pointer items-center gap-2 rounded-md border border-gray-600
