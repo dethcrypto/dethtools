@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 import { Navigation } from '../src/components/Navigation';
 import { ToolTree } from '../src/components/ToolTree';
-import { Button } from '../src/components/lib/Button';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [isShowMobileTree, setIsShowMobileTree] = useState(false);
