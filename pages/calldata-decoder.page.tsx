@@ -249,7 +249,7 @@ export default function CalldataDecoder({
             )}
 
             {error ? (
-              <p className="text-error">
+              <p>
                 {error} with `{encodedCalldata?.slice(0, 12)}`... encoded
                 calldata
               </p>

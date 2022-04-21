@@ -85,7 +85,7 @@ function CalldataTreeNode({
           ) : (
             <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
               {node.name ? <code className="text-pink">{node.name}</code> : ' '}
-              <code id="node-type" className=" text-purple">
+              <code id="node-type" className="text-purple">
                 {node.type}
               </code>
             </NodeBlock>
@@ -97,7 +97,7 @@ function CalldataTreeNode({
 
   return (
     <section>
-      <code className="text-purple-400">struct</code> {node.name}
+      <code className="text-purple">struct</code> {node.name}
       {':'}
       <ul className="pb-1">
         {node.components.map((node, index) => (
