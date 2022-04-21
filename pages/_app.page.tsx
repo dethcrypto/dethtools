@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { Navigation } from '../src/components/Navigation';
 import { ToolTree } from '../src/components/ToolTree';
+import { Button } from '../src/components/lib/Button';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [isShowMobileTree, setIsShowMobileTree] = useState(false);
@@ -33,7 +34,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <Component className="max-w-1/2 " {...pageProps} />
         </div>
 
-        <footer className="mt-3 flex h-12 cursor-default items-center justify-center rounded-md bg-gray-900 px-8 py-4 text-gray-500">
+        <footer
+          className="mt-3 flex h-12 cursor-default items-center justify-center
+          rounded-md bg-gray-900 px-8 py-4 text-gray-500"
+        >
           <p>Made by Deth Crypto with ♥</p>
         </footer>
       </ThemeProvider>

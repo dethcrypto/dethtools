@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { Bug } from './icons/BugIcon';
 
 import { DethToolsLogo } from './icons/DethToolsLogo';
 import { DiscordIcon } from './icons/DiscordIcon';
 import { GithubIcon } from './icons/GithubIcon';
 import { HamburgerIcon } from './icons/HamburgerIcon';
 import { TwitterIcon } from './icons/TwitterIcon';
+import { Button } from './lib/Button';
 import { Logo } from './Logo';
 
 function useWindowSize() {
@@ -47,7 +49,19 @@ export function Navigation({
 
       <section className="flex items-center">
         {width > 480 ? (
-          <SocialIcons />
+          <>
+            <SocialIcons />
+            <a
+              className="ml-6 flex items-center gap-3 rounded-md border border-gray-300 px-4 py-2
+            duration-200 hover:bg-gray-700 active:scale-95"
+              href="https://github.com/dethcrypto/dethtools/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Bug height={14} width={14} />
+              Report bug
+            </a>
+          </>
         ) : (
           <button onClick={() => handleShowMobileTree(width)} aria-label="menu">
             <HamburgerIcon width={36} height={36} />
