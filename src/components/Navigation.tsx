@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Bug } from './icons/BugIcon';
 
+import { Bug } from './icons/BugIcon';
 import { DethToolsLogo } from './icons/DethToolsLogo';
 import { DiscordIcon } from './icons/DiscordIcon';
 import { GithubIcon } from './icons/GithubIcon';
 import { HamburgerIcon } from './icons/HamburgerIcon';
 import { TwitterIcon } from './icons/TwitterIcon';
-import { Button } from './lib/Button';
 import { Logo } from './Logo';
 
 function useWindowSize() {
