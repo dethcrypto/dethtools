@@ -26,6 +26,7 @@ describe(CalldataDecoder.name, () => {
     );
 
     userEvent.click(await root.findByText('ABI'));
+
     const abiField = (await root.findByLabelText(
       'text area for abi',
     )) as HTMLTextAreaElement;
