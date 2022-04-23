@@ -15,7 +15,7 @@ export function decodeCalldata(
       decoded = iface.decodeFunctionData(frag.name, calldata);
       const encoded = iface.encodeFunctionData(frag.name, decoded);
       assert(
-        encoded.length === calldata.length,
+        encoded === calldata,
         'Ignore functions that do not fully encode data',
       );
       fragment = frag;

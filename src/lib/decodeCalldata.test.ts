@@ -6,18 +6,6 @@ import { decodeCalldata } from './decodeCalldata';
 import { parseAbi } from './parseAbi';
 
 describe(decodeCalldata.name, () => {
-  it('dont show partial decodings', () => {
-    const iface = parseAbi('many_msg_babbage(bytes1)') as Interface;
-
-    expect(iface).toBeA(Interface);
-
-    const decoded = decodeCalldata(
-      iface,
-      '0xa9059cbb000000000000000000000000e5b8ff1ca1c3ef2ac704783d6473ee5a9be7e02d0000000000000000000000000000000000000000000000000000000008510f10',
-    )!;
-
-    expect(decoded).not.toBeDefined();
-  });
   it('handles expected case', () => {
     const iface = parseAbi(
       'function transferFrom(address,address,uint256)',
@@ -82,5 +70,31 @@ describe(decodeCalldata.name, () => {
     expect(iface).toBeA(Interface);
 
     expect(decodeCalldata(iface, '0x0')).not.toBeDefined();
+  });
+
+  it('ignores partial decodings', () => {
+    const iface = parseAbi('many_msg_babbage(bytes1)') as Interface;
+
+    expect(iface).toBeA(Interface);
+
+    const decoded = decodeCalldata(
+      iface,
+      '0xa9059cbb000000000000000000000000e5b8ff1ca1c3ef2ac704783d6473ee5a9be7e02d0000000000000000000000000000000000000000000000000000000008510f10',
+    );
+
+    expect(decoded).toEqual(undefined);
+  });
+
+  it('ignores partial decodings (when overflows happens)', () => {
+    const iface = parseAbi('sign_szabo_bytecode(bytes16,uint128)') as Interface;
+
+    expect(iface).toBeA(Interface);
+
+    const decoded = decodeCalldata(
+      iface,
+      '0x095ea7b3000000000000000000000000881d40237659c251811cec9c364ef91dc08d300cffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    );
+
+    expect(decoded).toEqual(undefined);
   });
 });
