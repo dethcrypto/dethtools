@@ -37,7 +37,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           className="mt-3 flex h-12 cursor-default items-center justify-center
           rounded-md bg-gray-900 px-8 py-4 text-gray-500"
         >
-          <p>Made by Deth Crypto with ♥</p>
+          <p>
+            Made with ♥ by <a href="https://twitter.com/dethcrypto">dEth</a>
+          </p>
         </footer>
       </ThemeProvider>
     </main>
