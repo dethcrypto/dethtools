@@ -30,7 +30,19 @@ export default function EthUnitConversion() {
   const [state, setState] = useState<EthUnitConversionState>(initialState);
 
   function handleChangeValue(newValue: string, currentType: UnitType) {
-    newValue = decodeHex(newValue);
+    try {
+      newValue = decodeHex(newValue);
+    } catch (_) {
+      setState((prevState) => ({
+        ...prevState,
+        [currentType]: {
+          value: 0,
+          error: 'The pasted hex value format was wrong',
+        },
+      }));
+      // return here to not override error set above
+      return;
+    }
 
     const parsed = unitSchema.safeParse(newValue);
 

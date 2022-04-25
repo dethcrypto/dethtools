@@ -57,6 +57,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange?.(event);
             const validationMessage = event.target.validationMessage;
             if (validationMessage) setValidationMessage(validationMessage);
+            // otherwise error validation message would stay here despite lack of the error
+            else setValidationMessage(undefined);
           }}
           {...rest}
         />

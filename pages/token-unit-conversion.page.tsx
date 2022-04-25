@@ -44,7 +44,19 @@ export default function TokenUnitConversion() {
 
   const handleChangeValue = useMemo(() => {
     return (newValue: string, currentType: TokenUnitType) => {
-      newValue = decodeHex(newValue);
+      try {
+        newValue = decodeHex(newValue);
+      } catch (_) {
+        setState((prevState) => ({
+          ...prevState,
+          [currentType]: {
+            value: 0,
+            error: 'The pasted hex value format was wrong',
+          },
+        }));
+        // return here to not override error set above
+        return;
+      }
 
       const parsed = unitSchema.safeParse(newValue);
 
@@ -77,7 +89,8 @@ export default function TokenUnitConversion() {
           base: decimals.value + 1,
         });
 
-        if (out !== undefined) newState[otherUnit] = { value: out };
+        if (out !== undefined && !isNaN(parseInt(out)))
+          newState[otherUnit] = { value: out };
 
         lastUpdate.current = { name: currentType, value: newValue };
 

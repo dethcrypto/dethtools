@@ -18,10 +18,10 @@ import {
   EventProps,
 } from '../src/lib/decodeEvent';
 import { parseAbi } from '../src/lib/parseAbi';
-import { assert } from '../src/misc/assert';
 
 export default function EventDecoder() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
 
   const [rawAbi, setRawAbi] = useState<string>();
@@ -38,7 +38,11 @@ export default function EventDecoder() {
 
   async function handleDecodeCalldata() {
     setDecodeResults(undefined);
-    assert(signatureHash, 'signatureHash must be defined');
+
+    if (!signatureHash) {
+      setError('Signature hash is wrong or undefined');
+      return;
+    }
 
     if (tab === '4-bytes') {
       setLoading(true);
@@ -53,11 +57,16 @@ export default function EventDecoder() {
           };
           decodeResults = await decodeWithEventProps(signatureHash, eventProps);
         }
+      } catch (e) {
+        setError(
+          "Provided event couldn't be decoded, maybe there are too few topics?",
+        );
       } finally {
         setLoading(false);
       }
 
       if (decodeResults) {
+        setError('');
         setDecodeResults(decodeResults);
       }
     }
@@ -73,7 +82,11 @@ export default function EventDecoder() {
         topics: topics.filter((t) => t.trim().length > 0).map((t) => t),
       };
       decodeResult = decodeEvent(abi, eventProps);
-    } catch (e) {}
+    } catch (e) {
+      setError(
+        "Provided event couldn't be decoded, maybe there are too few topics?",
+      );
+    }
 
     if (!decodeResult) return;
     setDecodeResults([decodeResult]);
@@ -213,7 +226,7 @@ export default function EventDecoder() {
         {decodeResults ? (
           tab === '4-bytes' && decodeResults.length > 0 ? (
             <p className="text-md pb-4 font-semibold">
-              Possible decoded calldata:
+              Possible decoded results:
             </p>
           ) : (
             'No results found'
@@ -231,7 +244,7 @@ export default function EventDecoder() {
           placeholder="Output"
         >
           <section className="flex flex-col gap-4 break-words">
-            {signatureHash && decodeResults && (
+            {signatureHash && decodeResults?.length! > 0 && (
               <NodeBlock
                 className="my-2"
                 str={(signatureHash as string) || '0x0'}
@@ -242,28 +255,32 @@ export default function EventDecoder() {
               </NodeBlock>
             )}
 
-            <div className="items-left flex flex-col text-ellipsis font-semibold">
-              {decodeResults?.map((d, i) => {
-                return (
-                  <section key={i}>
-                    <div className="flex flex-col gap-2">
-                      <p>{d.fullSignature}</p>
-                      <p>{'{'}</p>
-                      {Object.entries(d.args).map(([key, value], i) => (
-                        <NodeBlock
-                          className="my-1"
-                          str={value.toString()}
-                          key={i}
-                        >
-                          <p className="text-purple-600">{` "${key}"`}</p>
-                        </NodeBlock>
-                      ))}
-                      <p>{'}'}</p>
-                    </div>
-                  </section>
-                );
-              })}
-            </div>
+            {error ? (
+              <p className="text-error">{error}</p>
+            ) : (
+              <div className="items-left flex flex-col text-ellipsis font-semibold">
+                {decodeResults?.map((d, i) => {
+                  return (
+                    <section key={i}>
+                      <div className="flex flex-col gap-2">
+                        <p>{d.fullSignature}</p>
+                        <p>{'{'}</p>
+                        {Object.entries(d.args).map(([key, value], i) => (
+                          <NodeBlock
+                            className="my-1"
+                            str={value.toString()}
+                            key={i}
+                          >
+                            <p className="text-purple-600">{` "${key}"`}</p>
+                          </NodeBlock>
+                        ))}
+                        <p>{'}'}</p>
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
           </section>
         </section>
       )}
