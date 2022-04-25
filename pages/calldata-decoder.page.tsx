@@ -69,7 +69,7 @@ export default function CalldataDecoder({
       }
 
       if (!decodeResults) {
-        setError('Signature dsadasdas is wrong or undefined');
+        setError('Signature is wrong or undefined');
         return;
       }
 
@@ -109,11 +109,12 @@ export default function CalldataDecoder({
     encodedCalldata
   );
 
-  const onDecodeClick = () => {
+  const onDecodeClick = async () => {
     try {
-      void handleDecodeCalldata();
+      await handleDecodeCalldata();
     } catch (e) {
-      setError('a');
+      // do not display generic error msg., as they are catched and displayed
+      // in `handleDecodeCalldata` fn.
     }
   };
 
