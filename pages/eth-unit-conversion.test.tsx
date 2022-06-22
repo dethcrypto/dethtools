@@ -111,4 +111,27 @@ describe(EthUnitConversion.name, () => {
       ),
     );
   });
+
+  it('calculates huge numbers', async () => {
+    const root = render(<EthUnitConversion />);
+    const weiField = (await root.findByLabelText(/^wei/i)) as HTMLInputElement;
+    const gweiField = (await root.findByLabelText(/gwei/i)) as HTMLInputElement;
+    const ethField = (await root.findByLabelText(/eth/i)) as HTMLInputElement;
+
+    fireEvent.change(gweiField, {
+      target: {
+        value: '100000000000000000000000000000000000000000000000000000000',
+      },
+    });
+
+    expect(weiField.value).toEqual(
+      '100000000000000000000000000000000000000000000000000000000000000000',
+    );
+    expect(gweiField.value).toEqual(
+      '100000000000000000000000000000000000000000000000000000000',
+    );
+    expect(ethField.value).toEqual(
+      '100000000000000000000000000000000000000000000000',
+    );
+  });
 });
