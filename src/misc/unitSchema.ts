@@ -8,5 +8,5 @@ export const unitSchema = z.preprocess(
       message:
         "The value mustn't contain letters or any special signs except dot",
     })
-    .min(1, { message: 'The value must be longer than 1 digit' })
+    .min(1, { message: 'The value must be longer than 1 digit' }),
 );
