@@ -6,6 +6,8 @@ import { expect, mockFn } from 'earljs';
 
 import { unexpectedCall } from '../test/unexpectedCall';
 import CalldataDecoder, { CalldataDecoderProps } from './calldata-decoder.page';
+import { humanReadableAbi } from './fixtures/hreAbi';
+import { jsonAbi } from './fixtures/jsonAbi';
 
 describe(CalldataDecoder.name, () => {
   it('decodes and displays types and values correctly', async () => {
@@ -186,5 +188,74 @@ describe(CalldataDecoder.name, () => {
     expect(
       decodedCalldataTree1.querySelector('#node-type')?.innerHTML!,
     ).toEqual(expect.stringMatching('address'));
+  });
+
+  it.skip('types wrong abi, gets error message', async () => {
+    const root = render(<CalldataDecoder />);
+    const abi = humanReadableAbi;
+
+    userEvent.click(await root.findByText('ABI'));
+
+    const abiField = (await root.findByLabelText(
+      'text area for abi',
+    )) as HTMLTextAreaElement;
+
+    fireEvent.change(abiField, {
+      target: {
+        value: abi,
+      },
+    });
+
+    expect(abiField.value).toEqual(abi);
+
+    const abiError = await root.findByLabelText('raw abi error');
+
+    expect(abiError.innerHTML).toEqual('');
+  });
+
+  it.skip('types wrong abi, gets error message', async () => {
+    const root = render(<CalldataDecoder />);
+    const abi = jsonAbi;
+
+    userEvent.click(await root.findByText('ABI'));
+
+    const abiField = (await root.findByLabelText(
+      'text area for abi',
+    )) as HTMLTextAreaElement;
+
+    fireEvent.change(abiField, {
+      target: {
+        value: abi,
+      },
+    });
+
+    expect(abiField.value).toEqual(abi);
+
+    const abiError = await root.findByLabelText('raw abi error');
+
+    expect(abiError.innerHTML).toEqual('');
+  });
+
+  it('types wrong calldata, gets error message', async () => {
+    const root = render(<CalldataDecoder />);
+    const calldataField = (await root.findByLabelText(
+      'Calldata',
+    )) as HTMLTextAreaElement;
+
+    fireEvent.change(calldataField, {
+      target: {
+        value: 'ddd',
+      },
+    });
+
+    expect(calldataField.value).toEqual('ddd');
+
+    const calldataError = await root.findByLabelText('encoded calldata error');
+
+    expect(calldataError.innerHTML).toEqual(
+      expect.stringMatching(
+        'The value must be a hexadecimal number, 0x-prefix is required',
+      ),
+    );
   });
 });

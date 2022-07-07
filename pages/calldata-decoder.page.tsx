@@ -1,6 +1,8 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
+import { WithOkAndErrorMsgOptional } from '../src/misc/types';
+
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -18,7 +20,9 @@ import {
   DecodeResult,
 } from '../src/lib/decodeCalldata';
 import { parseAbi } from '../src/lib/parseAbi';
-import { sigHashSchema } from '../src/misc/sigHashSchema';
+import { hexSchema } from '../src/misc/schemas/hexSchema';
+import { zodResultMessage } from '../src/misc/zodResultMessage';
+import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
 
 export interface CalldataDecoderProps {
   fetchAndDecode?: typeof fetchAndDecodeWithCalldata;
@@ -40,18 +44,88 @@ export default function CalldataDecoder({
     }[]
   >();
 
-  const [rawAbi, setRawAbi] = useState<string>();
-  const [encodedCalldata, setEncodedCalldata] = useState<string>();
+  const [rawAbi, setRawAbi] = useState<WithOkAndErrorMsgOptional<string>>({
+    isOk: true,
+  });
+  const [encodedCalldata, setEncodedCalldata] = useState<
+    WithOkAndErrorMsgOptional<string>
+  >({ isOk: true });
 
   const signatureHash = useMemo(
-    () => encodedCalldata && sigHashFromCalldata(encodedCalldata),
+    () => encodedCalldata.inner && sigHashFromCalldata(encodedCalldata.inner),
     [encodedCalldata],
   );
+
+  function handleChangeEncodedCalldata(
+    event: ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    const { value } = event.target;
+    const parseResult = hexSchema.safeParse(value);
+    setEncodedCalldata(() => {
+      return { inner: value };
+    });
+    if (parseResult.success) {
+      setEncodedCalldata((state) => {
+        return { ...state, isOk: true };
+      });
+    } else {
+      setEncodedCalldata((state) => {
+        return {
+          ...state,
+          isOk: false,
+          errorMsg: zodResultMessage(parseResult),
+        };
+      });
+    }
+    if (value.length === 0) {
+      setEncodedCalldata((state) => {
+        return {
+          ...state,
+          inner: value,
+          isOk: true,
+          errorMsg: undefined,
+        };
+      });
+    }
+  }
+
+  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
+    const { value } = event.target;
+    setRawAbi(() => {
+      return { inner: value };
+    });
+    // we're currently able to use three abi formats thanks to ethers
+    // test if the interface is being created correctly from rawAbi
+    try {
+      parseAbi(value); // throws error if rawAbi format is not valid
+      setRawAbi((state) => {
+        return { ...state, isOk: true };
+      });
+    } catch (error) {
+      setRawAbi((state) => {
+        return {
+          ...state,
+          isOk: false,
+          errorMsg: parseEthersErrorMessage((error as Error).message),
+        };
+      });
+    }
+    if (value.length === 0) {
+      setRawAbi((state) => {
+        return {
+          ...state,
+          inner: value,
+          isOk: true,
+          errorMsg: undefined,
+        };
+      });
+    }
+  }
 
   async function handleDecodeCalldata() {
     setError(undefined);
 
-    if (!encodedCalldata) return;
+    if (!encodedCalldata.inner) return;
     if (!signatureHash) {
       setError('Signature hash is wrong or undefined');
       return;
@@ -63,7 +137,10 @@ export default function CalldataDecoder({
       let decodeResults: DecodeResult[] | undefined;
 
       try {
-        decodeResults = await fetchAndDecode(signatureHash, encodedCalldata);
+        decodeResults = await fetchAndDecode(
+          signatureHash,
+          encodedCalldata.inner,
+        );
       } finally {
         setLoading(false);
       }
@@ -87,11 +164,11 @@ export default function CalldataDecoder({
 
     let decodeResult: DecodeResult | undefined;
     try {
-      if (!rawAbi) {
+      if (!rawAbi.inner) {
         return;
       }
-      const abi = parseAbi(rawAbi) as Interface;
-      decodeResult = decodeCalldata(abi, encodedCalldata);
+      const abi = parseAbi(rawAbi.inner) as Interface;
+      decodeResult = decodeCalldata(abi, encodedCalldata.inner);
     } catch (e) {
       setError(
         "Provided ABI was in the wrong format or it didn't matched calldata",
@@ -105,7 +182,7 @@ export default function CalldataDecoder({
   }
 
   const decodeButtonDisabled = !(
-    (rawAbi || tab === '4-bytes') &&
+    (rawAbi.inner || tab === '4-bytes') &&
     encodedCalldata
   );
 
@@ -124,39 +201,49 @@ export default function CalldataDecoder({
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Calldata Decoder']}
       />
-
       <label htmlFor="calldata">
         <span>Calldata</span>
       </label>
-
-      <textarea
-        id="calldata"
-        value={encodedCalldata || ''}
-        placeholder="e.g 0x23b8..3b2"
-        className="mb-4 h-20 break-words rounded-md border border-gray-600 bg-gray-900 p-4"
-        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-          setEncodedCalldata(event.target.value);
-        }}
-        onPaste={(event: ClipboardEvent<HTMLTextAreaElement>) => {
-          const encodedCalldata = event.clipboardData.getData('Text');
-          const sigHash = sigHashFromCalldata(encodedCalldata);
-          if (sigHash) {
-            void fetch4BytesData(sigHash, 'signatures');
+      <>
+        <textarea
+          id="calldata"
+          value={encodedCalldata.inner || ''}
+          placeholder="e.g 0x23b8..3b2"
+          className={
+            'h-20 break-words rounded-md border border-gray-600 bg-gray-900 ' +
+            String(!encodedCalldata.isOk && ' border-error/75')
           }
-        }}
-      />
-
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+            handleChangeEncodedCalldata(event)
+          }
+          onPaste={(event: ClipboardEvent<HTMLTextAreaElement>) => {
+            const encodedCalldata = event.clipboardData.getData('Text');
+            const sigHash = sigHashFromCalldata(encodedCalldata);
+            if (sigHash) {
+              void fetch4BytesData(sigHash, 'signatures');
+            }
+          }}
+        />
+        <p
+          aria-label="encoded calldata error"
+          className="pt-1 text-right text-error"
+        >
+          {encodedCalldata.errorMsg}
+        </p>
+      </>
       <div className="mt-8 flex flex-col">
         <div className="flex text-lg">
           <button
             role="tab"
             aria-selected={tab === '4-bytes'}
-            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            className={
+              `h-12 flex-1 cursor-pointer p-1
             text-center duration-300 active:scale-105 active:bg-pink/50 ${
               tab === '4-bytes'
                 ? 'rounded-l-md bg-pink'
                 : 'rounded-tl-md bg-gray-600'
-            }`}
+            }` + String(rawAbi.isOk ? ' border-gray-600' : ' border-error')
+            }
             onClick={() => {
               setTab('4-bytes');
               setDecodeResults(undefined);
@@ -168,12 +255,14 @@ export default function CalldataDecoder({
           <button
             role="tab"
             aria-selected={tab === 'abi'}
-            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
+            className={
+              `h-12 flex-1 cursor-pointer p-1
             text-center duration-300 active:scale-105 active:bg-pink/50 ${
               tab === 'abi'
                 ? 'rounded-tr-md bg-pink'
                 : 'rounded-r-md bg-gray-600'
-            }`}
+            }` + String(rawAbi.isOk ? ' border-gray-600' : ' bg-error/75')
+            }
             onClick={() => {
               setTab('abi');
               setDecodeResults(undefined);
@@ -184,17 +273,27 @@ export default function CalldataDecoder({
         </div>
 
         {tab === 'abi' && (
-          <textarea
-            id="abi"
-            aria-label="text area for abi"
-            value={rawAbi || ''}
-            placeholder="e.g function transferFrom(address, ..)"
-            className="flex h-48 w-full break-words rounded-b-md border-t-0
-            border-gray-600 bg-gray-900 p-5"
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-              setRawAbi(event.target.value);
-            }}
-          />
+          <>
+            <textarea
+              id="abi"
+              aria-label="text area for abi"
+              value={rawAbi.inner || ''}
+              placeholder="e.g function transferFrom(address, ..)"
+              className={
+                'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
+                String(rawAbi.isOk ? ' border-gray-600' : ' border-error/75')
+              }
+              onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                handleChangeRawAbi(event)
+              }
+            />
+            <p
+              aria-label="raw abi error"
+              className="pt-1 text-right text-error"
+            >
+              {rawAbi.errorMsg}
+            </p>
+          </>
         )}
       </div>
 
@@ -206,7 +305,6 @@ export default function CalldataDecoder({
       >
         Decode
       </Button>
-
       <section className="pt-8 pb-3">
         {decodeResults ? (
           decodeResults.length > 0 ? (
@@ -220,7 +318,6 @@ export default function CalldataDecoder({
           <p> Decoded output will appear here </p>
         )}
       </section>
-
       {loading ? (
         <Spinner className="mx-auto pt-6" />
       ) : (
@@ -233,7 +330,7 @@ export default function CalldataDecoder({
               <div>
                 {signatureHash &&
                   decodeResults?.length! > 0 &&
-                  sigHashSchema.safeParse(signatureHash).success && (
+                  hexSchema.safeParse(signatureHash).success && (
                     <div
                       className="m-0 flex cursor-pointer items-center gap-2 rounded-md border border-gray-600
                       py-2 px-3 duration-200 hover:bg-gray-700
@@ -250,8 +347,8 @@ export default function CalldataDecoder({
             )}
 
             {error ? (
-              <p>
-                {error} with `{encodedCalldata?.slice(0, 12)}`... encoded
+              <p className="text-error">
+                {error} with `{encodedCalldata.inner?.slice(0, 12)}`... encoded
                 calldata
               </p>
             ) : (
