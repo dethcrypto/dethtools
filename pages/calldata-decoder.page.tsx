@@ -93,7 +93,6 @@ export default function CalldataDecoder({
     setRawAbi(() => {
       return { inner: value };
     });
-    // we're currently able to use three abi formats thanks to ethers
     // test if the interface is being created correctly from rawAbi
     try {
       parseAbi(value); // throws error if rawAbi format is not valid
