@@ -64,7 +64,8 @@ export default function TxDecoder() {
       if (decoded) setDecodeResults(decoded);
     }
   }
-  const decodeButtonDisabled = !rawTx.inner;
+
+  const decodeButtonDisabled = !rawTx.inner || !rawTx.isOk;
 
   return (
     <ToolContainer>

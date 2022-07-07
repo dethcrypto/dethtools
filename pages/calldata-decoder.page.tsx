@@ -183,7 +183,7 @@ export default function CalldataDecoder({
 
   const decodeButtonDisabled = !(
     (rawAbi.inner || tab === '4-bytes') &&
-    encodedCalldata
+    encodedCalldata.isOk
   );
 
   const onDecodeClick = async () => {

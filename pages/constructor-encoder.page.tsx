@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
+import { raw } from '@storybook/react';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useState } from 'react';
 
@@ -44,7 +45,7 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled = !rawAbi || values.some((val) => val === '');
+  const encodeButtonDisabled = rawAbi || values.some((val) => val === '');
 
   const handleChangeAbi = (rawAbi: string) => {
     setError(undefined);

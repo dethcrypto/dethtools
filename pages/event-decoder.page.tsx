@@ -248,7 +248,8 @@ export default function EventDecoder() {
   }
 
   const decodeButtonDisabled = !(
-    topics &&
+    data.isOk &&
+    topics?.every(({ isOk }) => isOk) &&
     data.inner &&
     (rawAbi.inner || tab === '4-bytes')
   );
