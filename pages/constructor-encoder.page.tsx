@@ -1,6 +1,5 @@
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
-import { raw } from '@storybook/react';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, useState } from 'react';
 
