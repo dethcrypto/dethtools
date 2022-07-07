@@ -34,7 +34,7 @@ export default function ConstructorEncoder() {
     try {
       const iface = parseAbi(rawAbi) as Interface;
       try {
-        const encoded = encodeConstructor(iface, values as string[]);
+        const encoded = encodeConstructor(iface, values);
         setEncodedResult(stripHexPrefix(encoded).match(/.{1,64}/g) as string[]);
       } catch (e) {
         setError(`${(e as any).code} ${(e as any).argument}`);
@@ -46,7 +46,7 @@ export default function ConstructorEncoder() {
 
   const encodeButtonDisabled = !rawAbi || values.some((val) => val === '');
 
-  const onAbiChange = (rawAbi: string) => {
+  const handleChangeAbi = (rawAbi: string) => {
     setError(undefined);
     setRawAbi(rawAbi);
 
@@ -55,7 +55,6 @@ export default function ConstructorEncoder() {
       if (parsed instanceof Interface) {
         const iface = parsed;
         setIface(iface);
-
         setValues(new Array(iface.deploy.inputs.length).fill(''));
         setErrors(new Array(iface.deploy.inputs.length).fill(''));
       } else {
@@ -110,11 +109,19 @@ export default function ConstructorEncoder() {
         aria-label="text area for constructor abi"
         value={rawAbi || ''}
         placeholder="e.g function transferFrom(address, ..)"
-        className="mb-4 h-20 break-words rounded-md border border-gray-600 bg-gray-900 p-4"
+        className={
+          'mb-4 h-20 break-words rounded-md border bg-gray-900 p-4' +
+          String(
+            error && rawAbi?.length !== 0
+              ? ' border-error/75'
+              : ' border-gray-600',
+          )
+        }
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-          onAbiChange(event.target.value);
+          handleChangeAbi(event.target.value);
         }}
       />
+
       <section className="mb-3">
         {iface &&
           iface.deploy.inputs.map((input, i) => (
@@ -181,7 +188,7 @@ export default function ConstructorEncoder() {
         placeholder="Output"
       >
         {error ? (
-          <p className="text-deth-error" data-testid="error">
+          <p className="text-error" data-testid="error">
             {error}
           </p>
         ) : (
