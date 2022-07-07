@@ -93,18 +93,20 @@ export default function CalldataDecoder({
     setRawAbi(() => {
       return { inner: value };
     });
+
     // test if the interface is being created correctly from rawAbi
+    setRawAbi((state) => {
+      return { ...state, isOk: true };
+    });
     try {
       parseAbi(value); // throws error if rawAbi format is not valid
-      setRawAbi((state) => {
-        return { ...state, isOk: true };
-      });
     } catch (error) {
       setRawAbi((state) => {
+        const _error = error as Error; // we're sure that it's error
         return {
           ...state,
           isOk: false,
-          errorMsg: parseEthersErrorMessage((error as Error).message),
+          errorMsg: parseEthersErrorMessage(_error.message),
         };
       });
     }
