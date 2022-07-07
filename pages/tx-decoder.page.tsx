@@ -1,15 +1,15 @@
 import { TypedTransaction } from '@ethereumjs/tx';
 import { ChangeEvent, useState } from 'react';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
-import { WithOkAndErrorMsgOptional } from '../src/misc/types';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
 import { toEvenHex } from '../src/lib/toEvenHex';
+import { hexSchema } from '../src/misc/schemas/hexSchema';
+import { WithOkAndErrorMsgOptional } from '../src/misc/types';
+import { zodResultMessage } from '../src/misc/zodResultMessage';
 
 export default function TxDecoder() {
   const [error, setError] = useState<string>();

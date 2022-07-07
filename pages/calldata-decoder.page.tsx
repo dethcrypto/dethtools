@@ -1,8 +1,6 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
-import { WithOkAndErrorMsgOptional } from '../src/misc/types';
-
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -20,9 +18,10 @@ import {
   DecodeResult,
 } from '../src/lib/decodeCalldata';
 import { parseAbi } from '../src/lib/parseAbi';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
 import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
+import { hexSchema } from '../src/misc/schemas/hexSchema';
+import { WithOkAndErrorMsgOptional } from '../src/misc/types';
+import { zodResultMessage } from '../src/misc/zodResultMessage';
 
 export interface CalldataDecoderProps {
   fetchAndDecode?: typeof fetchAndDecodeWithCalldata;

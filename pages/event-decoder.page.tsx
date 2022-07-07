@@ -1,10 +1,6 @@
 import { Interface } from '@ethersproject/abi';
+import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
-import {
-  WithOkAndErrorMsg,
-  WithOkAndErrorMsgOptional,
-} from '../src/misc/types';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -22,9 +18,13 @@ import {
   EventProps,
 } from '../src/lib/decodeEvent';
 import { parseAbi } from '../src/lib/parseAbi';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
 import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
-import { addHexPrefix } from 'ethereumjs-util';
+import { hexSchema } from '../src/misc/schemas/hexSchema';
+import {
+  WithOkAndErrorMsg,
+  WithOkAndErrorMsgOptional,
+} from '../src/misc/types';
+import { zodResultMessage } from '../src/misc/zodResultMessage';
 
 interface HandleChangeTopic {
   index: number;
