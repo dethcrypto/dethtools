@@ -11,8 +11,6 @@ import { ToolHeader } from '../src/components/ToolHeader';
 import { encodeConstructor } from '../src/lib/encodeContructor';
 import { parseAbi } from '../src/lib/parseAbi';
 
-export interface ConstructorEncoderProps {}
-
 export default function ConstructorEncoder() {
   const [error, setError] = useState<string | undefined>();
   const [encodedResult, setEncodedResult] = useState<string[] | undefined>();
@@ -44,7 +42,8 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled = rawAbi || values.some((val) => val === '');
+  const encodeButtonDisabled =
+    (rawAbi && rawAbi) || values.some((val) => val === '');
 
   const handleChangeAbi = (rawAbi: string) => {
     setError(undefined);

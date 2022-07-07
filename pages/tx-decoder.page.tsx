@@ -40,7 +40,8 @@ export default function TxDecoder() {
         };
       });
     }
-    if (value.length === 0) {
+    // 0x prefixed
+    if (value.length <= 2) {
       setRawTx((state) => {
         return {
           ...state,
