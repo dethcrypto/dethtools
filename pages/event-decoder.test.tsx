@@ -154,11 +154,8 @@ describe(EventDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    expect(
-      await root.findByText(
-        '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
-      ),
-    );
+    // the first decoded value in node blocks is the signature hash
+    expect((await root.findAllByLabelText('decoded value'))[0]);
 
     const arg0 = await waitFor(() => root.findByText('"0"'));
     const arg1 = await waitFor(() => root.findByText('"1"'));
