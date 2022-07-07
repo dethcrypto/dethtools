@@ -157,9 +157,10 @@ describe(EventDecoder.name, () => {
     // the first decoded value in node blocks is the signature hash
     expect((await root.findAllByLabelText('decoded value'))[0]);
 
-    const arg0 = await waitFor(() => root.findByText('"0"'));
-    const arg1 = await waitFor(() => root.findByText('"1"'));
-    const arg2 = await waitFor(() => root.findByText('"2"'));
+    const args = await root.findAllByLabelText('decoded event arg index');
+    const arg0 = args[0];
+    const arg1 = args[1];
+    const arg2 = args[2];
 
     expect(arg0.parentElement!.innerHTML).toEqual(
       expect.stringMatching('0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85'),

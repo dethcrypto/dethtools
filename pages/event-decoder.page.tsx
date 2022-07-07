@@ -453,7 +453,10 @@ export default function EventDecoder() {
                             str={value.toString()}
                             key={i}
                           >
-                            <p className="text-purple-600">{` "${key}"`}</p>
+                            <p
+                              aria-label="decoded event arg index"
+                              className="text-purple-600"
+                            >{` "${key}"`}</p>
                           </NodeBlock>
                         ))}
                         <p>{'}'}</p>
