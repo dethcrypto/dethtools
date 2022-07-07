@@ -42,8 +42,12 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled =
-    (rawAbi && rawAbi) || values.some((val) => val === '');
+  const encodeButtonDisabled = (): boolean => {
+    if (!rawAbi) {
+      return false;
+    }
+    return !!rawAbi || values.every((val) => val.length > 0);
+  };
 
   const handleChangeAbi = (rawAbi: string) => {
     setError(undefined);
@@ -162,8 +166,10 @@ export default function ConstructorEncoder() {
       <Button
         onClick={onEncodeClick}
         className="mt-3"
-        disabled={encodeButtonDisabled}
-        title={encodeButtonDisabled ? 'Please fill in the calldata' : undefined}
+        disabled={encodeButtonDisabled()}
+        title={
+          encodeButtonDisabled() ? 'Please fill in the calldata' : undefined
+        }
       >
         Decode
       </Button>
