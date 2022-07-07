@@ -7,7 +7,7 @@ import { ToolHeader } from '../src/components/ToolHeader';
 import { UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
-import { unitSchema } from '../src/misc/unitSchema';
+import { unitSchema } from '../src/misc/schemas/unitSchema';
 
 type EthUnitConversionState = Record<
   UnitType,
