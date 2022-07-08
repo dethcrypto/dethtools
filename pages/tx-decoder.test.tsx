@@ -3,7 +3,7 @@ import { expect } from 'earljs';
 
 import TxDecoder from './tx-decoder.page';
 
-describe.only(TxDecoder.name, () => {
+describe(TxDecoder.name, () => {
   it('decodes and displays transaction correctly', async () => {
     const root = render(<TxDecoder />);
 
