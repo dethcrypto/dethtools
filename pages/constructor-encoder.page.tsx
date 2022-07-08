@@ -22,7 +22,7 @@ export default function ConstructorEncoder() {
 
   async function handleEncodeConstructor() {
     if (!rawAbi) {
-      setError('Please provide ABI');
+      setError('ABI is empty');
       return;
     }
     if (values.some((val) => val === '')) {
@@ -50,9 +50,12 @@ export default function ConstructorEncoder() {
   };
 
   const handleChangeAbi = (rawAbi: string) => {
+    // clear decode results and errors if something has changed
+    if (rawAbi.length >= 0) {
+      setError(undefined);
+    }
     setError(undefined);
     setRawAbi(rawAbi);
-
     try {
       const parsed = parseAbi(rawAbi);
       if (parsed instanceof Interface) {
@@ -106,26 +109,28 @@ export default function ConstructorEncoder() {
       <label htmlFor="abi">
         <span>ABI</span>
       </label>
+      <section className="mb-3 w-full">
+        <textarea
+          id="abi"
+          aria-label="text area for constructor abi"
+          value={rawAbi || ''}
+          placeholder="e.g function transferFrom(address, ..)"
+          className={
+            'h-20 w-full break-words rounded-md border bg-gray-900 p-4' +
+            String(
+              error && rawAbi?.length !== 0
+                ? ' border-error/75'
+                : ' border-gray-600',
+            )
+          }
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+            handleChangeAbi(event.target.value);
+          }}
+        />
+        {error && <p className="text-error">{error}</p>}
+      </section>
 
-      <textarea
-        id="abi"
-        aria-label="text area for constructor abi"
-        value={rawAbi || ''}
-        placeholder="e.g function transferFrom(address, ..)"
-        className={
-          'mb-4 h-20 break-words rounded-md border bg-gray-900 p-4' +
-          String(
-            error && rawAbi?.length !== 0
-              ? ' border-error/75'
-              : ' border-gray-600',
-          )
-        }
-        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-          handleChangeAbi(event.target.value);
-        }}
-      />
-
-      <section className="mb-3">
+      <section>
         {iface &&
           iface.deploy.inputs.map((input, i) => (
             <section className="flex items-center gap-2" key={input.name}>
@@ -155,62 +160,46 @@ export default function ConstructorEncoder() {
           ))}
       </section>
 
-      <section className="pt-1 pb-6">
-        {rawAbi?.includes('constructor') && values.length === 0 && (
-          <p className="text-md pb-4 font-semibold">
-            Constructor doesn't contain any arguments
-          </p>
-        )}
-      </section>
+      {rawAbi?.includes('constructor') && values.length === 0 && (
+        <p className="text-md pb-4 font-semibold">
+          Constructor doesn't contain any arguments
+        </p>
+      )}
 
       <Button
         onClick={onEncodeClick}
         className="mt-3"
         disabled={encodeButtonDisabled()}
-        title={
-          encodeButtonDisabled() ? 'Please fill in the calldata' : undefined
-        }
+        title={encodeButtonDisabled() ? 'Calldata empty' : undefined}
       >
         Decode
       </Button>
 
-      <section className="pt-8 pb-3">
-        {encodedResult ? (
-          encodedResult.length > 0 ? (
-            <p className="text-md pb-4 font-semibold">
-              Possible decoded calldata:
-            </p>
-          ) : (
-            'No results found'
-          )
-        ) : (
-          <p> Decoded output will appear here </p>
-        )}
-      </section>
-
-      <section
-        className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
-        placeholder="Output"
-      >
-        {error ? (
-          <p className="text-error" data-testid="error">
-            {error}
-          </p>
-        ) : (
-          encodedResult && (
-            <>
-              <h3 className="text-md flex-wrap pb-4 font-semibold">
-                Encoded constructor:
-              </h3>
-              {encodedResult.map((row, i) => (
-                <p key={i} data-testid={`encodedRow_${i}`}>
-                  {row}
-                </p>
-              ))}
-            </>
-          )
-        )}
-      </section>
+      {!encodedResult && !error && rawAbi?.length === 0 && (
+        <p className="text-md py-5 font-semibold">Possible decoded results:</p>
+      )}
+      {!encodedResult && error && (
+        <p className="text-md py-5 font-semibold">
+          Decoded output will appear here
+        </p>
+      )}
+      {encodedResult && (
+        <section
+          className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
+          placeholder="Output"
+        >
+          <>
+            <h3 className="text-md flex-wrap pb-4 font-semibold">
+              Encoded constructor:
+            </h3>
+            {encodedResult.map((row, i) => (
+              <p key={i} data-testid={`encodedRow_${i}`}>
+                {row}
+              </p>
+            ))}
+          </>
+        </section>
+      )}
     </ToolContainer>
   );
 }

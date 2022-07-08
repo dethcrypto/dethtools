@@ -1,6 +1,5 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
-import error from 'next/error';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';

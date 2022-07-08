@@ -21,8 +21,8 @@ export default function TxDecoder() {
     useState<{ tx: TypedTransaction; senderAddr: string }>();
 
   function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>) {
-    // clear decode results if something has changed
-    if (rawTx.inner?.length! >= 0) {
+    // clear decode results and errors if something has changed
+    if (rawTx.inner?.length! <= 0) {
       setDecodeResults(undefined);
       setError(undefined);
     }

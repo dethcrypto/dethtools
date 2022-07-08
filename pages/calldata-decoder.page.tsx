@@ -1,6 +1,5 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
-import { assert } from '../src/misc/assert';
 
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -19,6 +18,7 @@ import {
   DecodeResult,
 } from '../src/lib/decodeCalldata';
 import { parseAbi } from '../src/lib/parseAbi';
+import { assert } from '../src/misc/assert';
 import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
 import { hexSchema } from '../src/misc/schemas/hexSchema';
 import { WithOkAndErrorMsgOptional } from '../src/misc/types';
