@@ -52,7 +52,10 @@ export default function CalldataDecoder({
   >({ isOk: true });
 
   const signatureHash = useMemo(
-    () => encodedCalldata.inner && sigHashFromCalldata(encodedCalldata.inner),
+    () =>
+      encodedCalldata.isOk &&
+      encodedCalldata.inner &&
+      sigHashFromCalldata(encodedCalldata.inner),
     [encodedCalldata],
   );
 
@@ -66,7 +69,7 @@ export default function CalldataDecoder({
     const { value } = event.target;
     const parseResult = hexSchema.safeParse(value);
     setEncodedCalldata(() => {
-      return { inner: value };
+      return { inner: value, isOk: true };
     });
     if (parseResult.success) {
       setEncodedCalldata((state) => {
@@ -100,7 +103,7 @@ export default function CalldataDecoder({
     }
     const { value } = event.target;
     setRawAbi(() => {
-      return { inner: value };
+      return { inner: value, isOk: true };
     });
     // test if the interface is being created correctly from rawAbi
     setRawAbi((state) => {
@@ -132,7 +135,7 @@ export default function CalldataDecoder({
 
   async function handleDecodeCalldata() {
     setError(undefined);
-    if (!encodedCalldata.inner) return;
+    if (!encodedCalldata.isOk) return;
     // button was blocked, but the user triggered
     // this fn without encoded calldata
     assert(signatureHash, 'Signature hash undefined');
@@ -140,10 +143,12 @@ export default function CalldataDecoder({
       setLoading(true);
       let decodeResults: DecodeResult[] | undefined;
       try {
-        decodeResults = await fetchAndDecode(
-          signatureHash,
-          encodedCalldata.inner,
-        );
+        if (encodedCalldata.inner) {
+          decodeResults = await fetchAndDecode(
+            signatureHash,
+            encodedCalldata.inner,
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -163,12 +168,14 @@ export default function CalldataDecoder({
     }
     let decodeResult: DecodeResult | undefined;
     let abi: Interface | Error | undefined;
-    if (!rawAbi.inner) {
+    if (!rawAbi.isOk) {
       // Decode button is locked when rawAbi is not defined,
       // so we just return here
       return;
     } else {
-      abi = parseAbi(rawAbi.inner);
+      if (rawAbi.inner) {
+        abi = parseAbi(rawAbi.inner);
+      }
       if (abi instanceof Error) {
         setRawAbi((state) => {
           return {
@@ -181,7 +188,7 @@ export default function CalldataDecoder({
         return;
       }
     }
-    if (!(abi instanceof Error)) {
+    if (abi instanceof Interface && encodedCalldata.inner) {
       decodeResult = decodeCalldata(abi, encodedCalldata.inner);
     }
     if (!decodeResult) {
@@ -199,7 +206,7 @@ export default function CalldataDecoder({
   }
 
   const decodeButtonDisabled = !(
-    (rawAbi.inner || tab === '4-bytes') &&
+    ((rawAbi.isOk && rawAbi.inner) || tab === '4-bytes') &&
     encodedCalldata.isOk
   );
 
@@ -224,7 +231,15 @@ export default function CalldataDecoder({
       <>
         <textarea
           id="calldata"
-          value={encodedCalldata.inner || ''}
+          value={
+            // Cast inner to 'always present', as we always want to
+            // display the calldata, even if it's wrong
+            (
+              encodedCalldata as WithOkAndErrorMsgOptional<string> & {
+                inner: string;
+              }
+            ).inner || ''
+          }
           placeholder="e.g 0x23b8..3b2"
           className={
             'h-20 break-words rounded-md border border-gray-600 bg-gray-900 ' +
@@ -245,7 +260,7 @@ export default function CalldataDecoder({
           aria-label="encoded calldata error"
           className="pt-1 text-right text-error"
         >
-          {encodedCalldata.errorMsg}
+          {!encodedCalldata.isOk && encodedCalldata.errorMsg}
         </p>
       </>
       <div className="mt-8 flex flex-col">
@@ -294,7 +309,7 @@ export default function CalldataDecoder({
             <textarea
               id="abi"
               aria-label="text area for abi"
-              value={rawAbi.inner || ''}
+              value={(rawAbi.isOk && rawAbi.inner) || ''}
               placeholder="e.g function transferFrom(address, ..)"
               className={
                 'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
@@ -308,7 +323,7 @@ export default function CalldataDecoder({
               aria-label="raw abi error"
               className="pt-1 text-right text-error"
             >
-              {rawAbi.errorMsg}
+              {!rawAbi.isOk && rawAbi.errorMsg}
             </p>
           </>
         )}
@@ -366,8 +381,9 @@ export default function CalldataDecoder({
 
               {error ? (
                 <p className="text-error">
-                  {error} with `{encodedCalldata.inner?.slice(0, 12)}`...
-                  encoded calldata
+                  {error} with `
+                  {encodedCalldata.isOk && encodedCalldata.inner?.slice(0, 12)}
+                  `... encoded calldata
                 </p>
               ) : (
                 <div className="items-left flex flex-col text-ellipsis">

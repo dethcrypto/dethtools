@@ -1,12 +1,19 @@
-export type WithOkAndErrorMsg<T> = {
-  inner: T;
-  isOk?: boolean;
-  errorMsg?: string;
-};
+export type WithOkAndErrorMsg<T> =
+  | {
+      inner: T;
+      isOk: true;
+    }
+  | {
+      isOk: false;
+      errorMsg?: string;
+    };
 
-export type WithOkAndErrorMsgOptional<T> = Omit<
-  WithOkAndErrorMsg<T>,
-  'inner'
-> & {
-  inner?: T;
-};
+export type WithOkAndErrorMsgOptional<T> =
+  | (Omit<WithOkAndErrorMsg<T>, 'inner'> & {
+      isOk: true;
+      inner?: T;
+    })
+  | {
+      isOk: false;
+      errorMsg?: string;
+    };

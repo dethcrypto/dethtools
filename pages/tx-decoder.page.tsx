@@ -22,7 +22,7 @@ export default function TxDecoder() {
 
   function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>) {
     // clear decode results and errors if something has changed
-    if (rawTx.inner?.length! <= 0) {
+    if (!rawTx.isOk || rawTx.inner?.length! <= 0) {
       setDecodeResults(undefined);
       setError(undefined);
     }
@@ -60,10 +60,12 @@ export default function TxDecoder() {
 
   function handleDecodeCalldata() {
     setDecodeResults(undefined);
-    if (rawTx.inner) {
+    if (rawTx.isOk) {
       let decoded: DecodedTx | undefined;
       try {
-        decoded = decodeTx(rawTx.inner);
+        if (rawTx.inner) {
+          decoded = decodeTx(rawTx.inner);
+        }
       } catch (e) {
         setError('Unable to decode transaction');
       }
@@ -71,7 +73,7 @@ export default function TxDecoder() {
     }
   }
 
-  const decodeButtonDisabled = !rawTx.inner || !rawTx.isOk;
+  const decodeButtonDisabled = !rawTx.isOk;
 
   return (
     <ToolContainer>
@@ -96,7 +98,9 @@ export default function TxDecoder() {
           {error && (
             <p aria-label="raw tx decode error" className="text-error">
               {error} with{' '}
-              {rawTx.inner && String(rawTx.inner.slice(0, 12)) + '...'}
+              {rawTx.isOk &&
+                rawTx.inner &&
+                String(rawTx.inner.slice(0, 12)) + '...'}
             </p>
           )}
         </>
@@ -111,9 +115,12 @@ export default function TxDecoder() {
         Decode
       </Button>
 
-      {!decodeResults && rawTx.inner?.length === 0 && (
-        <p className="text-md py-5 font-semibold">Possible decoded results:</p>
-      )}
+      {(!decodeResults && !rawTx.isOk) ||
+        ((rawTx as { inner?: string }).inner?.length! <= 0 && (
+          <p className="text-md py-5 font-semibold">
+            Possible decoded results:
+          </p>
+        ))}
       {!error ||
         (decodeResults && (
           <p className="text-md py-5 font-semibold">

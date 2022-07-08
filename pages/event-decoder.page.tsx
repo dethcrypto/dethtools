@@ -101,7 +101,19 @@ export default function EventDecoder() {
         if (!state) return;
         return [
           ...stateBeforeIndex(state),
-          { ...state[index], isOk: true, errorMsg: undefined },
+          {
+            // Cast to the required and boolean isOk type to avoid type errors
+            // regarding the presence of the inner property
+            ...(
+              state as WithOkAndErrorMsg<string> &
+                {
+                  inner: string;
+                  isOk: boolean;
+                }[]
+            )[index],
+            isOk: true,
+            errorMsg: undefined,
+          },
           ...stateAfterIndex(state),
         ];
       });
@@ -139,22 +151,24 @@ export default function EventDecoder() {
   function handleChangeData(event: ChangeEvent<HTMLInputElement>) {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
+      // @ts-ignore - this is a valid state change
       setDecodeResults(undefined);
     }
     let { value } = event.target;
     value = addHexPrefix(value);
     const parseResult = hexSchema.safeParse(value);
-    setData({ inner: value });
+    setData({ inner: value, isOk: true });
     if (parseResult.success) {
+      // @ts-ignore - this is a valid state change
       setData({ inner: value, isOk: true, errorMsg: undefined });
     } else {
       setData({
-        inner: value,
         isOk: false,
         errorMsg: zodResultMessage(parseResult),
       });
     }
     if (value.length === 0) {
+      // @ts-ignore - this is a valid state change
       setData({ inner: value, isOk: true, errorMsg: undefined });
     }
   }
@@ -162,11 +176,12 @@ export default function EventDecoder() {
   function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
+      // @ts-ignore - this is a valid state change
       setDecodeResults(undefined);
     }
     const { value } = event.target;
     setRawAbi(() => {
-      return { inner: value };
+      return { inner: value, isOk: true };
     });
     // we're currently able to use three abi formats
     // test if the interface is being created correctly from rawAbi
@@ -197,6 +212,7 @@ export default function EventDecoder() {
   }
 
   async function handleDecodeCalldata() {
+    // @ts-ignore - this is a valid state change
     setDecodeResults(undefined);
     if (!signatureHash) {
       setError('Signature hash is wrong or undefined');
@@ -206,17 +222,25 @@ export default function EventDecoder() {
       setLoading(true);
       let decodeResults: DecodedEventResult[] | undefined;
       try {
-        if (topics && data.inner) {
+        if (topics && data.isOk && data.inner) {
           const eventProps: EventProps = {
             data: data.inner,
             topics: topics
-              .filter(({ inner }) => inner && inner.trim().length > 0)
-              .map((t) => t.inner),
+              .filter((topic) => {
+                if (topic.isOk) {
+                  return topic.inner.trim().length > 0;
+                }
+                return false;
+              })
+              // we're sure that all of the topics exist because of the filter above
+              .map((topic) => (topic as { inner: string }).inner),
           };
-          decodeResults = await decodeWithEventProps(
-            signatureHash.inner,
-            eventProps,
-          );
+          if (signatureHash.isOk) {
+            decodeResults = await decodeWithEventProps(
+              signatureHash.inner,
+              eventProps,
+            );
+          }
         }
       } catch (e) {
         setError(
@@ -234,15 +258,23 @@ export default function EventDecoder() {
 
     let decodeResult: DecodedEventResult | undefined;
     try {
-      if (!rawAbi.inner) return;
-      const abi = parseAbi(rawAbi.inner);
-
-      if (!(abi instanceof Interface) || !data.inner || !topics) return;
+      if (!rawAbi.isOk) return;
+      let abi: Interface | Error;
+      if (rawAbi.inner) {
+        abi = parseAbi(rawAbi.inner);
+      }
+      if (!(abi! instanceof Interface) || !data.isOk || !topics) return;
       const eventProps: EventProps = {
         data: data.inner,
         topics: topics
-          .filter(({ inner }) => inner.trim().length > 0)
-          .map((t) => t.inner),
+          .filter((topic) => {
+            if (topic.isOk) {
+              return topic.inner.trim().length > 0;
+            }
+            return false;
+          })
+          // we're sure that all of the topics exist because of the filter above
+          .map((topic) => (topic as { inner: string }).inner),
       };
       decodeResult = decodeEvent(abi, eventProps);
     } catch (e) {
@@ -259,7 +291,7 @@ export default function EventDecoder() {
     data.isOk &&
     topics?.every(({ isOk }) => isOk) &&
     data.inner &&
-    (rawAbi.inner || tab === '4-bytes')
+    ((rawAbi.isOk && rawAbi.inner) || tab === '4-bytes')
   );
 
   const decodeResultsDisabled =
@@ -315,7 +347,8 @@ export default function EventDecoder() {
                       aria-label={'topic ' + String(index) + ' error'}
                       className="text-right text-error"
                     >
-                      {topics[index].errorMsg}
+                      {/* @ts-ignore */}
+                      {!topics[index].isOk && topics[index].errorMsg}
                     </p>
                   </>
                 </div>
@@ -342,7 +375,9 @@ export default function EventDecoder() {
                 handleChangeData(event)
               }
             />
-            <p className="text-right text-error">{data.errorMsg}</p>
+            <p className="text-right text-error">
+              {!data.isOk && data.errorMsg}
+            </p>
           </>
         </section>
       </div>
@@ -360,6 +395,7 @@ export default function EventDecoder() {
             }`}
             onClick={() => {
               setTab('4-bytes');
+              // @ts-ignore - this is a valid state change
               setDecodeResults(undefined);
             }}
           >
@@ -378,6 +414,7 @@ export default function EventDecoder() {
             }
             onClick={() => {
               setTab('abi');
+              // @ts-ignore - this is a valid state change
               setDecodeResults(undefined);
             }}
           >
@@ -390,7 +427,7 @@ export default function EventDecoder() {
             <textarea
               id="abi"
               aria-label="text area for abi"
-              value={rawAbi.inner || ''}
+              value={(rawAbi.isOk && rawAbi.inner) || ''}
               placeholder="e.g function transferFrom(address, ..)"
               className={
                 'flex h-48 w-full break-words rounded-b-md border-t-0' +
@@ -401,7 +438,9 @@ export default function EventDecoder() {
                 handleChangeRawAbi(event)
               }
             />
-            <p className="pt-1 text-right text-error">{rawAbi.errorMsg}</p>
+            <p className="pt-1 text-right text-error">
+              {!rawAbi.isOk && rawAbi.errorMsg}
+            </p>
           </>
         )}
       </div>
@@ -443,7 +482,10 @@ export default function EventDecoder() {
           >
             <section className="flex flex-col gap-4 break-words">
               {signatureHash && decodeResults?.length! > 0 && (
-                <NodeBlock className="my-2" str={signatureHash.inner || '0x0'}>
+                <NodeBlock
+                  className="my-2"
+                  str={(signatureHash.isOk && signatureHash.inner) || '0x0'}
+                >
                   <div className="flex items-center gap-2">
                     <p className="truncate">Signature hash</p>
                   </div>
