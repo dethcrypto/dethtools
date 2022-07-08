@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
+import error from 'next/error';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -137,6 +138,10 @@ export default function EventDecoder() {
   }
 
   function handleChangeData(event: ChangeEvent<HTMLInputElement>) {
+    // clear decode results if something has changed
+    if (decodeResults?.length! > 0) {
+      setDecodeResults(undefined);
+    }
     let { value } = event.target;
     value = addHexPrefix(value);
     const parseResult = hexSchema.safeParse(value);
@@ -156,11 +161,15 @@ export default function EventDecoder() {
   }
 
   function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
+    // clear decode results if something has changed
+    if (decodeResults?.length! > 0) {
+      setDecodeResults(undefined);
+    }
     const { value } = event.target;
     setRawAbi(() => {
       return { inner: value };
     });
-    // we're currently able to use three abi formats thanks to ethers
+    // we're currently able to use three abi formats
     // test if the interface is being created correctly from rawAbi
     try {
       parseAbi(value); // throws error if rawAbi format is not valid
@@ -253,6 +262,9 @@ export default function EventDecoder() {
     data.inner &&
     (rawAbi.inner || tab === '4-bytes')
   );
+
+  const decodeResultsDisabled =
+    !error && (!decodeResults || decodeResults.length === 0);
 
   return (
     <ToolContainer>
@@ -425,50 +437,52 @@ export default function EventDecoder() {
       {loading ? (
         <Spinner className="mx-auto pt-12" />
       ) : (
-        <section
-          className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
-          placeholder="Output"
-        >
-          <section className="flex flex-col gap-4 break-words">
-            {signatureHash && decodeResults?.length! > 0 && (
-              <NodeBlock className="my-2" str={signatureHash.inner || '0x0'}>
-                <div className="flex items-center gap-2">
-                  <p className="truncate">Signature hash</p>
-                </div>
-              </NodeBlock>
-            )}
+        !decodeResultsDisabled && (
+          <section
+            className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
+            placeholder="Output"
+          >
+            <section className="flex flex-col gap-4 break-words">
+              {signatureHash && decodeResults?.length! > 0 && (
+                <NodeBlock className="my-2" str={signatureHash.inner || '0x0'}>
+                  <div className="flex items-center gap-2">
+                    <p className="truncate">Signature hash</p>
+                  </div>
+                </NodeBlock>
+              )}
 
-            {error ? (
-              <p className="text-error">{error}</p>
-            ) : (
-              <div className="items-left flex flex-col text-ellipsis font-semibold">
-                {decodeResults?.map((d, i) => {
-                  return (
-                    <section key={i}>
-                      <div className="flex flex-col gap-2">
-                        <p>{d.fullSignature}</p>
-                        <p>{'{'}</p>
-                        {Object.entries(d.args).map(([key, value], i) => (
-                          <NodeBlock
-                            className="my-1"
-                            str={value.toString()}
-                            key={i}
-                          >
-                            <p
-                              aria-label="decoded event arg index"
-                              className="text-purple-600"
-                            >{` "${key}"`}</p>
-                          </NodeBlock>
-                        ))}
-                        <p>{'}'}</p>
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
+              {error ? (
+                <p className="text-error">{error}</p>
+              ) : (
+                <div className="items-left flex flex-col text-ellipsis font-semibold">
+                  {decodeResults?.map((d, i) => {
+                    return (
+                      <section key={i}>
+                        <div className="flex flex-col gap-2">
+                          <p>{d.fullSignature}</p>
+                          <p>{'{'}</p>
+                          {Object.entries(d.args).map(([key, value], i) => (
+                            <NodeBlock
+                              className="my-1"
+                              str={value.toString()}
+                              key={i}
+                            >
+                              <p
+                                aria-label="decoded event arg index"
+                                className="text-purple-600"
+                              >{` "${key}"`}</p>
+                            </NodeBlock>
+                          ))}
+                          <p>{'}'}</p>
+                        </div>
+                      </section>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
           </section>
-        </section>
+        )
       )}
     </ToolContainer>
   );
