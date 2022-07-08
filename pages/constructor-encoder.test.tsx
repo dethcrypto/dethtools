@@ -52,13 +52,15 @@ describe(ConstructorEncoder.name, () => {
 
     userEvent.click(await root.findByText('Decode'));
 
-    expect((await root.findByTestId('encodedRow_0')).innerHTML).toEqual(
+    const encodedRows = await root.findAllByLabelText('encoded-row');
+
+    expect(encodedRows[0].innerHTML).toEqual(
       '0000000000000000000000000000000000000000000000000000000000000042',
     );
-    expect((await root.findByTestId('encodedRow_1')).innerHTML).toEqual(
+    expect(encodedRows[1].innerHTML).toEqual(
       '000000000000000000000000000000000000000000000000000000000000002a',
     );
-    expect((await root.findByTestId('encodedRow_2')).innerHTML).toEqual(
+    expect(encodedRows[2].innerHTML).toEqual(
       '00000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45',
     );
   });
@@ -72,7 +74,7 @@ describe(ConstructorEncoder.name, () => {
       },
     });
 
-    expect((await root.findByTestId('error')).innerHTML).toEqual(
+    expect((await root.findByLabelText('abi decode error')).innerHTML).toEqual(
       'ABI parsing failed: Unexpected end of JSON input',
     );
     fireEvent.change(abiField, {

@@ -46,7 +46,7 @@ export default function ConstructorEncoder() {
     if (!rawAbi) {
       return false;
     }
-    return !!rawAbi || values.every((val) => val.length > 0);
+    return values.every((val) => val.length === 0);
   };
 
   const handleChangeAbi = (rawAbi: string) => {
@@ -127,7 +127,11 @@ export default function ConstructorEncoder() {
             handleChangeAbi(event.target.value);
           }}
         />
-        {error && <p className="text-error">{error}</p>}
+        {error && (
+          <p aria-label="abi decode error" className="text-error">
+            {error}
+          </p>
+        )}
       </section>
 
       <section>
@@ -193,7 +197,7 @@ export default function ConstructorEncoder() {
               Encoded constructor:
             </h3>
             {encodedResult.map((row, i) => (
-              <p key={i} data-testid={`encodedRow_${i}`}>
+              <p aria-label="encoded-row" key={i}>
                 {row}
               </p>
             ))}
