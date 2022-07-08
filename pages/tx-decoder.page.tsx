@@ -21,6 +21,11 @@ export default function TxDecoder() {
     useState<{ tx: TypedTransaction; senderAddr: string }>();
 
   function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>) {
+    // clear decode results if something has changed
+    if (rawTx.inner?.length! >= 0) {
+      setDecodeResults(undefined);
+      setError(undefined);
+    }
     let { value } = event.target;
     value = toEvenHex(value);
     setRawTx((state) => {
@@ -29,7 +34,7 @@ export default function TxDecoder() {
     const parseResult = hexSchema.safeParse(value);
     if (parseResult.success) {
       setRawTx((state) => {
-        return { ...state, isOk: true, errorMsg: undefined };
+        return { ...state, isOk: true };
       });
     } else {
       setRawTx((state) => {
@@ -40,7 +45,7 @@ export default function TxDecoder() {
         };
       });
     }
-    // 0x prefixed
+    // 0x prefixed, thus length <= 2
     if (value.length <= 2) {
       setRawTx((state) => {
         return {
@@ -88,7 +93,12 @@ export default function TxDecoder() {
             }
             onChange={(event) => handleChangeRawTx(event)}
           />
-          <p className="text-right text-error">{rawTx.errorMsg}</p>
+          {error && (
+            <p className="text-error">
+              {error} with
+              {rawTx.inner && String(rawTx.inner.slice(0, 12)) + '...'}
+            </p>
+          )}
         </>
       </section>
 
@@ -101,37 +111,28 @@ export default function TxDecoder() {
         Decode
       </Button>
 
-      <section className="pt-8 pb-3">
-        {decodeResults ? (
-          rawTx.inner ? (
-            <p className="text-md pb-4 font-semibold">
-              Possible decoded results:
-            </p>
-          ) : (
-            'No results found'
-          )
-        ) : (
-          <p> Decoded output will appear here </p>
-        )}
-      </section>
-
-      <section
-        className="xl relative overflow-auto rounded-md border border-gray-600 bg-gray-900 p-8"
-        placeholder="Output"
-      >
-        {error ? (
-          <p className="text-error">
-            {error} with {rawTx.inner}
+      {!decodeResults && rawTx.inner?.length === 0 && (
+        <p className="text-md py-5 font-semibold">Possible decoded results:</p>
+      )}
+      {!error ||
+        (decodeResults && (
+          <p className="text-md py-5 font-semibold">
+            Decoded output will appear here
           </p>
-        ) : (
+        ))}
+      {decodeResults && (
+        <section
+          className="relative mt-6 overflow-auto rounded-md border border-gray-600 bg-gray-900 p-8"
+          placeholder="Output"
+        >
           <output>
-            <p>{decodeResults && 'decode results:'}</p>
+            <p>decode results:</p>
             <pre className="items-left flex flex-col text-clip text-sm">
               <p>{JSON.stringify(decodeResults, null, 2)}</p>
             </pre>
           </output>
-        )}
-      </section>
+        </section>
+      )}
     </ToolContainer>
   );
 }
