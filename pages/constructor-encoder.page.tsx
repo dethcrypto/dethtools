@@ -42,18 +42,10 @@ export default function ConstructorEncoder() {
     }
   }
 
-  const encodeButtonDisabled = (): boolean => {
-    if (!rawAbi) {
-      return false;
-    }
-    return values.every((val) => val.length === 0);
-  };
+  const encodeButtonDisabled =
+    !!rawAbi && values.every((val) => val.length === 0);
 
   const handleChangeAbi = (rawAbi: string) => {
-    // clear decode results and errors if something has changed
-    if (rawAbi.length >= 0) {
-      setError(undefined);
-    }
     setError(undefined);
     setRawAbi(rawAbi);
     try {
@@ -64,7 +56,7 @@ export default function ConstructorEncoder() {
         setValues(new Array(iface.deploy.inputs.length).fill(''));
         setErrors(new Array(iface.deploy.inputs.length).fill(''));
       } else {
-        setError(`ABI parsing failed: Unexpected end of JSON input`);
+        setError('ABI parsing failed: Unexpected end of JSON input');
       }
     } catch (_) {
       setError('Provided ABI is incorrect');
@@ -173,8 +165,8 @@ export default function ConstructorEncoder() {
       <Button
         onClick={onEncodeClick}
         className="mt-3"
-        disabled={encodeButtonDisabled()}
-        title={encodeButtonDisabled() ? 'Calldata empty' : undefined}
+        disabled={encodeButtonDisabled}
+        title={encodeButtonDisabled ? 'Calldata empty' : undefined}
       >
         Decode
       </Button>
