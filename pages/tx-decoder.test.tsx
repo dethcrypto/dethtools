@@ -3,7 +3,7 @@ import { expect } from 'earljs';
 
 import TxDecoder from './tx-decoder.page';
 
-describe(TxDecoder.name, () => {
+describe.only(TxDecoder.name, () => {
   it('decodes and displays transaction correctly', async () => {
     const root = render(<TxDecoder />);
 
@@ -55,7 +55,9 @@ describe(TxDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    expect(await root.findByText(/Unable to decode transaction with 0x0123/i));
+    expect(
+      (await root.findByLabelText('raw tx decode error')).innerHTML,
+    ).toEqual('Unable to decode transaction with 0x0123...');
   });
 
   it('displays error on wrong value', async () => {

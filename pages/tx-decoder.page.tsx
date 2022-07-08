@@ -94,8 +94,8 @@ export default function TxDecoder() {
             onChange={(event) => handleChangeRawTx(event)}
           />
           {error && (
-            <p className="text-error">
-              {error} with
+            <p aria-label="raw tx decode error" className="text-error">
+              {error} with{' '}
               {rawTx.inner && String(rawTx.inner.slice(0, 12)) + '...'}
             </p>
           )}
