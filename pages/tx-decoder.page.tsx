@@ -17,8 +17,10 @@ export default function TxDecoder() {
   const [rawTx, setRawTx] = useState<WithOkAndErrorMsgOptional<string>>({
     isOk: true,
   });
-  const [decodeResults, setDecodeResults] =
-    useState<{ tx: TypedTransaction; senderAddr: string }>();
+  const [decodeResults, setDecodeResults] = useState<{
+    tx: TypedTransaction;
+    senderAddr: string;
+  }>();
 
   function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>) {
     // clear decode results and errors if something has changed
