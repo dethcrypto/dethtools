@@ -2,11 +2,11 @@ import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
 
+import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { NodeBlock } from '../src/components/NodeBlock';
 import { Spinner } from '../src/components/Spinner';
-import { Tabs } from '../src/components/Tabs';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import {
@@ -384,7 +384,7 @@ export default function EventDecoder() {
       </div>
 
       <div className="mt-6 flex flex-col">
-        <Tabs
+        <AbiSourceTabs
           rawAbi={rawAbi}
           setDecodeResults={setDecodeResults}
           handleChangeRawAbi={handleChangeRawAbi}

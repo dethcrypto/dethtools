@@ -5,9 +5,9 @@ import React, {
   TextareaHTMLAttributes,
 } from 'react';
 
-import { WithOkAndErrorMsgOptional } from '../../src/misc/types';
+import { WithOkAndErrorMsgOptional } from '../misc/types';
 
-interface TabsProps<T, D> {
+interface AbiSourceTabsProps<T, D> {
   rawAbi: T;
   tabState: {
     tab: 'abi' | '4-bytes';
@@ -17,11 +17,16 @@ interface TabsProps<T, D> {
   handleChangeRawAbi: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-export function Tabs<
+export function AbiSourceTabs<
   R extends TextareaHTMLAttributes<HTMLTextAreaElement>['value'],
   T extends WithOkAndErrorMsgOptional<R>,
   D,
->({ rawAbi, setDecodeResults, handleChangeRawAbi, tabState }: TabsProps<T, D>) {
+>({
+  rawAbi,
+  setDecodeResults,
+  handleChangeRawAbi,
+  tabState,
+}: AbiSourceTabsProps<T, D>) {
   const { tab, setTab } = tabState;
   return (
     <div className="flex flex-col">
