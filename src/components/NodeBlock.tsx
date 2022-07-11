@@ -80,7 +80,9 @@ export function NodeBlock({
         </Listbox>
 
         {children}
-        <code id="node-value">{formatNodeValue(currentFormat, str)}</code>
+        <code aria-label="decoded value" id="node-value">
+          {formatNodeValue(currentFormat, str)}
+        </code>
       </div>
       {!copyNotification ? (
         <CopyIcon className="cursor-pointer" />

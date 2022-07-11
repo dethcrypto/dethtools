@@ -13,7 +13,7 @@ import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
-import { unitSchema } from '../src/misc/unitSchema';
+import { unitSchema } from '../src/misc/schemas/unitSchema';
 
 const DEFAULT_DECIMALS = 18;
 

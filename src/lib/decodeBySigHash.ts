@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import fetch from 'node-fetch';
 
-import { sigHashSchema } from '../misc/sigHashSchema';
+import { hexSchema } from './../misc/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
 import { parseAbi } from './parseAbi';
@@ -31,7 +31,7 @@ export async function fetchAndDecodeWithCalldata(
 
 export function sigHashFromCalldata(calldata: string): string | undefined {
   const chunk = calldata.slice(0, 10);
-  if (sigHashSchema.safeParse(chunk).success) {
+  if (hexSchema.safeParse(chunk).success) {
     return chunk;
   }
 }

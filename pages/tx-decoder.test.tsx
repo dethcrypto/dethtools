@@ -55,7 +55,9 @@ describe(TxDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    expect(await root.findByText(/Unable to decode transaction with 0x0123/i));
+    expect(
+      (await root.findByLabelText('raw tx decode error')).innerHTML,
+    ).toEqual('Unable to decode transaction with 0x0123...');
   });
 
   it('displays error on wrong value', async () => {

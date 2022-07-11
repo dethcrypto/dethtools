@@ -154,15 +154,13 @@ describe(EventDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    expect(
-      await root.findByText(
-        '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
-      ),
-    );
+    // the first decoded value in node blocks is the signature hash
+    expect((await root.findAllByLabelText('decoded value'))[0]);
 
-    const arg0 = await waitFor(() => root.findByText('"0"'));
-    const arg1 = await waitFor(() => root.findByText('"1"'));
-    const arg2 = await waitFor(() => root.findByText('"2"'));
+    const args = await root.findAllByLabelText('decoded event arg index');
+    const arg0 = args[0];
+    const arg1 = args[1];
+    const arg2 = args[2];
 
     expect(arg0.parentElement!.innerHTML).toEqual(
       expect.stringMatching('0x5853eD4f26A3fceA565b3FBC698bb19cdF6DEB85'),
@@ -173,7 +171,7 @@ describe(EventDecoder.name, () => {
     expect(arg2.parentElement!.innerHTML).toEqual(expect.stringMatching('0'));
   });
 
-  it('works with non-0x prefixed values', async () => {
+  it.skip('works with non-0x prefixed values', async () => {
     const root = render(<EventDecoder />);
 
     fireEvent.click(root.getByText('4 bytes'));
@@ -238,5 +236,31 @@ describe(EventDecoder.name, () => {
     expect(arg0.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg1.parentElement!.innerHTML).toMatchSnapshot();
     expect(arg2.parentElement!.innerHTML).toMatchSnapshot();
+  });
+
+  it('types topic in wrong format, gets error message', async () => {
+    const root = render(<EventDecoder />);
+
+    const topic0Field = (await root.findByLabelText(
+      'topic0',
+    )) as HTMLInputElement;
+
+    fireEvent.change(topic0Field, {
+      target: {
+        value: 'ddd',
+      },
+    });
+
+    expect(topic0Field.value).toEqual('ddd');
+
+    const topic0Error = (await root.findByLabelText(
+      'topic 0 error',
+    )) as HTMLInputElement;
+
+    expect(topic0Error.innerHTML).toEqual(
+      expect.stringMatching(
+        'The value must be a hexadecimal number, 0x-prefix is required',
+      ),
+    );
   });
 });
