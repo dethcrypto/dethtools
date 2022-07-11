@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber';
+import { waitFor } from '@testing-library/react';
 import { expect } from 'earljs';
 
 import {
@@ -6,6 +7,7 @@ import {
   decodeWithEventProps,
   fetch4BytesData,
   fetchAndDecodeWithCalldata,
+  FetchResult,
   getSignaturesByCalldata,
   parse4BytesResToIfaces,
 } from './decodeBySigHash';
@@ -13,9 +15,14 @@ import { EventProps } from './decodeEvent';
 
 describe(fetch4BytesData.name, () => {
   it('fetches data by signature', async () => {
-    expect(
-      await fetch4BytesData('0x23b872dd', 'signatures').catch(),
-    ).toBeDefined();
+    let response: FetchResult[] | undefined;
+    await waitFor(
+      async () => {
+        response = await fetch4BytesData('0x23b872dd', 'signatures');
+      },
+      { timeout: 10000, interval: 10000 },
+    );
+    expect(response).toBeDefined();
   });
 });
 
