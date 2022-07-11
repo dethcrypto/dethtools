@@ -1,7 +1,7 @@
 import { ComponentStory } from '@storybook/react';
 import React from 'react';
 
-import { meta } from './.storybook/utils';
+import { meta } from '../../../../.storybook/utils';
 import { Button, variants } from './Button';
 
 export default meta(Button, {
