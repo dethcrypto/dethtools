@@ -154,10 +154,20 @@ describe(EventDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    // the first decoded value in node blocks is the signature hash
-    expect((await root.findAllByLabelText('decoded value'))[0]);
+    await waitFor(
+      () => expect(root.findAllByLabelText('decoded value')).toBeDefined(),
+      { timeout: 5000, interval: 5000 },
+    );
 
-    const args = await root.findAllByLabelText('decoded event arg index');
+    let args: HTMLElement[] = [];
+
+    await waitFor(
+      async () => {
+        args = await root.findAllByLabelText('decoded event arg index');
+      },
+      { timeout: 5000, interval: 5000 },
+    );
+
     const arg0 = args[0];
     const arg1 = args[1];
     const arg2 = args[2];
