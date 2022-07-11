@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import { Bug } from './icons/BugIcon';
 import { DethToolsLogo } from './icons/DethToolsLogo';
@@ -8,13 +8,13 @@ import { HamburgerIcon } from './icons/HamburgerIcon';
 import { TwitterIcon } from './icons/TwitterIcon';
 import { Logo } from './Logo';
 
-function useWindowSize() {
+function useWindowSize(): { width: number; height: number } {
   const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0,
   });
   useEffect(() => {
-    function handleResize() {
+    function handleResize(): void {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -31,7 +31,7 @@ export function Navigation({
   handleShowMobileTree,
 }: {
   handleShowMobileTree: (width: number) => void;
-}) {
+}): ReactElement {
   const { width } = useWindowSize();
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function Navigation({
   );
 }
 
-function SocialIcons() {
+function SocialIcons(): ReactElement {
   return (
     <section className="flex">
       <a

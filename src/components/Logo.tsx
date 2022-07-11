@@ -1,6 +1,8 @@
-import * as React from 'react';
+import React, { ReactElement } from 'react';
 
-export function Logo(props: React.ComponentPropsWithoutRef<'svg'>) {
+export function Logo(
+  props: React.ComponentPropsWithoutRef<'svg'>,
+): ReactElement {
   return (
     <svg
       width={36}

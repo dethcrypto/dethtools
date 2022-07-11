@@ -1,4 +1,5 @@
 import { ParamType } from '@ethersproject/abi';
+import { ReactElement } from 'react';
 
 import { Decoded } from '../lib/decodeCalldata';
 import { NodeBlock } from './NodeBlock';
@@ -56,7 +57,7 @@ function CalldataTreeNode({
 }: {
   node: TreeNode;
   className?: string;
-}) {
+}): ReactElement {
   if ('value' in node) {
     return (
       <span className={className}>
@@ -120,7 +121,7 @@ export function DecodedCalldataTree({
   fnType?: string;
   decoded: Decoded;
   inputs: ParamType[];
-}) {
+}): ReactElement {
   const tree = attachValues(inputs, decoded);
   return (
     <output className="mb-2 overflow-auto">

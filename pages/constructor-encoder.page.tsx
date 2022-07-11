@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, ReactElement, useState } from 'react';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -11,7 +11,7 @@ import { ToolHeader } from '../src/components/ToolHeader';
 import { encodeConstructor } from '../src/lib/encodeContructor';
 import { parseAbi } from '../src/lib/parseAbi';
 
-export default function ConstructorEncoder() {
+export default function ConstructorEncoder(): ReactElement {
   const [error, setError] = useState<string | undefined>();
   const [encodedResult, setEncodedResult] = useState<string[] | undefined>();
 
@@ -20,7 +20,7 @@ export default function ConstructorEncoder() {
   const [errors, setErrors] = useState<string[]>([]);
   const [values, setValues] = useState<string[]>([]);
 
-  async function handleEncodeConstructor() {
+  async function handleEncodeConstructor(): Promise<void> {
     if (!rawAbi) {
       setError('ABI is empty');
       return;
@@ -45,7 +45,7 @@ export default function ConstructorEncoder() {
   const encodeButtonDisabled =
     !!rawAbi && values.every((val) => val.length === 0);
 
-  const handleChangeAbi = (rawAbi: string) => {
+  const handleChangeAbi = (rawAbi: string): void => {
     setError(undefined);
     setRawAbi(rawAbi);
     try {
@@ -63,17 +63,18 @@ export default function ConstructorEncoder() {
     }
   };
 
-  const onEncodeClick = () => void handleEncodeConstructor().catch(setError);
+  const onEncodeClick = (): void =>
+    void handleEncodeConstructor().catch(setError);
 
-  const setSingleValue = (i: number, value: string) => {
+  const setSingleValue = (i: number, value: string): void => {
     setValues(values.map((oldValue, id) => (i === id ? value : oldValue)));
   };
 
-  const setSingleError = (i: number, error: string) => {
+  const setSingleError = (i: number, error: string): void => {
     setErrors(errors.map((oldError, id) => (i === id ? error : oldError)));
   };
 
-  const validateInput = (i: number, value: string, type: string) => {
+  const validateInput = (i: number, value: string, type: string): void => {
     setSingleError(i, '');
 
     if (type.startsWith('uint')) {

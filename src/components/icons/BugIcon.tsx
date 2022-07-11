@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { ComponentPropsWithoutRef, ReactElement } from 'react';
 
-export function Bug(props: React.ComponentPropsWithoutRef<'svg'>) {
+export function Bug(props: ComponentPropsWithoutRef<'svg'>): ReactElement {
   return (
     <svg
       fill="#fffff"

@@ -1,5 +1,5 @@
 import { Listbox } from '@headlessui/react';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
 import { CopyIcon } from './icons/CopyIcon';
@@ -16,13 +16,13 @@ export function NodeBlock({
   str: string;
   children?: React.ReactNode;
   className?: string;
-}) {
+}): ReactElement {
   const [copyNotification, setCopyNotification] = useState(false);
   const [currentFormat, setCurrentFormat] = useState<FormatType>(() =>
     isHex(str) ? 'hex' : 'dec',
   );
 
-  function formatNodeValue(format: FormatType, value: string) {
+  function formatNodeValue(format: FormatType, value: string): string {
     if (format === 'dec') return decodeHex(value);
     else return encodeHex(value);
   }

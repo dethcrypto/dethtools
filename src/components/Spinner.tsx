@@ -1,4 +1,8 @@
-export function Spinner({ className }: React.HTMLAttributes<HTMLDivElement>) {
+import React, { HTMLAttributes, ReactElement } from 'react';
+
+export function Spinner({
+  className,
+}: HTMLAttributes<HTMLDivElement>): ReactElement {
   return (
     <div className={className}>
       <svg

@@ -1,7 +1,14 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
-import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  ClipboardEvent,
+  ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 
+import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { NodeBlock } from '../src/components/NodeBlock';
@@ -38,7 +45,7 @@ interface HandlePasteTopic {
   isPasted: true;
 }
 
-export default function EventDecoder() {
+export default function EventDecoder(): ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
@@ -79,10 +86,14 @@ export default function EventDecoder() {
       value = event.target.value;
     }
     const parseResult = hexSchema.safeParse(value);
-    const stateBeforeIndex = (state: WithOkAndErrorMsg<string>[]) => {
+    const stateBeforeIndex = (
+      state: WithOkAndErrorMsg<string>[],
+    ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(0, index)];
     };
-    const stateAfterIndex = (state: WithOkAndErrorMsg<string>[]) => {
+    const stateAfterIndex = (
+      state: WithOkAndErrorMsg<string>[],
+    ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(index + 1)];
     };
     setTopics((state) => {
@@ -148,7 +159,7 @@ export default function EventDecoder() {
     }
   }
 
-  function handleChangeData(event: ChangeEvent<HTMLInputElement>) {
+  function handleChangeData(event: ChangeEvent<HTMLInputElement>): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       // @ts-ignore - this is a valid state change
@@ -173,7 +184,7 @@ export default function EventDecoder() {
     }
   }
 
-  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
+  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       // @ts-ignore - this is a valid state change
@@ -211,7 +222,7 @@ export default function EventDecoder() {
     }
   }
 
-  async function handleDecodeCalldata() {
+  async function handleDecodeCalldata(): Promise<void> {
     // @ts-ignore - this is a valid state change
     setDecodeResults(undefined);
     if (!signatureHash) {
@@ -382,67 +393,13 @@ export default function EventDecoder() {
         </section>
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex text-lg">
-          <button
-            role="tab"
-            aria-selected={tab === '4-bytes'}
-            className={`h-12 flex-1 cursor-pointer border-gray-600 p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
-              tab === '4-bytes'
-                ? 'rounded-l-md bg-pink'
-                : 'rounded-tl-md bg-gray-600'
-            }`}
-            onClick={() => {
-              setTab('4-bytes');
-              // @ts-ignore - this is a valid state change
-              setDecodeResults(undefined);
-            }}
-          >
-            4 bytes
-          </button>
-          <button
-            role="tab"
-            aria-selected={tab === 'abi'}
-            className={
-              `h-12 flex-1 cursor-pointer border-gray-600 p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
-              tab === 'abi'
-                ? 'rounded-tr-md bg-pink'
-                : 'rounded-r-md bg-gray-600'
-            }` + String(rawAbi.isOk ? ' border-gray-600' : ' bg-error/75')
-            }
-            onClick={() => {
-              setTab('abi');
-              // @ts-ignore - this is a valid state change
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
-        </div>
-
-        {tab === 'abi' && (
-          <>
-            <textarea
-              id="abi"
-              aria-label="text area for abi"
-              value={(rawAbi.isOk && rawAbi.inner) || ''}
-              placeholder="e.g function transferFrom(address, ..)"
-              className={
-                'flex h-48 w-full break-words rounded-b-md border-t-0' +
-                ' bg-gray-900 p-5' +
-                String(rawAbi.isOk ? ' border-gray-600' : ' border-error/75')
-              }
-              onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-                handleChangeRawAbi(event)
-              }
-            />
-            <p className="pt-1 text-right text-error">
-              {!rawAbi.isOk && rawAbi.errorMsg}
-            </p>
-          </>
-        )}
+      <div className="mt-6 flex flex-col">
+        <AbiSourceTabs
+          rawAbi={rawAbi}
+          setDecodeResults={setDecodeResults}
+          handleChangeRawAbi={handleChangeRawAbi}
+          tabState={{ tab, setTab }}
+        />
       </div>
 
       <Button

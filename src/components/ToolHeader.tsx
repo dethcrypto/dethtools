@@ -1,9 +1,11 @@
+import { ReactElement } from 'react';
+
 export interface ToolHeaderProps {
   icon: React.ReactNode;
   text: string[];
 }
 
-export function ToolHeader({ icon, text }: ToolHeaderProps) {
+export function ToolHeader({ icon, text }: ToolHeaderProps): ReactElement {
   const dir = text.slice(0, -1);
   const last = text[text.length - 1];
 
