@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
@@ -26,10 +26,10 @@ const initialState: EthUnitConversionState = {
   eth: { value: '' },
 };
 
-export default function EthUnitConversion() {
+export default function EthUnitConversion(): ReactElement {
   const [state, setState] = useState<EthUnitConversionState>(initialState);
 
-  function handleChangeValue(newValue: string, currentType: UnitType) {
+  function handleChangeValue(newValue: string, currentType: UnitType): void {
     try {
       newValue = decodeHex(newValue);
     } catch (_) {

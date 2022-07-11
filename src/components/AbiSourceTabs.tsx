@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   Dispatch,
+  ReactElement,
   SetStateAction,
   TextareaHTMLAttributes,
 } from 'react';
@@ -26,7 +27,7 @@ export function AbiSourceTabs<
   setDecodeResults,
   handleChangeRawAbi,
   tabState,
-}: AbiSourceTabsProps<T, D>) {
+}: AbiSourceTabsProps<T, D>): ReactElement {
   const { tab, setTab } = tabState;
   return (
     <div className="flex flex-col">

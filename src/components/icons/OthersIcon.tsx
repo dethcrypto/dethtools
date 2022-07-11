@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { ReactElement, SVGProps } from 'react';
 
-export function OthersIcon(props: React.SVGProps<SVGSVGElement>) {
+export function OthersIcon(props: SVGProps<SVGSVGElement>): ReactElement {
   return (
     <svg
       width={15}

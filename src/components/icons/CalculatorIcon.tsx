@@ -1,6 +1,8 @@
-import * as React from 'react';
+import React, { ComponentPropsWithoutRef, ReactElement } from 'react';
 
-export function CalculatorIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
+export function CalculatorIcon(
+  props: ComponentPropsWithoutRef<'svg'>,
+): ReactElement {
   return (
     <svg
       width={19}

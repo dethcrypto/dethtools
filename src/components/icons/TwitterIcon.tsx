@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { ReactElement, SVGProps } from 'react';
 
-export function TwitterIcon(props: React.SVGProps<SVGSVGElement>) {
+export function TwitterIcon(props: SVGProps<SVGSVGElement>): ReactElement {
   return (
     <svg
       width={22}

@@ -1,5 +1,5 @@
 import { TypedTransaction } from '@ethereumjs/tx';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, ReactElement, useState } from 'react';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -11,7 +11,7 @@ import { hexSchema } from '../src/misc/schemas/hexSchema';
 import { WithOkAndErrorMsgOptional } from '../src/misc/types';
 import { zodResultMessage } from '../src/misc/zodResultMessage';
 
-export default function TxDecoder() {
+export default function TxDecoder(): ReactElement {
   const [error, setError] = useState<string>();
 
   const [rawTx, setRawTx] = useState<WithOkAndErrorMsgOptional<string>>({
@@ -22,7 +22,7 @@ export default function TxDecoder() {
     senderAddr: string;
   }>();
 
-  function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>) {
+  function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>): void {
     // clear decode results and errors if something has changed
     if (!rawTx.isOk || rawTx.inner?.length! <= 0) {
       setDecodeResults(undefined);
@@ -60,7 +60,7 @@ export default function TxDecoder() {
     }
   }
 
-  function handleDecodeCalldata() {
+  function handleDecodeCalldata(): void {
     setDecodeResults(undefined);
     if (rawTx.isOk) {
       let decoded: DecodedTx | undefined;

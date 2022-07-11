@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import fetch from 'node-fetch';
 
-import { hexSchema } from './../misc/schemas/hexSchema';
+import { hexSchema } from '../misc/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
 import { parseAbi } from './parseAbi';
@@ -89,12 +89,16 @@ function urlTo(hexSigType: HexSigType): string {
 }
 
 // @internal
-export async function getSignaturesByCalldata(sigHash: string) {
+export async function getSignaturesByCalldata(
+  sigHash: string,
+): Promise<FetchResult[] | undefined> {
   return getBytes4Data(sigHash, 'signatures');
 }
 
 // @internal
-export async function getSignaturesByTopic(sigHash: string) {
+export async function getSignaturesByTopic(
+  sigHash: string,
+): Promise<FetchResult[] | undefined> {
   return getBytes4Data(sigHash, 'event-signatures');
 }
 

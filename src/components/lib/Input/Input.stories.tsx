@@ -1,8 +1,8 @@
 import { ComponentStory } from '@storybook/react';
 import React from 'react';
 
+import { meta } from './.storybook/utils';
 import { Input, InputProps } from './Input';
-import { meta } from '.storybook/utils';
 
 export default meta(Input, {
   argTypes: {

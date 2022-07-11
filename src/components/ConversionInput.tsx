@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { ReactElement } from 'react';
 
 import { FormLabel } from './FormLabel';
 import { Input } from './lib/Input';
@@ -16,7 +16,7 @@ export function ConversionInput({
   error,
   extraLabel,
   ...rest
-}: ConversionInputProps) {
+}: ConversionInputProps): ReactElement {
   return (
     <FormLabel
       htmlFor={id}

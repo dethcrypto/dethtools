@@ -1,5 +1,6 @@
 import {
   Dispatch,
+  ReactElement,
   SetStateAction,
   useEffect,
   useMemo,
@@ -34,7 +35,7 @@ const initialState: TokenUnitConversionState = {
   unit: { value: '' },
 };
 
-export default function TokenUnitConversion() {
+export default function TokenUnitConversion(): ReactElement {
   const lastUpdate = useRef<UnitTypeExtended>();
 
   const [decimals, setDecimals] = useState<WithError<number>>({
@@ -131,7 +132,10 @@ interface DecimalsInputProps {
   setDecimals: Dispatch<SetStateAction<WithError<number>>>;
 }
 
-function DecimalsInput({ decimals, setDecimals }: DecimalsInputProps) {
+function DecimalsInput({
+  decimals,
+  setDecimals,
+}: DecimalsInputProps): ReactElement {
   return (
     <ConversionInput
       name="Decimals"

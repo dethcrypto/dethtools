@@ -1,4 +1,5 @@
 import { Disclosure } from '@headlessui/react';
+import React, { ReactElement } from 'react';
 
 import { MyLink } from '../components/MyLink';
 import { CalculatorIcon } from './icons/CalculatorIcon';
@@ -7,7 +8,7 @@ import { EncodersIcon } from './icons/EncodersIcon';
 import { MinusIcon } from './icons/MinusIcon';
 import { PlusIcon } from './icons/PlusIcon';
 
-function ToolTreeElements({ className }: { className?: string }) {
+function ToolTreeElements({ className }: { className?: string }): ReactElement {
   return (
     <div className={`items-start" flex flex-col ${className}`}>
       {Object.entries(tree).map(([key, value]) => (
@@ -60,7 +61,7 @@ export function ToolTree({
   className?: string;
   isShowMobileTree: boolean;
   isMobile: boolean;
-}) {
+}): ReactElement {
   return (
     <>
       {isShowMobileTree && isMobile ? (

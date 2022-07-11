@@ -1,6 +1,12 @@
 import { Interface } from '@ethersproject/abi';
 import { addHexPrefix } from 'ethereumjs-util';
-import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  ClipboardEvent,
+  ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 
 import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -39,7 +45,7 @@ interface HandlePasteTopic {
   isPasted: true;
 }
 
-export default function EventDecoder() {
+export default function EventDecoder(): ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
@@ -80,10 +86,14 @@ export default function EventDecoder() {
       value = event.target.value;
     }
     const parseResult = hexSchema.safeParse(value);
-    const stateBeforeIndex = (state: WithOkAndErrorMsg<string>[]) => {
+    const stateBeforeIndex = (
+      state: WithOkAndErrorMsg<string>[],
+    ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(0, index)];
     };
-    const stateAfterIndex = (state: WithOkAndErrorMsg<string>[]) => {
+    const stateAfterIndex = (
+      state: WithOkAndErrorMsg<string>[],
+    ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(index + 1)];
     };
     setTopics((state) => {
@@ -149,7 +159,7 @@ export default function EventDecoder() {
     }
   }
 
-  function handleChangeData(event: ChangeEvent<HTMLInputElement>) {
+  function handleChangeData(event: ChangeEvent<HTMLInputElement>): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       // @ts-ignore - this is a valid state change
@@ -174,7 +184,7 @@ export default function EventDecoder() {
     }
   }
 
-  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
+  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       // @ts-ignore - this is a valid state change
@@ -212,7 +222,7 @@ export default function EventDecoder() {
     }
   }
 
-  async function handleDecodeCalldata() {
+  async function handleDecodeCalldata(): Promise<void> {
     // @ts-ignore - this is a valid state change
     setDecodeResults(undefined);
     if (!signatureHash) {

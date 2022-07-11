@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 
 import { LightbulbIcon } from '../icons/LighbulbIcon';
 
-function getRandomIntInclusive(min: number, max: number) {
+function getRandomIntInclusive(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -16,7 +16,7 @@ export interface TipsProps {
   texts: string[];
 }
 
-export function Tips({ texts }: TipsProps) {
+export function Tips({ texts }: TipsProps): ReactElement {
   const [state, setState] = useState<string>(() => chooseRandom(texts));
 
   return (

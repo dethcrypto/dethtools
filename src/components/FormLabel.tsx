@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { ReactElement } from 'react';
 
 export interface FormLabelProps
   extends React.ComponentPropsWithoutRef<'label'> {
@@ -10,7 +10,7 @@ export function FormLabel({
   label,
   className,
   ...rest
-}: FormLabelProps) {
+}: FormLabelProps): ReactElement {
   return (
     <label
       className={'flex flex-col gap-2' + (className ? ' ' + className : '')}

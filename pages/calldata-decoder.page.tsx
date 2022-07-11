@@ -1,5 +1,11 @@
 import { Interface, ParamType } from '@ethersproject/abi';
-import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  ClipboardEvent,
+  ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 
 import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
@@ -31,7 +37,7 @@ export interface CalldataDecoderProps {
 
 export default function CalldataDecoder({
   fetchAndDecode = fetchAndDecodeWithCalldata,
-}: CalldataDecoderProps) {
+}: CalldataDecoderProps): ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -62,7 +68,7 @@ export default function CalldataDecoder({
 
   function handleChangeEncodedCalldata(
     event: ChangeEvent<HTMLTextAreaElement>,
-  ) {
+  ): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       setDecodeResults(undefined);
@@ -97,7 +103,7 @@ export default function CalldataDecoder({
     }
   }
 
-  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>) {
+  function handleChangeRawAbi(event: ChangeEvent<HTMLTextAreaElement>): void {
     // clear decode results if something has changed
     if (decodeResults?.length! > 0) {
       setDecodeResults(undefined);
@@ -134,7 +140,7 @@ export default function CalldataDecoder({
     }
   }
 
-  async function handleDecodeCalldata() {
+  async function handleDecodeCalldata(): Promise<void> {
     setError(undefined);
     if (!encodedCalldata.isOk) return;
     // button was blocked, but the user triggered
