@@ -20,7 +20,7 @@ describe(fetch4BytesData.name, () => {
       async () => {
         response = await fetch4BytesData('0x23b872dd', 'signatures');
       },
-      { timeout: 10000, interval: 10000 },
+      { timeout: 10000, interval: 2000 },
     );
     expect(response).toBeDefined();
   });

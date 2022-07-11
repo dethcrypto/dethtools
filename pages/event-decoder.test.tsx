@@ -156,7 +156,7 @@ describe(EventDecoder.name, () => {
 
     await waitFor(
       () => expect(root.findAllByLabelText('decoded value')).toBeDefined(),
-      { timeout: 10000, interval: 10000 },
+      { timeout: 10000, interval: 2000 },
     );
 
     let args: HTMLElement[] = [];
@@ -165,7 +165,7 @@ describe(EventDecoder.name, () => {
       async () => {
         args = await root.findAllByLabelText('decoded event arg index');
       },
-      { timeout: 10000, interval: 10000 },
+      { timeout: 10000, interval: 2000 },
     );
 
     const arg0 = args[0];
