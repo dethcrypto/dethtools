@@ -309,7 +309,15 @@ export default function CalldataDecoder({
             <textarea
               id="abi"
               aria-label="text area for abi"
-              value={(rawAbi.isOk && rawAbi.inner) || ''}
+              value={
+                // Cast inner to 'always present', as we always want to
+                // display the abi, even if it's wrong
+                (
+                  rawAbi as WithOkAndErrorMsgOptional<string> & {
+                    inner: string;
+                  }
+                ).inner || ''
+              }
               placeholder="e.g function transferFrom(address, ..)"
               className={
                 'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
