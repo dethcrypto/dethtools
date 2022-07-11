@@ -5,7 +5,7 @@ module.exports = {
   env: {
     es6: true,
   },
-  extends: ['typestrict', 'react-app', 'plugin:storybook/recommended'],
+  extends: ['react-app', 'plugin:storybook/recommended'],
   plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports', 'import'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
