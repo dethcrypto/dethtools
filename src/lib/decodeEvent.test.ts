@@ -131,7 +131,6 @@ describe(decodeEvent.name, () => {
       decodeEvent(iface, eventProps);
     } catch (err: any) {
       expect(err.reason).toEqual('no matching event');
-      expect(err).toMatchSnapshot();
     }
   });
 });
