@@ -1,5 +1,6 @@
 import { Interface, ParamType } from '@ethersproject/abi';
 import { ChangeEvent, ClipboardEvent, useMemo, useState } from 'react';
+import { Tabs } from '../src/components/Tabs';
 
 import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -210,15 +211,6 @@ export default function CalldataDecoder({
     encodedCalldata.isOk
   );
 
-  const onDecodeClick = async () => {
-    try {
-      await handleDecodeCalldata();
-    } catch (e) {
-      // do not display generic error msg., as they are catched and displayed
-      // in `handleDecodeCalldata` fn.
-    }
-  };
-
   return (
     <ToolContainer>
       <ToolHeader
@@ -242,7 +234,7 @@ export default function CalldataDecoder({
           }
           placeholder="e.g 0x23b8..3b2"
           className={
-            'h-20 break-words rounded-md border border-gray-600 bg-gray-900 ' +
+            'h-36 break-words rounded-md border border-gray-600 bg-gray-900 ' +
             String(!encodedCalldata.isOk && ' border-error/75')
           }
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
@@ -263,82 +255,17 @@ export default function CalldataDecoder({
           {!encodedCalldata.isOk && encodedCalldata.errorMsg}
         </p>
       </>
-      <div className="mt-8 flex flex-col">
-        <div className="flex text-lg">
-          <button
-            role="tab"
-            aria-selected={tab === '4-bytes'}
-            className={
-              `h-12 flex-1 cursor-pointer p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
-              tab === '4-bytes'
-                ? 'rounded-l-md bg-pink'
-                : 'rounded-tl-md bg-gray-600'
-            }` + String(rawAbi.isOk ? ' border-gray-600' : ' border-error')
-            }
-            onClick={() => {
-              setTab('4-bytes');
-              setDecodeResults(undefined);
-            }}
-          >
-            4 bytes
-          </button>
-
-          <button
-            role="tab"
-            aria-selected={tab === 'abi'}
-            className={
-              `h-12 flex-1 cursor-pointer p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
-              tab === 'abi'
-                ? 'rounded-tr-md bg-pink'
-                : 'rounded-r-md bg-gray-600'
-            }` + String(rawAbi.isOk ? ' border-gray-600' : ' bg-error/75')
-            }
-            onClick={() => {
-              setTab('abi');
-              setDecodeResults(undefined);
-            }}
-          >
-            ABI
-          </button>
-        </div>
-
-        {tab === 'abi' && (
-          <>
-            <textarea
-              id="abi"
-              aria-label="text area for abi"
-              value={
-                // Cast inner to 'always present', as we always want to
-                // display the abi, even if it's wrong
-                (
-                  rawAbi as WithOkAndErrorMsgOptional<string> & {
-                    inner: string;
-                  }
-                ).inner || ''
-              }
-              placeholder="e.g function transferFrom(address, ..)"
-              className={
-                'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
-                String(rawAbi.isOk ? ' border-gray-600' : ' border-error/75')
-              }
-              onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-                handleChangeRawAbi(event)
-              }
-            />
-            <p
-              aria-label="raw abi error"
-              className="pt-1 text-right text-error"
-            >
-              {!rawAbi.isOk && rawAbi.errorMsg}
-            </p>
-          </>
-        )}
+      <div className="mt-6 flex flex-col">
+        <Tabs
+          rawAbi={rawAbi}
+          setDecodeResults={setDecodeResults}
+          handleChangeRawAbi={handleChangeRawAbi}
+          tabState={{ tab, setTab }}
+        />
       </div>
 
       <Button
-        onClick={onDecodeClick}
+        onClick={handleDecodeCalldata}
         className="mt-6"
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the calldata' : undefined}
