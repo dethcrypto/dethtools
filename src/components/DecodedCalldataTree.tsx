@@ -84,11 +84,7 @@ function CalldataTreeNode({
               </section>
             </div>
           ) : (
-            <NodeBlock
-              className="my-2"
-              str={node.value ?? 'value missing'}
-              nodeType={node.type}
-            >
+            <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
               {node.name ? <code className="text-pink">{node.name}</code> : ' '}
             </NodeBlock>
           )}

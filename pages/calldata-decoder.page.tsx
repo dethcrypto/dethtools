@@ -172,6 +172,7 @@ export default function CalldataDecoder({
         };
       });
       setDecodeResults(mappedResults);
+      return;
     }
     let decodeResult: DecodeResult | undefined;
     let abi: Interface | Error | undefined;
