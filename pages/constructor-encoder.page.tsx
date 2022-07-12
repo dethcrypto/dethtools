@@ -224,7 +224,6 @@ function EncodedBlock({
           setCopyNotification(false);
         }, 1500);
       }}
-      aria-label="encoded-row"
     >
       <p className="text-gray-600">{`[${index}]`}</p>
       <p aria-label="encoded-row" id="node-value">

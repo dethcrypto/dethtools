@@ -170,7 +170,10 @@ function TxDecoderResults({
 }): ReactElement {
   return (
     <>
-      <div className="border-l border-gray-600 p-4">
+      <div
+        aria-label="tx decoder results"
+        className="border-l border-gray-600 p-4"
+      >
         {Object.entries(decodeResults).map(([key, value], i) => {
           if (key === 'buf') {
             return (
@@ -196,7 +199,7 @@ function TxDecoderResults({
           ) : (
             <>
               {!isElementEmpty(value) && (
-                <Disclosure defaultOpen={true}>
+                <Disclosure key={i} defaultOpen={true}>
                   {({ open }) => (
                     <>
                       {value && <p className="text-gray-300">{key}</p>}
