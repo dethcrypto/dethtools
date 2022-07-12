@@ -305,16 +305,17 @@ export default function CalldataDecoder({
                   {signatureHash &&
                     decodeResults?.length! > 0 &&
                     hexSchema.safeParse(signatureHash).success && (
-                      <div
-                        className="m-0 flex cursor-pointer items-center gap-2 rounded-md border border-gray-600
-                      py-2 px-3 duration-200 hover:bg-gray-700
-                      hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
-                    active:bg-gray-800"
-                      >
+                      <div className="flex items-center gap-3">
                         <p className="text-purple-400 font-bold">
                           Signature hash
                         </p>
-                        <b>{signatureHash}</b>
+                        <div
+                          className="m-0 flex h-10 cursor-pointer items-center gap-2 rounded-md 
+                          border border-gray-600 py-2 px-3 duration-200 hover:bg-gray-700
+                          hover:outline active:bg-gray-800"
+                        >
+                          <b>{signatureHash}</b>
+                        </div>
                       </div>
                     )}
                 </div>

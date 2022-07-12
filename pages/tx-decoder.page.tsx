@@ -1,5 +1,10 @@
 import { TypedTransaction } from '@ethereumjs/tx';
+import { Disclosure } from '@headlessui/react';
+import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
+import { DisclosureArrow } from '../src/components/lib/DisclosureArrow';
+import { NodeBlock } from '../src/components/NodeBlock';
+import { bufferToHexString } from '../src/lib/bufferToHexString';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -91,8 +96,10 @@ export default function TxDecoder(): ReactElement {
             type="text"
             placeholder="e.g 0x0..."
             className={
-              'mb-2 mt-1 mr-auto h-10 w-full rounded-md border' +
-              '  bg-gray-900 text-sm focus:outline-none' +
+              'w-full rounded-md border border-gray-600 bg-gray-900 ' +
+              'p-3.75 text-lg leading-none text-white focus:outline-none ' +
+              'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
+              'focus:border-pink focus:caret-pink ' +
               String(rawTx.isOk ? ' border-gray-600' : ' border-error')
             }
             onChange={(event) => handleChangeRawTx(event)}
@@ -134,14 +141,81 @@ export default function TxDecoder(): ReactElement {
           className="relative mt-6 overflow-auto rounded-md border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
-          <output>
-            <p>decode results:</p>
-            <pre className="items-left flex flex-col text-clip text-sm">
-              <p>{JSON.stringify(decodeResults, null, 2)}</p>
-            </pre>
-          </output>
+          <NodeBlock className="my-1" str={decodeResults.senderAddr}>
+            <p aria-label="decoded event arg index" className="text-gray-100">
+              senderAddress
+            </p>
+          </NodeBlock>
+          {<TxDecoderResults decodeResults={decodeResults.tx} />}
         </section>
       )}
     </ToolContainer>
+  );
+}
+
+function isElementEmpty(
+  element: { [key: string]: unknown } | undefined,
+): boolean {
+  if (!element) {
+    return false;
+  } else {
+    return !Object.values(element).some((value) => value);
+  }
+}
+
+function TxDecoderResults({
+  decodeResults,
+}: {
+  decodeResults: TypedTransaction;
+}): ReactElement {
+  return (
+    <>
+      <div className="border-l border-gray-600 p-4">
+        {Object.entries(decodeResults).map(([key, value], i) => {
+          if (key === 'buf') {
+            return (
+              <NodeBlock
+                className="my-1"
+                str={addHexPrefix(bufferToHexString(value))}
+                key={i}
+              >
+                <p
+                  aria-label="decoded event arg index"
+                  className="text-gray-300"
+                >{`${key}`}</p>
+              </NodeBlock>
+            );
+          }
+          return typeof value === 'string' || typeof value === 'number' ? (
+            <NodeBlock className="my-1" str={value.toString()} key={i}>
+              <p
+                aria-label="decoded event arg index"
+                className="text-gray-300"
+              >{`${key}`}</p>
+            </NodeBlock>
+          ) : (
+            <>
+              {!isElementEmpty(value) && (
+                <Disclosure defaultOpen={true}>
+                  {({ open }) => (
+                    <>
+                      {value && <p className="text-gray-300">{key}</p>}
+                      <Disclosure.Button>
+                        {!isElementEmpty(value) && (
+                          <DisclosureArrow open={open} />
+                        )}
+                      </Disclosure.Button>
+                      <Disclosure.Panel>
+                        {value && <TxDecoderResults decodeResults={value} />}
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              )}
+            </>
+          );
+        })}
+      </div>
+    </>
   );
 }

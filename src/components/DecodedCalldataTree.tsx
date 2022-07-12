@@ -63,8 +63,8 @@ function CalldataTreeNode({
       <span className={className}>
         <div>
           {node.type.match(isNodeArray) ? (
-            <div className="my-4 rounded-lg border border-gray-600 p-3 text-sm">
-              <p id="node-type" className="pt-2 pb-4 text-purple">
+            <div className="my-4 overflow-auto rounded-md border border-gray-600 p-3 text-sm">
+              <p id="node-type" className="pt-1 text-purple">
                 {node.name ? (
                   <code className="text-pink">{node.name} </code>
                 ) : (
@@ -73,7 +73,7 @@ function CalldataTreeNode({
                 {node.type}
               </p>
 
-              <section className="flex flex-wrap gap-2">
+              <section className="flex flex-wrap">
                 {node.value?.split(',').map((str, i) => {
                   return (
                     <NodeBlock className="basis shrink grow" str={str} key={i}>
@@ -84,11 +84,12 @@ function CalldataTreeNode({
               </section>
             </div>
           ) : (
-            <NodeBlock className="my-2" str={node.value ?? 'value missing'}>
+            <NodeBlock
+              className="my-2"
+              str={node.value ?? 'value missing'}
+              nodeType={node.type}
+            >
               {node.name ? <code className="text-pink">{node.name}</code> : ' '}
-              <code id="node-type" className="text-purple">
-                {node.type}
-              </code>
             </NodeBlock>
           )}
         </div>

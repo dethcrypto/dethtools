@@ -321,56 +321,63 @@ export default function EventDecoder(): ReactElement {
             topics.map((_, index) => (
               <section className="flex items-center gap-2" key={index}>
                 <div className="flex flex-1 flex-col">
-                  <label className="pb-2" htmlFor={`${index}`}>
-                    <div>
-                      {index === 0 ? <b>topic{index}</b> : <p>topic{index}</p>}
-                    </div>
-                  </label>
+                  <div className="mt-3">
+                    <label htmlFor={`${index}`}>
+                      <div>
+                        {index === 0 ? (
+                          <b>topic{index}</b>
+                        ) : (
+                          <p>topic{index}</p>
+                        )}
+                      </div>
+                    </label>
 
-                  <>
-                    <input
-                      id={`${index}`}
-                      type="text"
-                      placeholder="e.g 0x0..."
-                      className={
-                        'mb-2 mr-auto h-12 w-full rounded-md border' +
-                        ' bg-gray-900 text-sm focus:outline-none' +
-                        String(
-                          topics[index].isOk
-                            ? ' border-gray-600'
-                            : ' border-error/75',
-                        )
-                      }
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleChangeTopic({ index, event, isPasted: false })
-                      }
-                      onPaste={(event: ClipboardEvent<HTMLInputElement>) => {
-                        handleChangeTopic({ index, event, isPasted: true });
-                        if (index !== 0) return;
-                        const topicValue = event.clipboardData.getData('Text');
-                        const sigHash = topicValue;
-                        if (sigHash) {
-                          void fetch4BytesData(sigHash, 'event-signatures');
+                    <>
+                      <input
+                        id={`${index}`}
+                        type="text"
+                        placeholder="e.g 0x0..."
+                        className={
+                          'w-full rounded-md border border-gray-600 bg-gray-900 ' +
+                          'p-3.75 text-lg leading-none text-white focus:outline-none ' +
+                          'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
+                          'focus:border-pink focus:caret-pink ' +
+                          String(
+                            topics[index].isOk
+                              ? ' border-gray-600'
+                              : ' border-error/75',
+                          )
                         }
-                      }}
-                    />
-                    <p
-                      aria-label={'topic ' + String(index) + ' error'}
-                      className="text-right text-error"
-                    >
-                      {/* @ts-ignore */}
-                      {!topics[index].isOk && topics[index].errorMsg}
-                    </p>
-                  </>
+                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                          handleChangeTopic({ index, event, isPasted: false })
+                        }
+                        onPaste={(event: ClipboardEvent<HTMLInputElement>) => {
+                          handleChangeTopic({ index, event, isPasted: true });
+                          if (index !== 0) return;
+                          const topicValue =
+                            event.clipboardData.getData('Text');
+                          const sigHash = topicValue;
+                          if (sigHash) {
+                            void fetch4BytesData(sigHash, 'event-signatures');
+                          }
+                        }}
+                      />
+                      <p
+                        aria-label={'topic ' + String(index) + ' error'}
+                        className="text-right text-error"
+                      >
+                        {/* @ts-ignore */}
+                        {!topics[index].isOk && topics[index].errorMsg}
+                      </p>
+                    </>
+                  </div>
                 </div>
               </section>
             ))}
         </section>
 
         <section className="mb-6 flex flex-1 flex-col">
-          <label className="pb-1" htmlFor="data">
-            data
-          </label>
+          <label htmlFor="data">data</label>
 
           <>
             <input
@@ -378,8 +385,10 @@ export default function EventDecoder(): ReactElement {
               type="text"
               placeholder="e.g 0x0..."
               className={
-                'mb-4 mr-auto h-12 w-full rounded-md border border-gray-600' +
-                ' bg-gray-900 text-sm focus:outline-none' +
+                'w-full rounded-md border border-gray-600 bg-gray-900 ' +
+                'p-3.75 text-lg leading-none text-white focus:outline-none ' +
+                'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
+                'focus:border-pink focus:caret-pink ' +
                 String(data.isOk ? ' border-gray-600' : ' border-error/75')
               }
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -452,13 +461,22 @@ export default function EventDecoder(): ReactElement {
               {error ? (
                 <p className="text-error">{error}</p>
               ) : (
-                <div className="items-left flex flex-col text-ellipsis font-semibold">
+                <div className="items-left flex flex-col text-ellipsis">
                   {decodeResults?.map((d, i) => {
                     return (
                       <section key={i}>
-                        <div className="flex flex-col gap-2">
-                          <p>{d.fullSignature}</p>
-                          <p>{'{'}</p>
+                        <div className="flex flex-col">
+                          <div className="flex gap-3">
+                            <code className="pb-2 font-bold text-purple">
+                              {d.fullSignature.split(' ').slice(0, 1)}
+                            </code>
+                            <code className="pb-2">
+                              {d.fullSignature
+                                .split(' ')
+                                .slice(1, d.fullSignature.length)
+                                .join(' ')}
+                            </code>
+                          </div>
                           {Object.entries(d.args).map(([key, value], i) => (
                             <NodeBlock
                               className="my-1"
@@ -467,11 +485,10 @@ export default function EventDecoder(): ReactElement {
                             >
                               <p
                                 aria-label="decoded event arg index"
-                                className="text-purple-600"
-                              >{` "${key}"`}</p>
+                                className="text-gray-600"
+                              >{`[${key}]`}</p>
                             </NodeBlock>
                           ))}
-                          <p>{'}'}</p>
                         </div>
                       </section>
                     );
