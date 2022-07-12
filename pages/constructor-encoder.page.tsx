@@ -2,10 +2,10 @@ import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { CopyIcon } from '../src/components/icons/CopyIcon';
-import { OkIcon } from '../src/components/icons/OkIcon';
 
+import { CopyIcon } from '../src/components/icons/CopyIcon';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
+import { OkIcon } from '../src/components/icons/OkIcon';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
 import { ToolContainer } from '../src/components/ToolContainer';

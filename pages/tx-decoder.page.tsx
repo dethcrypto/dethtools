@@ -2,14 +2,14 @@ import { TypedTransaction } from '@ethereumjs/tx';
 import { Disclosure } from '@headlessui/react';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { DisclosureArrow } from '../src/components/lib/DisclosureArrow';
-import { NodeBlock } from '../src/components/NodeBlock';
-import { bufferToHexString } from '../src/lib/bufferToHexString';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
+import { DisclosureArrow } from '../src/components/lib/DisclosureArrow';
+import { NodeBlock } from '../src/components/NodeBlock';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
+import { bufferToHexString } from '../src/lib/bufferToHexString';
 import { DecodedTx, decodeTx } from '../src/lib/decodeTx';
 import { toEvenHex } from '../src/lib/toEvenHex';
 import { hexSchema } from '../src/misc/schemas/hexSchema';
