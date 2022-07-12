@@ -102,10 +102,9 @@ export function NodeBlock({
           state={state}
           setIsHex={setState}
         />
-
         {children}
         <code id="node-type" className="text-purple">
-          {nodeType && nodeType}
+          {nodeType}
         </code>
         <div
           onClick={(e) => {
