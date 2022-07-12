@@ -1,94 +1,136 @@
-import { Listbox } from '@headlessui/react';
-import React, { ReactElement, useState } from 'react';
+import { BigNumber } from '@ethersproject/bignumber';
+import React, {
+  Dispatch,
+  ReactElement,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
 import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
 import { CopyIcon } from './icons/CopyIcon';
 import { OkIcon } from './icons/OkIcon';
 
-type FormatType = 'hex' | 'dec';
-const formatTypes: FormatType[] = ['hex', 'dec'];
+function HexDecToggle({
+  setIsHex,
+  state,
+  isDisabled,
+}: {
+  isDisabled: boolean;
+  state: { isHex: boolean; value: string };
+  setIsHex: Dispatch<SetStateAction<{ isHex: boolean; value: string }>>;
+}): ReactElement {
+  const { isHex, value } = state;
+  const switchButtonStyle =
+    'grow-0 cursor-pointer border bg-gray-800 ' +
+    'border-gray-500 bg-gray-600 py-0.5 px-3 ' +
+    String(isDisabled && ' opacity-30 cursor-not-allowed ') +
+    'duration-200 hover:bg-gray-700 active:bg-gray-800 ';
+
+  return (
+    <div className="flex">
+      <button
+        disabled={isDisabled}
+        onClick={() => setIsHex({ isHex: true, value: encodeHex(value) })}
+        className={
+          switchButtonStyle +
+          'rounded-l-md border-r ' +
+          String(isHex && !isDisabled && 'border-gray-100')
+        }
+      >
+        hex
+      </button>
+      <button
+        disabled={isDisabled}
+        onClick={() => setIsHex({ isHex: false, value: decodeHex(value) })}
+        className={
+          switchButtonStyle +
+          'rounded-r-md border-l ' +
+          String(!isHex && !isDisabled && 'border-gray-100')
+        }
+      >
+        dec
+      </button>
+    </div>
+  );
+}
 
 export function NodeBlock({
   children,
   className,
   str,
+  nodeType,
 }: {
   str: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
+  nodeType?: string;
 }): ReactElement {
   const [copyNotification, setCopyNotification] = useState(false);
-  const [currentFormat, setCurrentFormat] = useState<FormatType>(() =>
-    isHex(str) ? 'hex' : 'dec',
-  );
+  const [state, setState] = useState<{ isHex: boolean; value: string }>({
+    isHex: isHex(str),
+    value: str,
+  });
 
-  function formatNodeValue(format: FormatType, value: string): string {
-    if (format === 'dec') return decodeHex(value);
-    else return encodeHex(value);
+  function isStringBigNumber(str: string): boolean {
+    try {
+      BigNumber.from(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
+
+  useEffect(() => {
+    if (isHex(str)) {
+      setState({ isHex: true, value: encodeHex(str) });
+    } else {
+      setState({ isHex: false, value: decodeHex(str) });
+    }
+  }, [str]);
 
   return (
     <div className="flex items-center gap-2">
       <div
-        onClick={(e) => {
-          const value =
-            e.currentTarget.children.namedItem('node-value')?.textContent;
-          void navigator.clipboard.writeText(value ?? '');
-
-          setCopyNotification(true);
-          setTimeout(() => {
-            setCopyNotification(false);
-          }, 1500);
-        }}
-        className={`my-1 mx-1 flex cursor-pointer items-center gap-3 overflow-auto rounded-md border
-      border-gray-600 pr-4 font-mono text-sm
-        duration-200 hover:bg-gray-700 hover:shadow-md
-      hover:shadow-pink/25 hover:outline hover:outline-2 active:scale-105
-      active:bg-gray-800 ${className}`}
+        className={`my-1 mx-2 flex h-12 cursor-pointer 
+        items-center gap-3 overflow-auto rounded-md pr-4
+        font-mono text-sm duration-200 ${className}`}
       >
-        <Listbox value={currentFormat} onChange={setCurrentFormat}>
-          <Listbox.Button
-            as="button"
-            className={`ml-3 grow-0 cursor-pointer items-center rounded-md
-                      py-0.5 px-1 pr-4 duration-200 hover:bg-gray-700
-                      hover:shadow-md hover:shadow-pink/25 hover:outline hover:outline-2
-                      active:bg-gray-800 ${className}`}
-          >
-            {currentFormat}
-          </Listbox.Button>
-
-          <Listbox.Options as="ul">
-            <div className="flex items-center">
-              {formatTypes
-                .filter((fmt) => fmt !== currentFormat)
-                .map((fmt) => (
-                  <Listbox.Option
-                    as="ul"
-                    className={`m-2 flex cursor-pointer items-center rounded-md border
-                  border-gray-600 p-0
-                  px-2 duration-200 hover:bg-gray-700 hover:shadow-md
-                  hover:shadow-pink/25 hover:outline hover:outline-2
-                  active:bg-gray-800 ${className}`}
-                    key={fmt}
-                    value={fmt}
-                  >
-                    {fmt}
-                  </Listbox.Option>
-                ))}
-            </div>
-          </Listbox.Options>
-        </Listbox>
-
+        <HexDecToggle
+          isDisabled={!(isHex(str) || isStringBigNumber(str))}
+          state={state}
+          setIsHex={setState}
+        />
         {children}
-        <code aria-label="decoded value" id="node-value">
-          {formatNodeValue(currentFormat, str)}
+        <code id="node-type" className="text-purple">
+          {nodeType}
         </code>
+        <div
+          onClick={(e) => {
+            const value =
+              e.currentTarget.children.namedItem('node-value')?.textContent;
+            void navigator.clipboard.writeText(value ?? '');
+
+            setCopyNotification(true);
+            setTimeout(() => {
+              setCopyNotification(false);
+            }, 1500);
+          }}
+          className="flex h-10 items-center gap-3 rounded-md border 
+          border-gray-600 p-1 px-2 duration-200 hover:bg-gray-700
+          hover:outline active:bg-gray-800"
+        >
+          <code aria-label="decoded value" id="node-value">
+            {state.value}
+          </code>
+          {!copyNotification ? (
+            <CopyIcon className="cursor-pointer" />
+          ) : (
+            <OkIcon className="delay-300" />
+          )}
+        </div>
       </div>
-      {!copyNotification ? (
-        <CopyIcon className="cursor-pointer" />
-      ) : (
-        <OkIcon className="delay-300" />
-      )}
     </div>
   );
 }

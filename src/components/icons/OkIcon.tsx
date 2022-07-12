@@ -13,9 +13,9 @@ export function OkIcon(props: SVGProps<SVGSVGElement>): ReactElement {
       <path
         d="M20 7L9.09556 18L4 13.0731"
         stroke="white"
-        stroke-miterlimit="10"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

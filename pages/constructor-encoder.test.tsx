@@ -55,13 +55,19 @@ describe(ConstructorEncoder.name, () => {
     const encodedRows = await root.findAllByLabelText('encoded-row');
 
     expect(encodedRows[0].innerHTML).toEqual(
-      '0000000000000000000000000000000000000000000000000000000000000042',
+      expect.stringMatching(
+        '0000000000000000000000000000000000000000000000000000000000000042',
+      ),
     );
     expect(encodedRows[1].innerHTML).toEqual(
-      '000000000000000000000000000000000000000000000000000000000000002a',
+      expect.stringMatching(
+        '000000000000000000000000000000000000000000000000000000000000002a',
+      ),
     );
     expect(encodedRows[2].innerHTML).toEqual(
-      '00000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45',
+      expect.stringMatching(
+        '00000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45',
+      ),
     );
   });
   it('validates data correctly', async () => {
