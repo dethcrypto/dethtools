@@ -83,9 +83,9 @@ describe(EventDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    const arg0 = await root.findByText('"0"');
-    const arg1 = await root.findByText('"1"');
-    const arg2 = await root.findByText('"2"');
+    const arg0 = await root.findByText('[0]');
+    const arg1 = await root.findByText('[1]');
+    const arg2 = await root.findByText('[2]');
 
     expect(arg0.parentElement!.innerHTML).toEqual(
       expect.stringMatching('0x8ba1f109551bD432803012645Ac136ddd64DBA72'),

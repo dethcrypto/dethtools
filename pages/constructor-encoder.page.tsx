@@ -3,7 +3,9 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
 
+import { CopyIcon } from '../src/components/icons/CopyIcon';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
+import { OkIcon } from '../src/components/icons/OkIcon';
 import { Button } from '../src/components/lib/Button';
 import { Input } from '../src/components/lib/Input';
 import { ToolContainer } from '../src/components/ToolContainer';
@@ -132,7 +134,7 @@ export default function ConstructorEncoder(): ReactElement {
           iface.deploy.inputs.map((input, i) => (
             <section className="flex items-center gap-2" key={input.name}>
               <div className="flex flex-1 flex-col">
-                <label className="pb-2" htmlFor={`${input.name}`}>
+                <label htmlFor={`${input.name}`}>
                   <div>
                     <b className="text-purple-600">{input.type}</b>{' '}
                     <b>{input.name}</b>
@@ -145,7 +147,10 @@ export default function ConstructorEncoder(): ReactElement {
                   value={values[i]}
                   error={errors[i]}
                   placeholder="e.g 0x0..."
-                  className="border-deth-gray-600 bg-deth-gray-900 mb-2 mr-auto h-10 w-3/5 rounded-md border text-sm focus:outline-none"
+                  className="w-full rounded-md border
+                  border-gray-600 bg-gray-900 p-3.75 text-lg leading-none 
+                  text-white invalid:border-error invalid:caret-error 
+                  focus:border-pink focus:caret-pink focus:outline-none  disabled:text-white/50"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     const value = event.target.value;
                     setSingleValue(i, value);
@@ -172,31 +177,63 @@ export default function ConstructorEncoder(): ReactElement {
         Decode
       </Button>
 
-      {!encodedResult && !error && rawAbi?.length === 0 && (
-        <p className="text-md py-5 font-semibold">Possible decoded results:</p>
+      {!error && encodedResult?.length! > 0 && (
+        <p className="text-md pb-4 pt-8 font-semibold">Encoded constructor:</p>
       )}
-      {!encodedResult && error && (
+      {!encodedResult && (
         <p className="text-md py-5 font-semibold">
           Decoded output will appear here
         </p>
       )}
       {encodedResult && (
         <section
-          className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
+          className="relative  mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
           <>
-            <h3 className="text-md flex-wrap pb-4 font-semibold">
-              Encoded constructor:
-            </h3>
-            {encodedResult.map((row, i) => (
-              <p aria-label="encoded-row" key={i}>
-                {row}
-              </p>
+            {encodedResult.map((row, index) => (
+              <EncodedBlock str={row} index={index} />
             ))}
           </>
         </section>
       )}
     </ToolContainer>
+  );
+}
+
+function EncodedBlock({
+  str,
+  index,
+}: {
+  str: string;
+  index?: number;
+}): ReactElement {
+  const [copyNotification, setCopyNotification] = useState(false);
+  return (
+    <div
+      className="mb-2 flex h-10 cursor-pointer items-center gap-3 rounded-md
+                  border border-gray-600 p-1 px-2 duration-200
+                  hover:bg-gray-700 hover:outline active:bg-gray-800"
+      onClick={(e) => {
+        const value =
+          e.currentTarget.children.namedItem('node-value')?.textContent;
+        void navigator.clipboard.writeText(value ?? '');
+
+        setCopyNotification(true);
+        setTimeout(() => {
+          setCopyNotification(false);
+        }, 1500);
+      }}
+    >
+      <p className="text-gray-600">{`[${index}]`}</p>
+      <p aria-label="encoded-row" id="node-value">
+        {str}
+      </p>
+      {!copyNotification ? (
+        <CopyIcon className="cursor-pointer" />
+      ) : (
+        <OkIcon className="delay-300" />
+      )}
+    </div>
   );
 }
