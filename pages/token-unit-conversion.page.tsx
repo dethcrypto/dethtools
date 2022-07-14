@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 
+import { WithError } from '../src/misc/types';
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
@@ -24,8 +25,6 @@ interface UnitTypeExtended {
   name: TokenUnitType;
   value: string;
 }
-
-type WithError<T> = { value: T; error?: string };
 
 interface TokenUnitConversionState
   extends Record<TokenUnitType, WithError<string>> {}
