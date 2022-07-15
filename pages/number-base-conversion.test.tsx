@@ -3,7 +3,7 @@ import { expect } from 'earljs';
 
 import NumberBaseConversion from './number-base-conversion.page';
 
-describe.only(NumberBaseConversion.name, () => {
+describe(NumberBaseConversion.name, () => {
   it('sets binary and gets a correct value in other fields', async () => {
     const root = render(<NumberBaseConversion />);
     const binaryField = (await root.findByLabelText(

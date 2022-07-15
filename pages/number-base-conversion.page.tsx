@@ -1,21 +1,20 @@
 import { ReactElement, useState } from 'react';
-import { convertNumberBase } from '../src/lib/convertNumberBase';
-
-import {
-  NumberBase,
-  NumberBaseType,
-} from '../src/lib/numberBaseConvertProperties';
+import { SafeParseError, SafeParseReturnType } from 'zod';
 
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
-import { WithError } from '../src/misc/types';
-import { unitSchema } from '../src/misc/schemas/unitSchema';
+import { convertNumberBase } from '../src/lib/convertNumberBase';
+import {
+  NumberBase,
+  NumberBaseType,
+} from '../src/lib/numberBaseConvertProperties';
 import { binarySchema } from '../src/misc/schemas/binarySchema';
-import { SafeParseError, SafeParseReturnType } from 'zod';
-import { octalSchema } from '../src/misc/schemas/octalSchema';
 import { hexSchema } from '../src/misc/schemas/hexSchema';
+import { octalSchema } from '../src/misc/schemas/octalSchema';
+import { unitSchema } from '../src/misc/schemas/unitSchema';
+import { WithError } from '../src/misc/types';
 import { zodResultMessage } from '../src/misc/zodResultMessage';
 
 interface NumberBaseConversionState
@@ -31,7 +30,10 @@ const initialState: NumberBaseConversionState = {
 export default function NumberBaseConversion(): ReactElement {
   const [state, setState] = useState<NumberBaseConversionState>(initialState);
 
-  function handleChangeValue(newValue: string, currentType: NumberBaseType) {
+  function handleChangeValue(
+    newValue: string,
+    currentType: NumberBaseType,
+  ): void {
     let parseResult: SafeParseReturnType<string, string> | undefined;
     switch (currentType) {
       case 'binary':

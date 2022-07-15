@@ -5,7 +5,7 @@ module.exports = {
     es6: true,
   },
   extends: ['react-app', 'plugin:storybook/recommended'],
-  plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports', 'import'],
+  plugins: ['no-only-tests', 'simple-import-sort', 'unused-imports'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',

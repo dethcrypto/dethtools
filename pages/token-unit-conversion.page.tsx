@@ -8,7 +8,6 @@ import {
   useState,
 } from 'react';
 
-import { WithError } from '../src/misc/types';
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
@@ -16,6 +15,7 @@ import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/schemas/unitSchema';
+import { WithError } from '../src/misc/types';
 
 const DEFAULT_DECIMALS = 18;
 

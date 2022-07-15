@@ -43,7 +43,6 @@ export function convertNumberBase(
         case 'octal':
           return new BigNumber(value, 10).toString(8);
         case 'hexadecimal':
-          console.log(value);
           return '0x' + new BigNumber(value, 10).toString(16);
         default:
           return;
