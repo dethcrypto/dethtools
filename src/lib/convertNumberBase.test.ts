@@ -52,9 +52,5 @@ describe(convertNumberBase.name, () => {
     ).toEqual(
       '2032451277354503517050671117710665174541362015355755433271161163735017771002766626163316202665376213112150604707401405604661247057377575022164344535612415350312622001401736106151250437704700',
     );
-    expect(convertNumberBase('1', 'decimal', 'decimal')).toEqual('1');
-    expect(convertNumberBase('1000000.16', 'decimal', 'hexadecimal')).toEqual(
-      expect.stringMatching(/0xF4240.000010C6F7A536D974F1/i),
-    );
   });
 });
