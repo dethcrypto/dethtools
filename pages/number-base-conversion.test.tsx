@@ -98,9 +98,9 @@ describe(NumberBaseConversion.name, () => {
       /binary/i,
     )) as HTMLInputElement;
 
-    let errorField = await root.findByRole('alert');
-
     fireEvent.change(octalField, { target: { value: '140' } });
+
+    let errorField = (await root.findAllByRole('alert'))[0];
 
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(
@@ -108,29 +108,19 @@ describe(NumberBaseConversion.name, () => {
       ),
     );
 
-    errorField = await root.findByRole('alert');
-
     fireEvent.change(decimalField, { target: { value: '@%' } });
+
+    errorField = (await root.findAllByRole('alert'))[1];
 
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(
         /The value mustn't contain letters or any special signs except dot/,
       ),
     );
-
-    errorField = await root.findByRole('alert');
-
-    fireEvent.change(decimalField, { target: { value: '@%' } });
-
-    expect(errorField.innerHTML).toEqual(
-      expect.stringMatching(
-        /The value mustn't contain letters or any special signs except dot/,
-      ),
-    );
-
-    errorField = await root.findByRole('alert');
 
     fireEvent.change(binaryField, { target: { value: '123' } });
+
+    errorField = (await root.findAllByRole('alert'))[0];
 
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(/The value must be a valid, binary number/),
