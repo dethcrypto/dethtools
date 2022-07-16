@@ -7,58 +7,46 @@ export function convertNumberBase(
   fromUnit: NumberBaseType,
   toUnit: NumberBaseType,
 ): string | undefined {
-  switch (fromUnit) {
-    case 'binary':
-      switch (toUnit) {
-        case 'binary':
-          return value;
-        case 'octal':
-          return '0' + new BigNumber(value, 2).toString(8);
-        case 'decimal':
-          return new BigNumber(value, 2).toString(10);
-        case 'hexadecimal':
-          return '0x' + new BigNumber(value, 2).toString(16);
-        default:
-          return;
+  for (const [fromBaseName, fromBaseNumber] of Object.entries(
+    numberBaseConversionDict,
+  )) {
+    if (fromBaseName === fromUnit) {
+      for (const [toBaseName, toBaseNumber] of Object.entries(
+        numberBaseConversionDict,
+      )) {
+        if (toBaseName === toUnit) {
+          return convertNumberBaseWithBn(
+            value,
+            toBaseName,
+            fromBaseNumber,
+            toBaseNumber,
+          );
+        }
       }
-    case 'octal':
-      switch (toUnit) {
-        case 'octal':
-          return value;
-        case 'binary':
-          return new BigNumber(value, 8).toString(2);
-        case 'decimal':
-          return new BigNumber(value, 8).toString(10);
-        case 'hexadecimal':
-          return '0x' + new BigNumber(value, 8).toString(16);
-        default:
-          return;
-      }
-    case 'decimal':
-      switch (toUnit) {
-        case 'decimal':
-          return value;
-        case 'binary':
-          return new BigNumber(value, 10).toString(2);
-        case 'octal':
-          return '0' + new BigNumber(value, 10).toString(8);
-        case 'hexadecimal':
-          return '0x' + new BigNumber(value, 10).toString(16);
-        default:
-          return;
-      }
-    case 'hexadecimal':
-      switch (toUnit) {
-        case 'hexadecimal':
-          return value;
-        case 'binary':
-          return new BigNumber(value, 16).toString(2);
-        case 'octal':
-          return '0' + new BigNumber(value, 16).toString(8);
-        case 'decimal':
-          return new BigNumber(value, 16).toString(10);
-        default:
-          return;
-      }
+    }
+  }
+}
+
+// @internal
+const numberBaseConversionDict = {
+  binary: 2,
+  octal: 8,
+  decimal: 10,
+  hexadecimal: 16,
+};
+
+// @internal
+function convertNumberBaseWithBn(
+  value: string,
+  toBaseName: string,
+  from: number,
+  to: number,
+): string {
+  if (toBaseName === 'octal') {
+    return '0' + new BigNumber(value, from).toString(to);
+  } else if (toBaseName === 'hexadecimal') {
+    return '0x' + new BigNumber(value, from).toString(to);
+  } else {
+    return new BigNumber(value, from).toString(to);
   }
 }
