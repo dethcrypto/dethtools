@@ -22,7 +22,7 @@ describe(NumberBaseConversion.name, () => {
     fireEvent.change(binaryField, { target: { value: '10100101000001' } });
 
     expect(binaryField.value).toEqual('10100101000001');
-    expect(octalField.value).toEqual('24501');
+    expect(octalField.value).toEqual('024501');
     expect(hexadecimalField.value).toEqual('0x2941');
     expect(decimalField.value).toEqual('10561');
   });
@@ -47,7 +47,7 @@ describe(NumberBaseConversion.name, () => {
     });
 
     expect(hexadecimalField.value).toEqual('0x91923123124a3b331dddddd');
-    expect(octalField.value).toEqual('2214443044304445073146167356735');
+    expect(octalField.value).toEqual('02214443044304445073146167356735');
     expect(decimalField.value).toEqual('2815753852291900309296242141');
     expect(binaryField.value).toEqual(
       '10010001100100100011000100100011000100100100101000111011001100110001110111011101110111011101',
