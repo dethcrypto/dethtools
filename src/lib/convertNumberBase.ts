@@ -13,7 +13,7 @@ export function convertNumberBase(
         case 'binary':
           return value;
         case 'octal':
-          return new BigNumber(value, 2).toString(8);
+          return '0' + new BigNumber(value, 2).toString(8);
         case 'decimal':
           return new BigNumber(value, 2).toString(10);
         case 'hexadecimal':
@@ -41,7 +41,7 @@ export function convertNumberBase(
         case 'binary':
           return new BigNumber(value, 10).toString(2);
         case 'octal':
-          return new BigNumber(value, 10).toString(8);
+          return '0' + new BigNumber(value, 10).toString(8);
         case 'hexadecimal':
           return '0x' + new BigNumber(value, 10).toString(16);
         default:
@@ -54,7 +54,7 @@ export function convertNumberBase(
         case 'binary':
           return new BigNumber(value, 16).toString(2);
         case 'octal':
-          return new BigNumber(value, 16).toString(8);
+          return '0' + new BigNumber(value, 16).toString(8);
         case 'decimal':
           return new BigNumber(value, 16).toString(10);
         default:
