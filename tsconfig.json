@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2019",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["cypress", "node"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,7 +18,7 @@
     "baseUrl": "."
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.test.ts", "./*.js"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "test/e2e/**/*.cy.ts"],
   "ts-node": {
     "compilerOptions": {
       "jsx": "react-jsx"

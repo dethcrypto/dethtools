@@ -1,3 +1,5 @@
 /node_modules
 /public
 /styles
+.eslintrc.js
+test/e2e
