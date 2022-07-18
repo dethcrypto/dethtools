@@ -85,7 +85,7 @@ const tree: Tree = {
     tools: [
       { title: 'Eth Unit Conversion', pageHref: 'eth-unit-conversion' },
       { title: 'Token Unit Conversion', pageHref: 'token-unit-conversion' },
-      { title: 'Number Base Conversion', pageHref: 'number-base-conversion' },
+      { title: 'Base Conversion', pageHref: 'base-conversion' },
     ],
   },
   decoders: {
