@@ -25,7 +25,12 @@ export async function fetchAndDecodeWithCalldata(
   const data = await getSignaturesByCalldata(sigHash);
   if (data) {
     const ifaces = parse4BytesResToIfaces(data);
-    return decodeByCalldata(ifaces, calldata);
+    const decodedByCalldata = decodeByCalldata(ifaces, calldata);
+    if (decodedByCalldata.length === 0 && ifaces.length > 0) {
+      return [{ decoded: [], fragment: ifaces[0].fragments[0], sigHash }];
+    } else {
+      return decodedByCalldata;
+    }
   }
 }
 
