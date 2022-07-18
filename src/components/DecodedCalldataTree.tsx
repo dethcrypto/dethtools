@@ -25,7 +25,6 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
   return components.map((input, index): TreeNode => {
     if (input.type === 'tuple') {
       const value = decoded[index];
-
       if (!Array.isArray(value)) {
         throw new Error(
           'input.type is tuple, but decoded value is not an array',
@@ -41,7 +40,7 @@ function attachValues(components: ParamType[], decoded: Decoded): TreeNode[] {
     return {
       name: input.name,
       type: input.type,
-      value: String(decoded[index]),
+      value: decoded[index] ? String(decoded[index]) : '',
     };
   });
 }
@@ -83,14 +82,14 @@ function CalldataTreeNode({
                 })}
               </section>
             </div>
-          ) : (
-            <NodeBlock
-              className="my-2"
-              str={node.value || ''}
-              nodeType={node.type}
-            >
+          ) : node.value ? (
+            <NodeBlock className="my-2" str={node.value} nodeType={node.type}>
               {node.name ? <code className="text-pink">{node.name}</code> : ' '}
             </NodeBlock>
+          ) : (
+            <code id="node-type" className="text-purple">
+              {node.type}
+            </code>
           )}
         </div>
       </span>
