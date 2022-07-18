@@ -5,11 +5,8 @@ import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
-import { convertNumberBase } from '../src/lib/convertNumberBase';
-import {
-  NumberBase,
-  NumberBaseType,
-} from '../src/lib/numberBaseConvertProperties';
+import { convertBase } from '../src/lib/convertBase';
+import { Base, base } from '../src/lib/convertBaseProperties';
 import { binarySchema } from '../src/misc/schemas/binarySchema';
 import { hexSchema } from '../src/misc/schemas/hexSchema';
 import { octalSchema } from '../src/misc/schemas/octalSchema';
@@ -17,10 +14,9 @@ import { unitSchema } from '../src/misc/schemas/unitSchema';
 import { WithError } from '../src/misc/types';
 import { zodResultMessage } from '../src/misc/zodResultMessage';
 
-interface NumberBaseConversionState
-  extends Record<NumberBaseType, WithError<string>> {}
+interface BaseConversionState extends Record<Base, WithError<string>> {}
 
-const initialState: NumberBaseConversionState = {
+const initialState: BaseConversionState = {
   binary: { value: '' },
   octal: { value: '' },
   decimal: { value: '' },
@@ -28,12 +24,9 @@ const initialState: NumberBaseConversionState = {
 };
 
 export default function NumberBaseConversion(): ReactElement {
-  const [state, setState] = useState<NumberBaseConversionState>(initialState);
+  const [state, setState] = useState<BaseConversionState>(initialState);
 
-  function handleChangeValue(
-    newValue: string,
-    currentType: NumberBaseType,
-  ): void {
+  function handleChangeValue(newValue: string, currentType: Base): void {
     let parseResult: SafeParseReturnType<string, string> | undefined;
     switch (currentType) {
       case 'binary':
@@ -64,7 +57,7 @@ export default function NumberBaseConversion(): ReactElement {
       return;
     }
     setState((oldState) => {
-      const newState: NumberBaseConversionState = {
+      const newState: BaseConversionState = {
         ...oldState,
         [currentType]: { value: newValue },
       };
@@ -72,11 +65,12 @@ export default function NumberBaseConversion(): ReactElement {
     });
     setState((oldState) => {
       const newState = { ...oldState };
-      for (const unit of NumberBase) {
+
+      for (const unit of base) {
         if (unit === currentType) {
           newState[unit] = { value: newValue };
         } else {
-          const convertedValue = convertNumberBase(newValue, currentType, unit);
+          const convertedValue = convertBase(newValue, currentType, unit);
           if (convertedValue && !isNaN(parseInt(convertedValue))) {
             newState[unit] = { value: convertedValue };
           }
@@ -104,8 +98,8 @@ export default function NumberBaseConversion(): ReactElement {
   );
 }
 interface ConversionInputsProps {
-  state: NumberBaseConversionState;
-  handleChangeValue: (newValue: string, currentType: NumberBaseType) => void;
+  state: BaseConversionState;
+  handleChangeValue: (newValue: string, currentType: Base) => void;
 }
 
 function ConversionInputs({
