@@ -140,6 +140,19 @@ describe(fetchAndDecodeWithCalldata.name, async () => {
     expect(decodedResults![0].fragment.name).toEqual('transferFrom');
     expect(decodedResults![0].sigHash).toEqual('0x23b872dd');
   });
+
+  it('decodes fragment with raw signature', async () => {
+    const sigHash = '0x23c32819';
+    const calldata = sigHash;
+
+    const decodeResult = await fetchAndDecodeWithCalldata(sigHash, calldata);
+
+    expect(decodeResult).toBeDefined();
+    expect(decodeResult!.length).toEqual(1);
+    expect(decodeResult![0].decoded).toEqual([]);
+    expect(decodeResult![0].fragment).toBeDefined();
+    expect(decodeResult![0].sigHash).toEqual(sigHash);
+  });
 });
 
 describe(decodeWithEventProps.name, async () => {

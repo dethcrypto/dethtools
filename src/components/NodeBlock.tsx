@@ -107,19 +107,20 @@ export function NodeBlock({
           {nodeType}
         </code>
         <div
-          onClick={(e) => {
+          onClick={async (event) => {
             const value =
-              e.currentTarget.children.namedItem('node-value')?.textContent;
-            void navigator.clipboard.writeText(value ?? '');
-
-            setCopyNotification(true);
-            setTimeout(() => {
-              setCopyNotification(false);
-            }, 1500);
+              event.currentTarget.children.namedItem('node-value')?.textContent;
+            if (value) {
+              await navigator.clipboard.writeText(value);
+              setCopyNotification(true);
+              setTimeout(() => {
+                setCopyNotification(false);
+              }, 1500);
+            }
           }}
           className="flex h-10 items-center gap-3 rounded-md border 
           border-gray-600 p-1 px-2 duration-200 hover:bg-gray-700
-          hover:outline active:bg-gray-800"
+            hover:outline active:bg-gray-800"
         >
           <code aria-label="decoded value" id="node-value">
             {state.value}
