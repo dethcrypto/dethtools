@@ -24,6 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       className,
+      name,
       error: errorFromProps,
       autoComplete = 'off',
       onChange,
@@ -40,11 +41,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div>
         <input
+          name={name}
           ref={ref}
           aria-invalid={!!errorFromProps}
           {...(autoComplete === 'off' && autoCompleteProps)}
           className={
-            'w-full rounded-md border border-gray-600 bg-gray-900 ' +
+            'w-full rounded-md border-gray-600 bg-gray-900 ring-pink focus:ring-0 ' +
             'p-3.75 text-lg leading-none text-white focus:outline-none ' +
             'invalid:border-error invalid:caret-error ' +
             'disabled:text-white/50 ' +
