@@ -19,3 +19,5 @@ export type WithOkAndErrorMsgOptional<T> =
     };
 
 export type WithErrorAndResult<T, R> = { inner: T; error?: string; result?: R };
+
+export type WithError<T> = { value: T; error?: string };

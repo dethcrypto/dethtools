@@ -89,6 +89,7 @@ const tree: Tree = {
         title: 'Unix Epoch - UTC Conversion',
         pageHref: 'unix-epoch-utc-conversion',
       },
+      { title: 'Base Conversion', pageHref: 'base-conversion' },
     ],
   },
   decoders: {
