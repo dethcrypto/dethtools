@@ -4,7 +4,7 @@ import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
-import { UnitType } from '../src/lib/convertProperties';
+import { unitType, UnitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/schemas/unitSchema';
@@ -63,7 +63,7 @@ export default function EthUnitConversion(): ReactElement {
     setState((oldState) => {
       const newState = { ...oldState };
 
-      for (const unit of UnitType.values) {
+      for (const unit of unitType.values) {
         if (unit === currentType) newState[unit] = { value: newValue };
         else if (parseFloat(newValue) >= 0) {
           const out = convertEthUnits(newValue, currentType, unit)!;
@@ -83,7 +83,7 @@ export default function EthUnitConversion(): ReactElement {
           text={['Calculators', 'Eth Unit Conversion']}
         />
         <section className="flex w-full flex-col gap-5">
-          {UnitType.values.map((unit) => (
+          {unitType.values.map((unit) => (
             <ConversionInput
               key={unit}
               name={unit.toUpperCase()}

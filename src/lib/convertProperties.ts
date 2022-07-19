@@ -10,7 +10,6 @@ export type UnitType = 'wei' | 'gwei' | 'eth';
 
 const unitTypes: UnitType[] = ['wei', 'gwei', 'eth'];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UnitType = { values: unitTypes };
+export const unitType = { values: unitTypes };
 
 export type TokenUnitType = 'unit' | 'base';
