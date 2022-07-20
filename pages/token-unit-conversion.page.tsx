@@ -10,13 +10,13 @@ import {
 
 import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
+import { CurrencyIcon } from '../src/components/icons/Currency';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import { convertUnit } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/schemas/unitSchema';
 import { WithError } from '../src/misc/types';
-import { CurrencyIcon } from '../src/components/icons/Currency';
 
 const DEFAULT_DECIMALS = 18;
 
