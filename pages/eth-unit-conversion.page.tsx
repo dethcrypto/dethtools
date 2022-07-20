@@ -4,7 +4,7 @@ import { ConversionInput } from '../src/components/ConversionInput';
 import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
-import { unitType, UnitType } from '../src/lib/convertProperties';
+import { UnitType, unitType } from '../src/lib/convertProperties';
 import { convertEthUnits } from '../src/lib/convertUnits';
 import { decodeHex } from '../src/lib/decodeHex';
 import { unitSchema } from '../src/misc/schemas/unitSchema';
