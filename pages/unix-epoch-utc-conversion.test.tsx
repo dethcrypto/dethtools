@@ -1,15 +1,11 @@
-import { fireEvent, render, RenderResult } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
 import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../src/lib/convertUtcProperties';
 import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
 
-type Root = RenderResult<
-  typeof import('/Users/7sne/Documents/Praca/deth-tools/node_modules/@testing-library/dom/types/queries'),
-  HTMLElement,
-  HTMLElement
->;
+type Root = any;
 
 function expectUtc(
   root: Root,
