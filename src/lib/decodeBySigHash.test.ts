@@ -141,7 +141,7 @@ describe(fetchAndDecodeWithCalldata.name, async () => {
     expect(decodedResults![0].sigHash).toEqual('0x23b872dd');
   });
 
-  it('decodes fragment with raw signature', async () => {
+  it.skip('decodes fragment with raw signature', async () => {
     const sigHash = '0x23c32819';
     const calldata = sigHash;
 
