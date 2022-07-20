@@ -12,6 +12,7 @@ describe(TokenUnitConversion.name, () => {
     )) as HTMLInputElement;
 
     const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
+
     fireEvent.change(unitField, { target: { value: '1' } });
 
     expect(decimalsField.placeholder).not.toEqual('NaN');
@@ -32,6 +33,7 @@ describe(TokenUnitConversion.name, () => {
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '9' } });
+
     expect(unitField.value).toEqual(String(9e10));
   });
 
@@ -42,12 +44,14 @@ describe(TokenUnitConversion.name, () => {
     )) as HTMLInputElement;
 
     fireEvent.change(decimalsField, { target: { value: '5' } });
+
     expect(decimalsField.value).toEqual('5');
 
     const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: String(15e5) } });
+
     expect(baseField.value).toEqual('15');
   });
 
@@ -57,12 +61,14 @@ describe(TokenUnitConversion.name, () => {
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: '12444444000000000.55' } });
+
     expect(unitField.value).toEqual('12444444000000000.55');
     expect(baseField.value).toEqual('0.01244444400000000055');
 
     fireEvent.change(unitField, {
       target: { value: '12444444000000000.55/fa' },
     });
+
     expect(unitField.value).toEqual('12444444000000000.55/fa');
     expect(baseField.value).toEqual('0.01244444400000000055');
   });
@@ -72,13 +78,17 @@ describe(TokenUnitConversion.name, () => {
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '140fa,@' } });
+
     let errorField = await root.findByRole('alert');
+
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(/The value mustn't contain letters/),
     );
 
     fireEvent.change(baseField, { target: { value: '' } });
+
     errorField = await root.findByRole('alert');
+
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching(/The value must be longer than 1 digit/),
     );
@@ -98,6 +108,7 @@ describe(TokenUnitConversion.name, () => {
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '9' } });
+
     expect(unitField.value).toEqual('90000000000');
 
     fireEvent.change(decimalsField, { target: { value: '15' } });
@@ -117,9 +128,34 @@ describe(TokenUnitConversion.name, () => {
     fireEvent.change(unitField, { target: { value: '15' } });
 
     const errorField = await root.findByRole('alert');
+
     expect(errorField.innerHTML).toEqual(
       expect.stringMatching('The decimals must be a number between 0 and 26'),
     );
     expect(baseField.value).toEqual('');
+  });
+
+  it('predefined decimals set decimals correctly', async () => {
+    const root = render(<TokenUnitConversion />);
+    const predefinedDecimalsButton = await root.findByLabelText(
+      /predefined decimals dropdown/i,
+    );
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
+
+    fireEvent.change(unitField, { target: { value: '2013' } });
+
+    expect(unitField.value).toEqual('2013');
+
+    fireEvent.click(predefinedDecimalsButton);
+
+    const rayDropdownElement = await root.findByLabelText(
+      'ray predefined decimal',
+    );
+
+    fireEvent.click(rayDropdownElement);
+
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+
+    expect(baseField.value).toEqual('0.000000000000000000000002013');
   });
 });
