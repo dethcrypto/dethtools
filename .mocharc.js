@@ -10,6 +10,6 @@ module.exports = {
   extension: ['ts', 'tsx'],
   watchExtensions: ['ts', 'tsx'],
   spec: ['./{src,pages}/**/*.test.{ts,tsx}'],
-  timeout: 5000,
+  timeout: 30000,
   exit: true, // @See ./docs/MOCHA_REACT_BUG.md
 };
