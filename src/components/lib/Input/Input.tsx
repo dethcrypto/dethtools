@@ -46,7 +46,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-invalid={!!errorFromProps}
           {...(autoComplete === 'off' && autoCompleteProps)}
           className={
-            'w-full rounded-md border-gray-600 bg-gray-900 ring-pink focus:ring-0 ' +
+            'w-full rounded-md border-gray-600 bg-gray-900 pr-12 ring-pink focus:ring-0 ' +
             'p-3.75 text-lg leading-none text-white focus:outline-none ' +
             'invalid:border-error invalid:caret-error ' +
             'disabled:text-white/50 ' +
