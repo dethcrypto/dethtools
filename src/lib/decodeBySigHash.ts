@@ -57,10 +57,15 @@ async function fetch4Bytes(
   retries: number = 0,
 ): Promise<FourBytesReponseEntry[] | undefined> {
   let result: FourBytesReponseEntry[] | undefined;
+  const cached = bytes4Cache[hexSigType][hexSig];
+  if (cached) {
+    return cached;
+  }
   try {
     const { results } = await safeFetch<FourBytesResponse>(
       `${urlTo(hexSigType)}${hexSig}`,
     );
+    bytes4Cache[hexSigType][hexSig] = results;
     result = results;
   } catch (error) {
     retries += 1;
@@ -73,9 +78,51 @@ async function fetch4Bytes(
   return result;
 }
 
+async function safeFetch<T>(...args: Parameters<typeof fetch>): Promise<T> {
+  return fetch(...args).then(async (response) => {
+    if (response.status === 200) {
+      return response.json() as unknown as T;
+    } else {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+  });
+}
+
+// @internal
+interface FourBytesReponseEntry {
+  id: number;
+  text_signature: string;
+  bytes_signature: string;
+  created_at: string;
+  hex_signature: string;
+}
+
+// @internal
+interface FourBytesResponse {
+  count: number;
+  next: unknown;
+  previous: unknown;
+  results: FourBytesReponseEntry[];
+}
+
 // @internal
 // there are more types, but we don't need them for now
 export type HexSigType = 'signatures' | 'event-signatures';
+
+type Bytes4Cache = {
+  [sigType in HexSigType]: {
+    // undefined - not populated
+    // [] - no results
+    // [...] - results
+    [sig: string]: FourBytesReponseEntry[] | undefined;
+  };
+};
+
+// @internal
+const bytes4Cache: Bytes4Cache = {
+  signatures: {},
+  'event-signatures': {},
+};
 
 // @internal
 function urlTo(hexSigType: HexSigType): string {
@@ -97,31 +144,6 @@ export function parse4BytesResToIfaces(
     } catch (e) {}
   }
   return ifaces;
-}
-
-async function safeFetch<T>(...args: Parameters<typeof fetch>): Promise<T> {
-  return fetch(...args).then(async (response) => {
-    if (response.status === 200) {
-      return response.json() as unknown as T;
-    } else {
-      throw new Error(`${response.status} ${response.statusText}`);
-    }
-  });
-}
-
-interface FourBytesReponseEntry {
-  id: number;
-  text_signature: string;
-  bytes_signature: string;
-  created_at: string;
-  hex_signature: string;
-}
-
-interface FourBytesResponse {
-  count: number;
-  next: unknown;
-  previous: unknown;
-  results: FourBytesReponseEntry[];
 }
 
 // @internal
