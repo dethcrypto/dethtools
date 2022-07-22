@@ -15,8 +15,8 @@ import { Spinner } from '../src/components/Spinner';
 import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import {
-  fetch4BytesData,
-  fetchAndDecodeWithCalldata,
+  decodeWithCalldata,
+  fetch4BytesBy,
   sigHashFromCalldata,
 } from '../src/lib/decodeBySigHash';
 import {
@@ -31,13 +31,7 @@ import { hexSchema } from '../src/misc/schemas/hexSchema';
 import { WithOkAndErrorMsgOptional } from '../src/misc/types';
 import { zodResultMessage } from '../src/misc/zodResultMessage';
 
-export interface CalldataDecoderProps {
-  fetchAndDecode?: typeof fetchAndDecodeWithCalldata;
-}
-
-export default function CalldataDecoder({
-  fetchAndDecode = fetchAndDecodeWithCalldata,
-}: CalldataDecoderProps): ReactElement {
+export default function CalldataDecoder(): ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -151,11 +145,12 @@ export default function CalldataDecoder({
       let decodeResults: DecodeResult[] | undefined;
       try {
         if (encodedCalldata.inner) {
-          decodeResults = await fetchAndDecode(
+          decodeResults = await decodeWithCalldata(
             signatureHash,
             encodedCalldata.inner,
           );
         }
+      } catch (error) {
       } finally {
         setLoading(false);
       }
@@ -247,11 +242,13 @@ export default function CalldataDecoder({
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
             handleChangeEncodedCalldata(event)
           }
-          onPaste={(event: ClipboardEvent<HTMLTextAreaElement>) => {
+          onPaste={async (event: ClipboardEvent<HTMLTextAreaElement>) => {
             const encodedCalldata = event.clipboardData.getData('Text');
             const sigHash = sigHashFromCalldata(encodedCalldata);
             if (sigHash) {
-              void fetch4BytesData(sigHash, 'signatures');
+              try {
+                await fetch4BytesBy.Signatures(sigHash);
+              } catch (e) {}
             }
           }}
         />
