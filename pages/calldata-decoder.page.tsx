@@ -150,7 +150,6 @@ export default function CalldataDecoder(): ReactElement {
             encodedCalldata.inner,
           );
         }
-      } catch (error) {
       } finally {
         setLoading(false);
       }

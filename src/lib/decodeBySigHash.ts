@@ -49,14 +49,28 @@ export const fetch4BytesBy = {
   },
 };
 
+const MAX_RETRY = 30;
+
 async function fetch4Bytes(
   hexSig: string,
   hexSigType: HexSigType,
+  retries: number = 0,
 ): Promise<FourBytes[] | undefined> {
-  const { results } = await safeFetch<FourBytesResponse>(
-    `${urlTo(hexSigType)}${hexSig}`,
-  );
-  return results;
+  let result: FourBytes[] | undefined;
+  try {
+    const { results } = await safeFetch<FourBytesResponse>(
+      `${urlTo(hexSigType)}${hexSig}`,
+    );
+    result = results;
+  } catch (error) {
+    retries += 1;
+    if (retries < MAX_RETRY) {
+      return fetch4Bytes(hexSig, hexSigType, retries);
+    } else {
+      return undefined;
+    }
+  }
+  return result;
 }
 
 // @internal
