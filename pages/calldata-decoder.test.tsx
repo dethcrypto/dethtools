@@ -1,17 +1,20 @@
-import { FunctionFragment } from '@ethersproject/abi';
-import { BigNumber } from '@ethersproject/bignumber';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { expect, mockFn } from 'earljs';
+import { expect } from 'earljs';
+import sinon from 'sinon';
+import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
 
-import { unexpectedCall } from '../test/unexpectedCall';
-import CalldataDecoder, { CalldataDecoderProps } from './calldata-decoder.page';
+import CalldataDecoder from './calldata-decoder.page';
 import { humanReadableAbi } from './fixtures/hreAbi';
 import { jsonAbi } from './fixtures/jsonAbi';
 
 describe(CalldataDecoder.name, () => {
+  after(() => {
+    sinon.restore(); // Unwraps the spy
+  });
+
   it('decodes and displays types and values correctly', async () => {
-    const root = render(<CalldataDecoder fetchAndDecode={unexpectedCall} />);
+    const root = render(<CalldataDecoder />);
 
     const calldataField = (await root.findByLabelText(
       'Calldata',
@@ -71,7 +74,7 @@ describe(CalldataDecoder.name, () => {
   });
 
   it('decodes and displays ABI with nested parameters', async () => {
-    const root = render(<CalldataDecoder fetchAndDecode={unexpectedCall} />);
+    const root = render(<CalldataDecoder />);
 
     const calldataField = (await root.findByLabelText(
       'Calldata',
@@ -126,32 +129,26 @@ describe(CalldataDecoder.name, () => {
   it('types calldata, enters correct hash signature, clicks decode btn and gets correct results', async () => {
     const calldata =
       '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000';
-
-    const sigHash = '0x23b872dd';
-    const fetchAndDecode = mockFn<
-      Required<CalldataDecoderProps>['fetchAndDecode']
-    >()
-      .given(sigHash, calldata)
-      .resolvesToOnce([
+    sinon.stub(fetch4BytesBy, 'Signatures').returns(
+      Promise.resolve([
         {
-          decoded: [BigNumber.from('0x551bd432803012645ac136ddd64dba72')],
-          fragment: FunctionFragment.from('gasprice_bit_ether(int128)'),
-          sigHash,
+          id: 31781,
+          created_at: '2018-05-12T20:40:45.467194Z',
+          text_signature: 'gasprice_bit_ether(int128)',
+          hex_signature: '0x23b872dd',
+          bytes_signature: '#¸rÝ',
         },
         {
-          decoded: [
-            '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
-            '0xaB7C8803962c0f2F5BBBe3FA8bf41cd82AA1923C',
-            BigNumber.from('0x0de0b6b3a7640000'),
-          ],
-          fragment: FunctionFragment.from(
-            'transferFrom(address,address,uint256)',
-          ),
-          sigHash,
+          id: 147,
+          created_at: '2016-07-09T03:58:28.927638Z',
+          text_signature: 'transferFrom(address,address,uint256)',
+          hex_signature: '0x23b872dd',
+          bytes_signature: '#¸rÝ',
         },
-      ]);
+      ]),
+    );
 
-    const root = render(<CalldataDecoder fetchAndDecode={fetchAndDecode} />);
+    const root = render(<CalldataDecoder />);
 
     const calldataField = (await root.findByLabelText(
       'Calldata',
@@ -167,27 +164,21 @@ describe(CalldataDecoder.name, () => {
 
     userEvent.click(root.getByText('Decode'));
 
-    const decodedCalldataTree0 = await waitFor(() => {
-      return root.getByTestId('decodedCalldataTree0');
-    });
-    const decodedCalldataTree1 = await waitFor(() => {
-      return root.getByTestId('decodedCalldataTree1');
-    });
+    const decodedCalldataTree = await waitFor(
+      () => {
+        return root.getByTestId('decodedCalldataTree0');
+      },
+      { timeout: 300 },
+    );
 
     expect(
-      decodedCalldataTree0.querySelector('#node-value')?.innerHTML!,
-    ).toEqual(expect.stringMatching('113128875528814585960425018501245024882'));
-    expect(
-      decodedCalldataTree0.querySelector('#node-type')?.innerHTML!,
-    ).toEqual(expect.stringMatching('int128'));
-    expect(
-      decodedCalldataTree1.querySelector('#node-value')?.innerHTML!,
+      decodedCalldataTree.querySelector('#node-value')?.innerHTML!,
     ).toEqual(
       expect.stringMatching('0x8ba1f109551bD432803012645Ac136ddd64DBA72'),
     );
-    expect(
-      decodedCalldataTree1.querySelector('#node-type')?.innerHTML!,
-    ).toEqual(expect.stringMatching('address'));
+    expect(decodedCalldataTree.querySelector('#node-type')?.innerHTML!).toEqual(
+      expect.stringMatching('address'),
+    );
   });
 
   it.skip('types wrong abi, gets error message', async () => {

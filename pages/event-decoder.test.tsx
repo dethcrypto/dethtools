@@ -1,9 +1,15 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { expect } from 'earljs';
+import sinon from 'sinon';
+import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
 
 import EventDecoder from './event-decoder.page';
 
 describe(EventDecoder.name, () => {
+  after(() => {
+    sinon.restore(); // Unwraps the spy
+  });
+
   it('types abi, switches to ABI mode, fills three topics, presses decode button and gets correct results', async () => {
     const root = render(<EventDecoder />);
 
@@ -99,6 +105,20 @@ describe(EventDecoder.name, () => {
   });
 
   it('clicks on 4byte button, fills data and three topics and clicks on decode button', async () => {
+    sinon.stub(fetch4BytesBy, 'EventProps').returns(
+      Promise.resolve([
+        {
+          id: 32,
+          created_at: '2020-11-30T22:38:01.206423Z',
+          text_signature: 'Approval(address,address,uint256)',
+          hex_signature:
+            '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+          bytes_signature:
+            '\x8C[áåëì}[ÑOqB}\x1E\x84óÝ\x03\x14À÷²)\x1E[ \nÈÇÃ¹%',
+        },
+      ]),
+    );
+
     const root = render(<EventDecoder />);
 
     const dataField = (await root.findByLabelText('data')) as HTMLInputElement;
