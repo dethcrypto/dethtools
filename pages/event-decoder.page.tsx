@@ -17,7 +17,7 @@ import { ToolContainer } from '../src/components/ToolContainer';
 import { ToolHeader } from '../src/components/ToolHeader';
 import {
   decodeWithEventProps,
-  fetch4BytesData,
+  fetch4BytesBy,
 } from '../src/lib/decodeBySigHash';
 import {
   DecodedEventResult,
@@ -351,14 +351,16 @@ export default function EventDecoder(): ReactElement {
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                           handleChangeTopic({ index, event, isPasted: false })
                         }
-                        onPaste={(event: ClipboardEvent<HTMLInputElement>) => {
+                        onPaste={async (
+                          event: ClipboardEvent<HTMLInputElement>,
+                        ) => {
                           handleChangeTopic({ index, event, isPasted: true });
                           if (index !== 0) return;
                           const topicValue =
                             event.clipboardData.getData('Text');
                           const sigHash = topicValue;
                           if (sigHash) {
-                            void fetch4BytesData(sigHash, 'event-signatures');
+                            await fetch4BytesBy.EventProps(sigHash);
                           }
                         }}
                       />
