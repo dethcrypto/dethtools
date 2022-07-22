@@ -9,8 +9,8 @@ import { humanReadableAbi } from './fixtures/hreAbi';
 import { jsonAbi } from './fixtures/jsonAbi';
 
 describe(CalldataDecoder.name, () => {
-  after(() => {
-    sinon.restore(); // Unwraps the spy
+  afterEach(() => {
+    sinon.restore();
   });
 
   it('decodes and displays types and values correctly', async () => {
@@ -164,12 +164,9 @@ describe(CalldataDecoder.name, () => {
 
     userEvent.click(root.getByText('Decode'));
 
-    const decodedCalldataTree = await waitFor(
-      () => {
-        return root.getByTestId('decodedCalldataTree0');
-      },
-      { timeout: 300 },
-    );
+    const decodedCalldataTree = await waitFor(() => {
+      return root.getByTestId('decodedCalldataTree0');
+    });
 
     expect(
       decodedCalldataTree.querySelector('#node-value')?.innerHTML!,

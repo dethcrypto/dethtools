@@ -26,7 +26,7 @@ export async function decodeWithEventProps(
   sigHash: string,
   eventProps: EventProps,
 ): Promise<DecodedEventResult[] | undefined> {
-  const response = await fetch4BytesBy.EventProps(sigHash);
+  const response = await fetch4BytesBy.EventSignatures(sigHash);
   if (response) {
     const ifaces = parse4BytesResToIfaces(response, 'event');
     return decode4BytesData(ifaces, eventProps, decodeEvent);
@@ -41,7 +41,7 @@ export function sigHashFromCalldata(calldata: string): string | undefined {
 }
 
 export const fetch4BytesBy = {
-  EventProps: async (sigHash: string) => {
+  EventSignatures: async (sigHash: string) => {
     return fetch4Bytes(sigHash, 'event-signatures');
   },
   Signatures: async (sigHash: string) => {
@@ -55,8 +55,8 @@ async function fetch4Bytes(
   hexSig: string,
   hexSigType: HexSigType,
   retries: number = 0,
-): Promise<FourBytes[] | undefined> {
-  let result: FourBytes[] | undefined;
+): Promise<FourBytesReponseEntry[] | undefined> {
+  let result: FourBytesReponseEntry[] | undefined;
   try {
     const { results } = await safeFetch<FourBytesResponse>(
       `${urlTo(hexSigType)}${hexSig}`,
@@ -84,7 +84,7 @@ function urlTo(hexSigType: HexSigType): string {
 
 // @internal
 export function parse4BytesResToIfaces(
-  data: FourBytes[],
+  data: FourBytesReponseEntry[],
   defaultKeyword: string = 'function',
 ): Interface[] {
   const ifaces: Interface[] = [];
@@ -109,7 +109,7 @@ async function safeFetch<T>(...args: Parameters<typeof fetch>): Promise<T> {
   });
 }
 
-interface FourBytes {
+interface FourBytesReponseEntry {
   id: number;
   text_signature: string;
   bytes_signature: string;
@@ -121,7 +121,7 @@ interface FourBytesResponse {
   count: number;
   next: unknown;
   previous: unknown;
-  results: FourBytes[];
+  results: FourBytesReponseEntry[];
 }
 
 // @internal

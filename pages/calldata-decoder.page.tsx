@@ -245,9 +245,7 @@ export default function CalldataDecoder(): ReactElement {
             const encodedCalldata = event.clipboardData.getData('Text');
             const sigHash = sigHashFromCalldata(encodedCalldata);
             if (sigHash) {
-              try {
-                await fetch4BytesBy.Signatures(sigHash);
-              } catch (e) {}
+              await fetch4BytesBy.Signatures(sigHash);
             }
           }}
         />

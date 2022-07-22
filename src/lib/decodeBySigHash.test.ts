@@ -55,7 +55,7 @@ describe(decodeByCalldata.name, () => {
 
 describe(decodeWithCalldata.name, async () => {
   afterEach(() => {
-    sinon.restore(); // Unwraps the spy
+    sinon.restore();
   });
 
   it('decodes calldata by 4 byte hash signature and returns matches', async () => {
@@ -104,7 +104,7 @@ describe(decodeWithCalldata.name, async () => {
 
 describe(decodeWithEventProps.name, async () => {
   afterEach(() => {
-    sinon.restore(); // Unwraps the spy
+    sinon.restore();
   });
 
   it('decodes event topics by hash signature', async () => {
@@ -117,7 +117,7 @@ describe(decodeWithEventProps.name, async () => {
       ],
     };
 
-    sinon.stub(fetch4BytesBy, 'EventProps').returns(
+    sinon.stub(fetch4BytesBy, 'EventSignatures').returns(
       Promise.resolve([
         {
           id: 32,

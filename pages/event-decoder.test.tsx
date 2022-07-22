@@ -6,8 +6,8 @@ import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
 import EventDecoder from './event-decoder.page';
 
 describe(EventDecoder.name, () => {
-  after(() => {
-    sinon.restore(); // Unwraps the spy
+  afterEach(() => {
+    sinon.restore();
   });
 
   it('types abi, switches to ABI mode, fills three topics, presses decode button and gets correct results', async () => {
@@ -105,7 +105,7 @@ describe(EventDecoder.name, () => {
   });
 
   it('clicks on 4byte button, fills data and three topics and clicks on decode button', async () => {
-    sinon.stub(fetch4BytesBy, 'EventProps').returns(
+    sinon.stub(fetch4BytesBy, 'EventSignatures').returns(
       Promise.resolve([
         {
           id: 32,
@@ -174,19 +174,15 @@ describe(EventDecoder.name, () => {
 
     fireEvent.click(decodeButton);
 
-    await waitFor(
-      () => expect(root.findAllByLabelText('decoded value')).toBeDefined(),
-      { timeout: 10000, interval: 2000 },
+    await waitFor(() =>
+      expect(root.findAllByLabelText('decoded value')).toBeDefined(),
     );
 
     let args: HTMLElement[] = [];
 
-    await waitFor(
-      async () => {
-        args = await root.findAllByLabelText('decoded event arg index');
-      },
-      { timeout: 10000, interval: 2000 },
-    );
+    await waitFor(async () => {
+      args = await root.findAllByLabelText('decoded event arg index');
+    });
 
     const arg0 = args[0];
     const arg1 = args[1];

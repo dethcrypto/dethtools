@@ -360,7 +360,7 @@ export default function EventDecoder(): ReactElement {
                             event.clipboardData.getData('Text');
                           const sigHash = topicValue;
                           if (sigHash) {
-                            await fetch4BytesBy.EventProps(sigHash);
+                            await fetch4BytesBy.EventSignatures(sigHash);
                           }
                         }}
                       />
