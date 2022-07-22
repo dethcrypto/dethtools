@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi';
 import fetch from 'node-fetch';
+
 import { hexSchema } from '../misc/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';

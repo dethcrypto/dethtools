@@ -2,8 +2,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect } from 'earljs';
 import sinon from 'sinon';
-import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
 
+import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
 import CalldataDecoder from './calldata-decoder.page';
 import { humanReadableAbi } from './fixtures/hreAbi';
 import { jsonAbi } from './fixtures/jsonAbi';

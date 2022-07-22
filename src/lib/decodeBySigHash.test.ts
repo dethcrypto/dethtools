@@ -1,6 +1,6 @@
-import { sigHashReponseFixture } from './fixtures/sigHashResponse';
 import { BigNumber } from '@ethersproject/bignumber';
 import { expect } from 'earljs';
+import sinon from 'sinon';
 
 import {
   decodeByCalldata,
@@ -9,8 +9,8 @@ import {
   fetch4BytesBy,
   parse4BytesResToIfaces,
 } from './decodeBySigHash';
-import sinon from 'sinon';
 import { EventProps } from './decodeEvent';
+import { sigHashReponseFixture } from './fixtures/sigHashResponse';
 
 describe(parse4BytesResToIfaces.name, () => {
   it('parses fetched results to interface format', () => {
