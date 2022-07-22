@@ -63,7 +63,11 @@ function CalldataTreeNode({
         <div>
           {node.type.match(isNodeArray) ? (
             <div className="my-4 overflow-auto rounded-md border border-gray-600 p-3 text-sm">
-              <p id="node-type" className="pt-1 text-purple">
+              <p
+                aria-label="node type"
+                id="node-type"
+                className="pt-1 text-purple"
+              >
                 {node.name ? (
                   <code className="text-pink">{node.name} </code>
                 ) : (
@@ -87,7 +91,7 @@ function CalldataTreeNode({
               {node.name ? <code className="text-pink">{node.name}</code> : ' '}
             </NodeBlock>
           ) : (
-            <code id="node-type" className="text-purple">
+            <code aria-label="node type" id="node-type" className="text-purple">
               {node.type}
             </code>
           )}

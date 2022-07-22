@@ -98,6 +98,7 @@ describe(TokenUnitConversion.name, () => {
     const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '9' } });
+
     expect(unitField.value).toEqual('90000000000');
 
     fireEvent.change(decimalsField, { target: { value: '15' } });
