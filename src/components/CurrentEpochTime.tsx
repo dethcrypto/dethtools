@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
-import { currentEpochTime } from '../lib/currentEpochTime';
 
+import { currentEpochTime } from '../lib/currentEpochTime';
 import { CopyIcon } from './icons/CopyIcon';
 import { OkIcon } from './icons/OkIcon';
 
