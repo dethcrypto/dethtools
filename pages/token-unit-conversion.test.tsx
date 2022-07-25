@@ -133,27 +133,27 @@ describe(TokenUnitConversion.name, () => {
     expect(baseField.value).toEqual('');
   });
 
-  // it('predefined decimals set decimals correctly', async () => {
-  //   const root = render(<TokenUnitConversion />);
-  //   const predefinedDecimalsButton = await root.findByLabelText(
-  //     /predefined decimals dropdown/i,
-  //   );
-  //   const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
+  it('predefined decimals set decimals correctly', async () => {
+    const root = render(<TokenUnitConversion />);
+    const predefinedDecimalsButton = await root.findByLabelText(
+      /predefined decimals dropdown/i,
+    );
+    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
 
-  //   fireEvent.change(unitField, { target: { value: '2013' } });
+    fireEvent.change(unitField, { target: { value: '2013' } });
 
-  //   expect(unitField.value).toEqual('2013');
+    expect(unitField.value).toEqual('2013');
 
-  //   fireEvent.click(predefinedDecimalsButton);
+    fireEvent.click(predefinedDecimalsButton);
 
-  //   const rayDropdownElement = await root.findByLabelText(
-  //     'ray predefined decimal',
-  //   );
+    const rayDropdownElement = await root.findByLabelText(
+      'ray predefined decimal',
+    );
 
-  //   fireEvent.click(rayDropdownElement);
+    fireEvent.click(rayDropdownElement);
 
-  //   const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
-  //   expect(baseField.value).toEqual('0.000000000000000000000002013');
-  // });
+    expect(baseField.value).toEqual('0.000000000000000000000002013');
+  });
 });
