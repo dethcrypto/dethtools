@@ -8,6 +8,9 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
+
+export {};
+
 //
 //
 // -- This is a parent command --
