@@ -24,17 +24,11 @@ function useInterval(callback: () => void, delay: number): void {
 }
 
 export function CurrentEpochTime(): ReactElement {
-  const [state, setState] = React.useState<number>(
-    Math.floor(new Date().getTime() / 1000),
-  );
+  const [state, setState] = React.useState<number>(currentEpochTime.get());
   const [copyNotification, setCopyNotification] = useState(false);
 
-  function unixEpoch(): number {
-    return Math.floor(new Date().getTime() / 1000);
-  }
-
   useInterval(() => {
-    return setState(unixEpoch());
+    return setState(currentEpochTime.get());
   }, 1000);
 
   return (
@@ -68,3 +62,10 @@ export function CurrentEpochTime(): ReactElement {
     </div>
   );
 }
+
+// @internal
+export const currentEpochTime = {
+  get(): number {
+    return Math.floor(new Date().getTime() / 1000);
+  },
+};
