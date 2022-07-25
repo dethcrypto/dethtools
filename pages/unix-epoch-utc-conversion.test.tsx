@@ -1,8 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 import sinon from 'sinon';
-import { currentEpochTime } from '../src/components/CurrentEpochTime';
 
+import { currentEpochTime } from '../src/components/CurrentEpochTime';
 import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../src/lib/convertUtcProperties';
 import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
