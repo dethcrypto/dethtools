@@ -37,5 +37,9 @@ jobs:
       - run: yarn format
       - run: yarn typecheck
       - run: yarn test
+      - name: 'Test E2E'
+        uses: cypress-io/github-action@v4
+        with:
+          start: yarn start
       - name: 'Build storybook'
         run: yarn build-storybook
