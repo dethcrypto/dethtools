@@ -149,20 +149,24 @@ function DecimalsInput({
         error={decimals.error}
         type="number"
         onChange={(e) => {
+          let error = e.target.validationMessage;
           const value = e.target.valueAsNumber;
-          setDecimals({ value });
+          if (isNaN(value) || value < 0) {
+            error = 'The decimals must be a number greater than 0';
+          }
+          setDecimals({ value, error });
         }}
       />
       <div
         aria-label="predefined decimals button"
-        className="absolute top-10 right-4 cursor-pointer duration-200 hover:scale-105 active:scale-90"
+        className="absolute top-10 right-20 z-50 cursor-pointer duration-200 hover:scale-105 active:scale-90"
         onClick={() => setShowPredefined(!showPredefined)}
       >
         <CurrencyIcon width={18} height={18} color="#0000000" />
       </div>
       <section
         aria-label="predefined decimals dropdown"
-        className={`absolute w-full rounded-md border border-gray-600 bg-gray-800 px-4 py-2 shadow-md ${
+        className={`absolute z-10 w-full rounded-md border border-gray-600 bg-gray-800 px-4 py-3 shadow-md ${
           showPredefined ? 'opacity-1 block select-none' : 'hidden opacity-0'
         }`}
       >
@@ -175,7 +179,7 @@ function DecimalsInput({
                 setDecimals({ value: decimal.value });
                 setShowPredefined(!showPredefined);
               }}
-              className="flex cursor-pointer rounded-md p-1 duration-200 
+              className="flex cursor-pointer rounded-md py-2 px-2 duration-200 
                        hover:bg-gray-600 active:scale-95"
             >
               <p aria-label="predefined decimal name">{decimal.name}</p>

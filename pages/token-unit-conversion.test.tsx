@@ -6,11 +6,9 @@ import TokenUnitConversion from './token-unit-conversion.page';
 describe(TokenUnitConversion.name, () => {
   it('sets defualt value, thus user can calculate values without getting NaN', async () => {
     const root = render(<TokenUnitConversion />);
-
     const decimalsField = (await root.findByLabelText(
-      /decimals/i,
+      'Decimals',
     )) as HTMLInputElement;
-
     const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: '1' } });
@@ -22,15 +20,15 @@ describe(TokenUnitConversion.name, () => {
   it('sets decimals, changes base and gets a correct value in unit field', async () => {
     const root = render(<TokenUnitConversion />);
     const decimalsField = (await root.findByLabelText(
-      /decimals/i,
+      'Decimals',
     )) as HTMLInputElement;
 
     fireEvent.change(decimalsField, { target: { value: '10' } });
 
     expect(decimalsField.value).toEqual('10');
 
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const unitField = (await root.findByLabelText('Units')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '9' } });
 
@@ -40,15 +38,15 @@ describe(TokenUnitConversion.name, () => {
   it('sets decimals, changes unit and gets a correct value in base field', async () => {
     const root = render(<TokenUnitConversion />);
     const decimalsField = (await root.findByLabelText(
-      /decimals/i,
+      'Decimals',
     )) as HTMLInputElement;
 
     fireEvent.change(decimalsField, { target: { value: '5' } });
 
     expect(decimalsField.value).toEqual('5');
 
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const unitField = (await root.findByLabelText('Units')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: String(15e5) } });
 
@@ -57,8 +55,8 @@ describe(TokenUnitConversion.name, () => {
 
   it('sets correct unit input, then adds chars, thus freezes calculation results in base field', async () => {
     const root = render(<TokenUnitConversion />);
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const unitField = (await root.findByLabelText('Units')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(unitField, { target: { value: '12444444000000000.55' } });
 
@@ -75,7 +73,7 @@ describe(TokenUnitConversion.name, () => {
 
   it('types letters and special signs to one of the fields and error gets displayed', async () => {
     const root = render(<TokenUnitConversion />);
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '140fa,@' } });
 
@@ -97,15 +95,15 @@ describe(TokenUnitConversion.name, () => {
   it('recalculates values when decimals change', async () => {
     const root = render(<TokenUnitConversion />);
     const decimalsField = (await root.findByLabelText(
-      /decimals/i,
+      'Decimals',
     )) as HTMLInputElement;
 
     fireEvent.change(decimalsField, { target: { value: '10' } });
 
     expect(decimalsField.value).toEqual('10');
 
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const unitField = (await root.findByLabelText('Units')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(baseField, { target: { value: '9' } });
 
@@ -119,10 +117,10 @@ describe(TokenUnitConversion.name, () => {
   it('types negative value to decimals, then tries to calculate values and error gets displayed', async () => {
     const root = render(<TokenUnitConversion />);
     const decimalsField = (await root.findByLabelText(
-      /decimals/i,
+      'Decimals',
     )) as HTMLInputElement;
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+    const unitField = (await root.findByLabelText('Units')) as HTMLInputElement;
+    const baseField = (await root.findByLabelText('Base')) as HTMLInputElement;
 
     fireEvent.change(decimalsField, { target: { value: '-3' } });
     fireEvent.change(unitField, { target: { value: '15' } });
@@ -130,32 +128,32 @@ describe(TokenUnitConversion.name, () => {
     const errorField = await root.findByRole('alert');
 
     expect(errorField.innerHTML).toEqual(
-      expect.stringMatching('The decimals must be a number between 0 and 26'),
+      expect.stringMatching('The decimals must be a number greater than 0'),
     );
     expect(baseField.value).toEqual('');
   });
 
-  it('predefined decimals set decimals correctly', async () => {
-    const root = render(<TokenUnitConversion />);
-    const predefinedDecimalsButton = await root.findByLabelText(
-      /predefined decimals dropdown/i,
-    );
-    const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
+  // it('predefined decimals set decimals correctly', async () => {
+  //   const root = render(<TokenUnitConversion />);
+  //   const predefinedDecimalsButton = await root.findByLabelText(
+  //     /predefined decimals dropdown/i,
+  //   );
+  //   const unitField = (await root.findByLabelText(/unit/i)) as HTMLInputElement;
 
-    fireEvent.change(unitField, { target: { value: '2013' } });
+  //   fireEvent.change(unitField, { target: { value: '2013' } });
 
-    expect(unitField.value).toEqual('2013');
+  //   expect(unitField.value).toEqual('2013');
 
-    fireEvent.click(predefinedDecimalsButton);
+  //   fireEvent.click(predefinedDecimalsButton);
 
-    const rayDropdownElement = await root.findByLabelText(
-      'ray predefined decimal',
-    );
+  //   const rayDropdownElement = await root.findByLabelText(
+  //     'ray predefined decimal',
+  //   );
 
-    fireEvent.click(rayDropdownElement);
+  //   fireEvent.click(rayDropdownElement);
 
-    const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
+  //   const baseField = (await root.findByLabelText(/base/i)) as HTMLInputElement;
 
-    expect(baseField.value).toEqual('0.000000000000000000000002013');
-  });
+  //   expect(baseField.value).toEqual('0.000000000000000000000002013');
+  // });
 });
