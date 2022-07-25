@@ -1,5 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
+import sinon from 'sinon';
+import { currentEpochTime } from '../src/components/CurrentEpochTime';
 
 import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../src/lib/convertUtcProperties';
@@ -61,11 +63,11 @@ async function expectUtcError(
 describe(UnixEpochUtcConversion.name, () => {
   it('displays correct unix epoch time', async () => {
     const root = render(<UnixEpochUtcConversion />);
+    const currentEpoch = Math.floor(new Date().getTime() / 1000);
+    sinon.stub(currentEpochTime, 'get').returns(currentEpoch);
     const currentUnixEpochTime = root.getByLabelText('current unix epoch time');
 
-    expect(currentUnixEpochTime.innerHTML).toEqual(
-      String(Math.floor(new Date().getTime() / 1000)),
-    );
+    expect(currentUnixEpochTime.innerHTML).toEqual(String(currentEpoch));
   });
 
   it('converts unix epoch to utc, seconds assumed', () => {
