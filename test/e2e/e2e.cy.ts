@@ -1,10 +1,11 @@
 /// <reference types="cypress" />
-import { currentEpochTime } from '../../src/lib/CurrentEpochTime';
+
 import sinon from 'sinon';
-import { getInputByLabel } from './e2e.helpers';
 import failOnConsoleError, { consoleType } from 'cypress-fail-on-console-error';
+
+import { getInputByLabel } from './e2e.helpers';
 import { convertUnixEpochToUtc } from '../../src/lib/convertUnixEpochToUtc';
-import { it } from 'mocha';
+import { currentEpochTime } from '../../src/lib/currentEpochTime';
 
 failOnConsoleError({
   includeConsoleTypes: [consoleType.ERROR, consoleType.WARN, consoleType.INFO],
