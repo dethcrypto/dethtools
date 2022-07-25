@@ -32,6 +32,16 @@ jobs:
 
       - run: yarn --no-progress --non-interactive --frozen-lockfile
 
+      - name: Cache Cypress binary
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/Cypress
+          key:
+            cypress-${{ runner.OS }}-{{ matrix.node }}-cypress-${{
+            hashFiles('**/package.json') }}
+          restore-keys: |
+            cypress-${{ runner.OS }}-{{ matrix.node }}-cypress-
+
       - run: yarn build #next js will lint and typecheck *some* files but to cover everything we run linting and typecheck as separate steps
       - run: yarn lint
       - run: yarn format
