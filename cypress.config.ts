@@ -6,5 +6,6 @@ export default defineConfig({
       // implement node event listeners here
     },
     specPattern: 'test/e2e/**/*.cy.{ts,tsx}',
+    supportFile: false,
   },
 });

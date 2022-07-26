@@ -120,7 +120,7 @@ describe('Calldata Decoder Page', () => {
       );
     cy.get('button').contains('Decode').click();
     cy.get('[aria-label="signature hash"]').contains('0x6a947f74');
-    let correctDecodedValues = ['123', '123', '123', '123', '540'];
+    const correctDecodedValues = ['123', '123', '123', '123', '540'];
     cy.get('[aria-label="decoded value"]').each((item, index) =>
       cy.wrap(item).contains(correctDecodedValues[index]),
     );
