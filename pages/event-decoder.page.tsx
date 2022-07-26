@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { ConversionInput } from '../src/components/ConversionInput';
 
 import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
@@ -49,7 +50,6 @@ export default function EventDecoder(): ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [tab, setTab] = useState<'abi' | '4-bytes'>('4-bytes');
-
   const [rawAbi, setRawAbi] = useState<WithOkAndErrorMsgOptional<string>>({
     isOk: true,
   });
@@ -314,95 +314,49 @@ export default function EventDecoder(): ReactElement {
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Event Decoder']}
       />
-
-      <div className="relative">
+      <>
         <section className="mb-4">
           {topics &&
             topics.map((_, index) => (
-              <section className="flex items-center gap-2" key={index}>
-                <div className="flex flex-1 flex-col">
-                  <div className="mt-3">
-                    <label htmlFor={`${index}`}>
-                      <div>
-                        {index === 0 ? (
-                          <b>topic{index}</b>
-                        ) : (
-                          <p>topic{index}</p>
-                        )}
-                      </div>
-                    </label>
-
-                    <>
-                      <input
-                        id={`${index}`}
-                        type="text"
-                        placeholder="e.g 0x0..."
-                        className={
-                          'w-full rounded-md border border-gray-600 bg-gray-900 ' +
-                          'p-3.75 text-lg leading-none text-white focus:outline-none ' +
-                          'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
-                          'focus:border-pink focus:caret-pink ' +
-                          String(
-                            topics[index].isOk
-                              ? ' border-gray-600'
-                              : ' border-error/75',
-                          )
-                        }
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                          handleChangeTopic({ index, event, isPasted: false })
-                        }
-                        onPaste={async (
-                          event: ClipboardEvent<HTMLInputElement>,
-                        ) => {
-                          handleChangeTopic({ index, event, isPasted: true });
-                          if (index !== 0) return;
-                          const topicValue =
-                            event.clipboardData.getData('Text');
-                          const sigHash = topicValue;
-                          if (sigHash) {
-                            await fetch4BytesBy.EventSignatures(sigHash);
-                          }
-                        }}
-                      />
-                      <p
-                        aria-label={'topic ' + String(index) + ' error'}
-                        className="text-right text-error"
-                      >
-                        {/* @ts-ignore */}
-                        {!topics[index].isOk && topics[index].errorMsg}
-                      </p>
-                    </>
-                  </div>
-                </div>
+              <section className="mb-2 flex flex-1 flex-col" key={index}>
+                <ConversionInput
+                  name={`topic${index}`}
+                  id={`${index}`}
+                  type="text"
+                  placeholder="0x0.."
+                  // @ts-ignore
+                  error={!topics[index].isOk && topics[index].errorMsg}
+                  className={`${
+                    topics[index].isOk ? 'border-gray-600' : 'border-error/75'
+                  }`}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    handleChangeTopic({ index, event, isPasted: false })
+                  }
+                  onPaste={async (event: ClipboardEvent<HTMLInputElement>) => {
+                    handleChangeTopic({ index, event, isPasted: true });
+                    if (index !== 0) return;
+                    const topicValue = event.clipboardData.getData('Text');
+                    const sigHash = topicValue;
+                    if (sigHash) {
+                      await fetch4BytesBy.EventSignatures(sigHash);
+                    }
+                  }}
+                />
               </section>
             ))}
         </section>
-
-        <section className="mb-6 flex flex-1 flex-col">
-          <label htmlFor="data">data</label>
-
-          <>
-            <input
-              id="data"
-              type="text"
-              placeholder="e.g 0x0..."
-              className={
-                'w-full rounded-md border border-gray-600 bg-gray-900 ' +
-                'p-3.75 text-lg leading-none text-white focus:outline-none ' +
-                'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
-                'focus:border-pink focus:caret-pink ' +
-                String(data.isOk ? ' border-gray-600' : ' border-error/75')
-              }
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                handleChangeData(event)
-              }
-            />
-            <p className="text-right text-error">
-              {!data.isOk && data.errorMsg}
-            </p>
-          </>
-        </section>
-      </div>
+        <ConversionInput
+          name="data"
+          type="text"
+          placeholder="0x0.."
+          // @ts-ignore
+          error={!data.isOk && data.errorMsg}
+          className={`${data.isOk ? 'border-gray-600' : 'border-error/75'}`}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            handleChangeData(event)
+          }
+        />
+      </>
 
       <div className="mt-6 flex flex-col">
         <AbiSourceTabs
