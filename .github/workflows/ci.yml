@@ -37,7 +37,8 @@ jobs:
       - run: yarn format
       - run: yarn typecheck
       - run: yarn test
-      - name: 'Test E2E'
-        run: yarn test:e2e
       - name: 'Build storybook'
         run: yarn build-storybook
+  e2e_tests:
+    - name: 'Test E2E'
+      run: yarn test:e2e
