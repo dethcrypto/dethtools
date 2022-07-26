@@ -32,9 +32,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
     >
   >({ inner: '' });
   const [utc, setUtc] = useState<WithErrorAndResult<UtcUnits, string>>({
-    inner: toDefaultValues(utcUnits, '') as unknown as {
-      [K in keyof UtcUnits]: string;
-    },
+    inner: toDefaultValues(utcUnits, '') as unknown as UtcUnits,
   });
 
   function handleChangeUnixEpoch(newValue: string): void {
