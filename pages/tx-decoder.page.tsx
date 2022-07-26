@@ -2,8 +2,8 @@ import { TypedTransaction } from '@ethereumjs/tx';
 import { Disclosure } from '@headlessui/react';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
-import { ConversionInput } from '../src/components/ConversionInput';
 
+import { ConversionInput } from '../src/components/ConversionInput';
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
 import { DisclosureArrow } from '../src/components/lib/DisclosureArrow';
