@@ -2,6 +2,7 @@ import { TypedTransaction } from '@ethereumjs/tx';
 import { Disclosure } from '@headlessui/react';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
+import { ConversionInput } from '../src/components/ConversionInput';
 
 import { DecodersIcon } from '../src/components/icons/DecodersIcon';
 import { Button } from '../src/components/lib/Button';
@@ -89,19 +90,13 @@ export default function TxDecoder(): ReactElement {
         text={['Decoders', 'Tx Decoder']}
       />
       <section>
-        <label htmlFor="tx-input">raw transaction</label>
         <>
-          <input
+          <ConversionInput
+            name="raw transaction"
             id="tx-input"
             type="text"
-            placeholder="e.g 0x0..."
-            className={
-              'w-full rounded-md border border-gray-600 bg-gray-900 ' +
-              'p-3.75 text-lg leading-none text-white focus:outline-none ' +
-              'invalid:border-error invalid:caret-error disabled:text-white/50 ' +
-              'focus:border-pink focus:caret-pink ' +
-              String(rawTx.isOk ? ' border-gray-600' : ' border-error')
-            }
+            placeholder="0x0.."
+            className={rawTx.isOk ? 'border-gray-600' : 'bg-gray-900'}
             onChange={(event) => handleChangeRawTx(event)}
           />
           {error && (
