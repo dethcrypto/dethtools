@@ -24,7 +24,7 @@ function HexDecToggle({
   const { isHex, value } = state;
   const switchButtonStyle =
     'grow-0 cursor-pointer border bg-gray-800 ' +
-    'border-gray-500 bg-gray-600 py-0.5 px-3 ' +
+    'border-gray-500 bg-gray-700 py-0.5 px-3 ' +
     String(isDisabled && ' opacity-30 cursor-not-allowed ') +
     'duration-200 hover:bg-gray-700 active:bg-gray-800 ';
 
