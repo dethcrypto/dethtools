@@ -63,6 +63,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
           });
         }
       }
+
       if (result) {
         setUnixEpoch({
           ...unixEpoch,
@@ -91,7 +92,9 @@ export default function UnixEpochUtcConversion(): ReactElement {
         // return early to assure that only correct `parsedNewValue` passes
         return;
       }
+
       const parsed = utcUnitToZodSchema[unitName].safeParse(parsedNewValue);
+
       if (!parsed.success) {
         setUtc({
           ...utc,

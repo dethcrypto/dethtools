@@ -34,12 +34,15 @@ export default function TxDecoder(): ReactElement {
       setDecodeResults(undefined);
       setError(undefined);
     }
+
     let { value } = event.target;
     value = toEvenHex(value);
     setRawTx((state) => {
       return { ...state, inner: value };
     });
+
     const parseResult = hexSchema.safeParse(value);
+
     if (parseResult.success) {
       setRawTx((state) => {
         return { ...state, isOk: true };

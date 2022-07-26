@@ -85,17 +85,21 @@ export default function EventDecoder(): ReactElement {
     } else {
       value = event.target.value;
     }
+
     const parseResult = hexSchema.safeParse(value);
+
     const stateBeforeIndex = (
       state: WithOkAndErrorMsg<string>[],
     ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(0, index)];
     };
+
     const stateAfterIndex = (
       state: WithOkAndErrorMsg<string>[],
     ): WithOkAndErrorMsg<string>[] => {
       return [...state.slice(index + 1)];
     };
+
     setTopics((state) => {
       if (!state) return;
       return [
@@ -107,6 +111,7 @@ export default function EventDecoder(): ReactElement {
         ...stateAfterIndex(state),
       ];
     });
+
     if (parseResult.success) {
       setTopics((state) => {
         if (!state) return;
@@ -142,6 +147,7 @@ export default function EventDecoder(): ReactElement {
         ];
       });
     }
+
     if (value.length === 0) {
       setTopics((state) => {
         if (!state) return;
@@ -165,10 +171,12 @@ export default function EventDecoder(): ReactElement {
       // @ts-ignore - this is a valid state change
       setDecodeResults(undefined);
     }
+
     let { value } = event.target;
     value = addHexPrefix(value);
     const parseResult = hexSchema.safeParse(value);
     setData({ inner: value, isOk: true });
+
     if (parseResult.success) {
       // @ts-ignore - this is a valid state change
       setData({ inner: value, isOk: true, errorMsg: undefined });
@@ -178,6 +186,7 @@ export default function EventDecoder(): ReactElement {
         errorMsg: zodResultMessage(parseResult),
       });
     }
+
     if (value.length === 0) {
       // @ts-ignore - this is a valid state change
       setData({ inner: value, isOk: true, errorMsg: undefined });
@@ -190,7 +199,9 @@ export default function EventDecoder(): ReactElement {
       // @ts-ignore - this is a valid state change
       setDecodeResults(undefined);
     }
+
     const { value } = event.target;
+
     setRawAbi(() => {
       return { inner: value, isOk: true };
     });
@@ -210,6 +221,7 @@ export default function EventDecoder(): ReactElement {
         };
       });
     }
+
     if (value.length === 0) {
       setRawAbi((state) => {
         return {

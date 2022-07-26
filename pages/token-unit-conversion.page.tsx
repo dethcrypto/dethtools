@@ -58,7 +58,9 @@ export default function TokenUnitConversion(): ReactElement {
         // return here to not override error set above
         return;
       }
+
       const parsed = unitSchema.safeParse(newValue);
+
       if (!parsed.success) {
         setState((state) => ({
           ...state,
@@ -69,7 +71,9 @@ export default function TokenUnitConversion(): ReactElement {
         }));
         return;
       }
+
       newValue = parsed.data;
+
       setState((state) => {
         const newState: TokenUnitConversionState = {
           ...state,

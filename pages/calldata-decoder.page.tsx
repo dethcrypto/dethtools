@@ -69,9 +69,11 @@ export default function CalldataDecoder(): ReactElement {
     }
     const { value } = event.target;
     const parseResult = hexSchema.safeParse(value);
+
     setEncodedCalldata(() => {
       return { inner: value, isOk: true };
     });
+
     if (parseResult.success) {
       setEncodedCalldata((state) => {
         return { ...state, isOk: true };
@@ -85,6 +87,7 @@ export default function CalldataDecoder(): ReactElement {
         };
       });
     }
+
     if (value.length === 0) {
       setEncodedCalldata((state) => {
         return {
@@ -102,14 +105,17 @@ export default function CalldataDecoder(): ReactElement {
     if (decodeResults?.length! > 0) {
       setDecodeResults(undefined);
     }
+
     const { value } = event.target;
     setRawAbi(() => {
       return { inner: value, isOk: true };
     });
+
     // test if the interface is being created correctly from rawAbi
     setRawAbi((state) => {
       return { ...state, isOk: true };
     });
+
     try {
       parseAbi(value); // throws error if rawAbi format is not valid
     } catch (error) {
@@ -122,6 +128,7 @@ export default function CalldataDecoder(): ReactElement {
         };
       });
     }
+
     if (value.length === 0) {
       setRawAbi((state) => {
         return {
@@ -153,10 +160,12 @@ export default function CalldataDecoder(): ReactElement {
       } finally {
         setLoading(false);
       }
+
       if (!decodeResults) {
         setError('Signature is wrong or undefined');
         return;
       }
+
       const mappedResults = decodeResults.map((d) => {
         return {
           fnName: d.fragment.name,
@@ -168,6 +177,7 @@ export default function CalldataDecoder(): ReactElement {
       setDecodeResults(mappedResults);
       return;
     }
+
     let decodeResult: DecodeResult | undefined;
     let abi: Interface | Error | undefined;
     if (!rawAbi.isOk) {
@@ -190,9 +200,11 @@ export default function CalldataDecoder(): ReactElement {
         return;
       }
     }
+
     if (abi instanceof Interface && encodedCalldata.inner) {
       decodeResult = decodeCalldata(abi, encodedCalldata.inner);
     }
+
     if (!decodeResult) {
       setRawAbi((state) => {
         return {
@@ -203,6 +215,7 @@ export default function CalldataDecoder(): ReactElement {
       });
       return;
     }
+
     const { decoded, fragment } = decodeResult;
     setDecodeResults([{ inputs: fragment.inputs, decoded }]);
   }

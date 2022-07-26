@@ -43,7 +43,9 @@ export default function EthUnitConversion(): ReactElement {
       // return here to not override error set above
       return;
     }
+
     const parsed = unitSchema.safeParse(newValue);
+
     if (!parsed.success) {
       setState((prevState) => ({
         ...prevState,
@@ -54,7 +56,9 @@ export default function EthUnitConversion(): ReactElement {
       }));
       return;
     }
+
     newValue = parsed.data;
+
     setState((state) => {
       const newState = { ...state };
       for (const unit of unitType.values) {
