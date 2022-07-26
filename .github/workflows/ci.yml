@@ -52,4 +52,5 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --no-progress --non-interactive --frozen-lockfile
+      - run: yarn build
       - run: yarn test:e2e
