@@ -63,11 +63,10 @@ async function expectUtcError(
 describe(UnixEpochUtcConversion.name, () => {
   it('displays correct unix epoch time', async () => {
     const root = render(<UnixEpochUtcConversion />);
-    const currentEpoch = Math.floor(new Date().getTime() / 1000);
-    sinon.stub(currentEpochTime, 'get').returns(currentEpoch);
+    sinon.stub(currentEpochTime, 'get').returns(1658850003);
     const currentUnixEpochTime = root.getByLabelText('current unix epoch time');
 
-    expect(currentUnixEpochTime.innerHTML).toEqual(String(currentEpoch));
+    expect(currentUnixEpochTime.innerHTML).toEqual(String(1658850003));
   });
 
   it('converts unix epoch to utc, seconds assumed', () => {
