@@ -61,14 +61,6 @@ async function expectUtcError(
 }
 
 describe(UnixEpochUtcConversion.name, () => {
-  it('displays correct unix epoch time', async () => {
-    const root = render(<UnixEpochUtcConversion />);
-    sinon.stub(currentEpochTime, 'get').returns(1658850003);
-    const currentUnixEpochTime = root.getByLabelText('current unix epoch time');
-
-    expect(currentUnixEpochTime.innerHTML).toEqual(String(1658850003));
-  });
-
   it('converts unix epoch to utc, seconds assumed', () => {
     const root = render(<UnixEpochUtcConversion />);
     expectUtc(root, '1658230560', 'seconds', 'Tue, 19 Jul 2022 11:36:00 GMT');
