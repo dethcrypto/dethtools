@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
+import { currentEpochTime } from '../lib/currentEpochTime';
 import { CopyIcon } from './icons/CopyIcon';
 import { OkIcon } from './icons/OkIcon';
 
@@ -62,10 +63,3 @@ export function CurrentEpochTime(): ReactElement {
     </div>
   );
 }
-
-// @internal
-export const currentEpochTime = {
-  get(): number {
-    return Math.floor(new Date().getTime() / 1000);
-  },
-};

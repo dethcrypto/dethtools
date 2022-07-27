@@ -264,6 +264,7 @@ export default function CalldataDecoder(): ReactElement {
         />
         <p
           aria-label="encoded calldata error"
+          role="alert"
           className="pt-1 text-right text-error"
         >
           {!encodedCalldata.isOk && encodedCalldata.errorMsg}
@@ -293,7 +294,7 @@ export default function CalldataDecoder(): ReactElement {
               Possible decoded calldata:
             </p>
           ) : (
-            'No results found'
+            <p aria-label="no results found">No results found</p>
           )
         ) : (
           <p> Decoded output will appear here </p>
@@ -322,7 +323,7 @@ export default function CalldataDecoder(): ReactElement {
                           border border-gray-600 py-2 px-3 duration-200 hover:bg-gray-700
                           hover:outline active:bg-gray-800"
                         >
-                          <b>{signatureHash}</b>
+                          <b aria-label="signature hash">{signatureHash}</b>
                         </div>
                       </div>
                     )}

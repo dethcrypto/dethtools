@@ -39,3 +39,18 @@ jobs:
       - run: yarn test
       - name: 'Build storybook'
         run: yarn build-storybook
+  e2e_test:
+    strategy:
+      matrix:
+        node: ['14.x']
+    runs-on: ubuntu-latest
+
+    name: Run e2e tests
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - run: yarn --no-progress --non-interactive --frozen-lockfile
+      - run: yarn build
+      - run: yarn test:e2e
