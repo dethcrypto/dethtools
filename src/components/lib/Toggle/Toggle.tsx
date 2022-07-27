@@ -1,6 +1,7 @@
 import { formatBytes32String, parseBytes32String } from 'ethers/lib/utils';
 import { Dispatch, ReactElement, SetStateAction, useEffect } from 'react';
-import { encodeHex, decodeHex } from '../../../../src/lib/decodeHex';
+
+import { decodeHex, encodeHex } from '../../../../src/lib/decodeHex';
 
 export function HexDecToggle({
   isDisabled,
