@@ -1,60 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import React, {
-  Dispatch,
-  ReactElement,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 
-import { decodeHex, encodeHex, isHex } from '../lib/decodeHex';
+import { isHex } from '../lib/decodeHex';
 import { CopyIcon } from './icons/CopyIcon';
 import { OkIcon } from './icons/OkIcon';
-
-function HexDecToggle({
-  setIsHex,
-  state,
-  isDisabled,
-}: {
-  isDisabled: boolean;
-  state: { isHex: boolean; value: string };
-  setIsHex: Dispatch<SetStateAction<{ isHex: boolean; value: string }>>;
-}): ReactElement {
-  const { isHex, value } = state;
-  const switchButtonStyle =
-    'grow-0 cursor-pointer border bg-gray-800 ' +
-    'border-gray-500 bg-gray-700 py-0.5 px-3 ' +
-    String(isDisabled && ' opacity-30 cursor-not-allowed ') +
-    'duration-200 hover:bg-gray-700 active:bg-gray-800 ';
-
-  return (
-    <div className="flex">
-      <button
-        disabled={isDisabled}
-        onClick={() => setIsHex({ isHex: true, value: encodeHex(value) })}
-        className={
-          switchButtonStyle +
-          'rounded-l-md border-r ' +
-          String(isHex && !isDisabled && 'border-gray-100')
-        }
-      >
-        hex
-      </button>
-      <button
-        disabled={isDisabled}
-        onClick={() => setIsHex({ isHex: false, value: decodeHex(value) })}
-        className={
-          switchButtonStyle +
-          'rounded-r-md border-l ' +
-          String(!isHex && !isDisabled && 'border-gray-100')
-        }
-      >
-        dec
-      </button>
-    </div>
-  );
-}
+import { Bytes32StringToggle, HexDecToggle, ToggleProps } from './lib/Toggle';
 
 export function NodeBlock({
   children,
@@ -68,27 +17,12 @@ export function NodeBlock({
   nodeType?: string;
 }): ReactElement {
   const [copyNotification, setCopyNotification] = useState(false);
-  const [state, setState] = useState<{ isHex: boolean; value: string }>({
-    isHex: isHex(str),
-    value: str,
+
+  const [state, setState] = useState<{ isState: boolean; inner: string }>({
+    // it's going to be changed right away, set false naively to avoid type problems
+    isState: false,
+    inner: str,
   });
-
-  function isStringBigNumber(str: string): boolean {
-    try {
-      BigNumber.from(str);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  useEffect(() => {
-    if (isHex(str)) {
-      setState({ isHex: true, value: encodeHex(str) });
-    } else {
-      setState({ isHex: false, value: decodeHex(str) });
-    }
-  }, [str]);
 
   return (
     <div className="flex items-center gap-2">
@@ -97,11 +31,7 @@ export function NodeBlock({
         items-center gap-3 overflow-auto rounded-md pr-4
         font-mono text-sm duration-200 ${className}`}
       >
-        <HexDecToggle
-          isDisabled={!(isHex(str) || isStringBigNumber(str))}
-          state={state}
-          setIsHex={setState}
-        />
+        <AdequateToggle str={str} state={state} setState={setState} />
         {children}
         <code id="node-type" className="text-purple">
           {nodeType}
@@ -123,7 +53,7 @@ export function NodeBlock({
             hover:outline active:bg-gray-800"
         >
           <code aria-label="decoded value" id="node-value">
-            {state.value}
+            {state.inner}
           </code>
           {!copyNotification ? (
             <CopyIcon className="cursor-pointer" />
@@ -133,5 +63,39 @@ export function NodeBlock({
         </div>
       </div>
     </div>
+  );
+}
+
+// @internal
+type AdequateToggle = Omit<
+  ToggleProps<string, string>,
+  'isDisabled' | 'isStateFn'
+> & {
+  str: string;
+};
+
+// @internal
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+function AdequateToggle({
+  str,
+  state,
+  setState,
+}: AdequateToggle): ReactElement {
+  const isString = isNaN(Number.parseInt(str));
+
+  return isString ? (
+    <Bytes32StringToggle
+      isStateFn={isHex}
+      isDisabled={false}
+      state={state}
+      setState={setState}
+    />
+  ) : (
+    <HexDecToggle
+      isStateFn={isHex}
+      isDisabled={false}
+      state={state}
+      setState={setState}
+    />
   );
 }
