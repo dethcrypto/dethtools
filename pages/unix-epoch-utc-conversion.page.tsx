@@ -32,9 +32,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
     >
   >({ inner: '' });
   const [utc, setUtc] = useState<WithErrorAndResult<UtcUnits, string>>({
-    inner: toDefaultValues(utcUnits, '') as unknown as {
-      [K in keyof UtcUnits]: string;
-    },
+    inner: toDefaultValues(utcUnits, '') as unknown as UtcUnits,
   });
 
   function handleChangeUnixEpoch(newValue: string): void {
@@ -65,6 +63,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
           });
         }
       }
+
       if (result) {
         setUnixEpoch({
           ...unixEpoch,
@@ -93,7 +92,9 @@ export default function UnixEpochUtcConversion(): ReactElement {
         // return early to assure that only correct `parsedNewValue` passes
         return;
       }
+
       const parsed = utcUnitToZodSchema[unitName].safeParse(parsedNewValue);
+
       if (!parsed.success) {
         setUtc({
           ...utc,

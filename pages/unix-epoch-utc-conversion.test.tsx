@@ -1,8 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
-import sinon from 'sinon';
 
-import { currentEpochTime } from '../src/components/CurrentEpochTime';
 import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../src/lib/convertUtcProperties';
 import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
@@ -61,15 +59,6 @@ async function expectUtcError(
 }
 
 describe(UnixEpochUtcConversion.name, () => {
-  it('displays correct unix epoch time', async () => {
-    const root = render(<UnixEpochUtcConversion />);
-    const currentEpoch = Math.floor(new Date().getTime() / 1000);
-    sinon.stub(currentEpochTime, 'get').returns(currentEpoch);
-    const currentUnixEpochTime = root.getByLabelText('current unix epoch time');
-
-    expect(currentUnixEpochTime.innerHTML).toEqual(String(currentEpoch));
-  });
-
   it('converts unix epoch to utc, seconds assumed', () => {
     const root = render(<UnixEpochUtcConversion />);
     expectUtc(root, '1658230560', 'seconds', 'Tue, 19 Jul 2022 11:36:00 GMT');

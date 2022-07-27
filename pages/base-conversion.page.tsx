@@ -45,6 +45,7 @@ export default function NumberBaseConversion(): ReactElement {
         // this won't happen
         break;
     }
+
     if (parseResult && !parseResult.success) {
       setState((state) => ({
         ...state,
@@ -56,16 +57,11 @@ export default function NumberBaseConversion(): ReactElement {
       // return here to not override error set above
       return;
     }
-    setState((oldState) => {
-      const newState: BaseConversionState = {
-        ...oldState,
-        [currentType]: { value: newValue },
-      };
-      return newState;
-    });
-    setState((oldState) => {
-      const newState = { ...oldState };
 
+    setState({ ...state, [currentType]: { value: newValue, error: '' } });
+
+    setState((state) => {
+      const newState = { ...state };
       for (const unit of base) {
         if (unit === currentType) {
           newState[unit] = { value: newValue };

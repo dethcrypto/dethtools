@@ -58,10 +58,12 @@ export default function TokenUnitConversion(): ReactElement {
         // return here to not override error set above
         return;
       }
+
       const parsed = unitSchema.safeParse(newValue);
+
       if (!parsed.success) {
-        setState((prevState) => ({
-          ...prevState,
+        setState((state) => ({
+          ...state,
           [currentType]: {
             value: newValue,
             error: parsed.error.errors[0].message,
@@ -72,9 +74,9 @@ export default function TokenUnitConversion(): ReactElement {
 
       newValue = parsed.data;
 
-      setState((oldState) => {
+      setState((state) => {
         const newState: TokenUnitConversionState = {
-          ...oldState,
+          ...state,
           [currentType]: { value: newValue },
         };
         if (decimals.error) return newState;

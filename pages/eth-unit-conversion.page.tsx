@@ -54,15 +54,13 @@ export default function EthUnitConversion(): ReactElement {
           error: parsed.error.errors[0].message,
         },
       }));
-
       return;
     }
 
     newValue = parsed.data;
 
-    setState((oldState) => {
-      const newState = { ...oldState };
-
+    setState((state) => {
+      const newState = { ...state };
       for (const unit of unitType.values) {
         if (unit === currentType) newState[unit] = { value: newValue };
         else if (parseFloat(newValue) >= 0) {
@@ -70,7 +68,6 @@ export default function EthUnitConversion(): ReactElement {
           if (!isNaN(parseInt(out))) newState[unit] = { value: out };
         }
       }
-
       return newState;
     });
   }

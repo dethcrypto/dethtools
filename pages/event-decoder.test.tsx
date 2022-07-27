@@ -279,9 +279,7 @@ describe(EventDecoder.name, () => {
 
     expect(topic0Field.value).toEqual('ddd');
 
-    const topic0Error = (await root.findByLabelText(
-      'topic 0 error',
-    )) as HTMLInputElement;
+    const topic0Error = await root.findByRole('alert');
 
     expect(topic0Error.innerHTML).toEqual(
       expect.stringMatching(
