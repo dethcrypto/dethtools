@@ -131,8 +131,10 @@ export function DecodedCalldataTree({
     <output className="mb-2 overflow-auto">
       <pre className="bg-gray-900">
         <p className="mb-2">
-          <code className="font-bold text-purple">{fnType} </code>
-          <code>{fnName} </code>
+          <code aria-label="function type" className="font-bold text-purple">
+            {fnType}
+          </code>
+          <code aria-label="function name">{fnName} </code>
         </p>
 
         {tree.map((node, index) => (
