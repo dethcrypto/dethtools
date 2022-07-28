@@ -217,7 +217,14 @@ export default function CalldataDecoder(): ReactElement {
     }
 
     const { decoded, fragment } = decodeResult;
-    setDecodeResults([{ inputs: fragment.inputs, decoded }]);
+    setDecodeResults([
+      {
+        inputs: fragment.inputs,
+        fnName: fragment.name,
+        fnType: fragment.type,
+        decoded,
+      },
+    ]);
   }
 
   const decodeButtonDisabled = !(
