@@ -3,7 +3,6 @@ import { expect } from 'earljs';
 
 import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../src/lib/convertUtcProperties';
-import { currentEpochTime } from '../src/lib/currentEpochTime';
 import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
 
 type Root = any;
