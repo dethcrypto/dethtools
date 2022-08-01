@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
-import TokenUnitConversion from './token-unit-conversion';
+import TokenUnitConversion from './token-unit-conversion.page';
 
 describe(TokenUnitConversion.name, () => {
   it('sets defualt value, thus user can calculate values without getting NaN', async () => {

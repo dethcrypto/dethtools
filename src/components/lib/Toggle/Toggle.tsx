@@ -1,4 +1,7 @@
-import { formatBytes32String, parseBytes32String } from 'ethers/lib/utils';
+import {
+  formatBytes32String,
+  parseBytes32String,
+} from '@ethersproject/strings';
 import { Dispatch, ReactElement, SetStateAction, useEffect } from 'react';
 
 import { decodeHex, encodeHex } from '../../../../src/lib/decodeHex';

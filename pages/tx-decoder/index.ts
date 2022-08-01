@@ -1,1 +1,1 @@
-export { default } from './tx-decoder';
+export { default } from './tx-decoder.page';

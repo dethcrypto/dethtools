@@ -1,1 +1,1 @@
-export { default } from './eth-unit-conversion';
+export { default } from './eth-unit-conversion.page';

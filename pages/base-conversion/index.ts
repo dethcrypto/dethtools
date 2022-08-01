@@ -1,1 +1,1 @@
-export { default } from './base-conversion';
+export { default } from './base-conversion.page';

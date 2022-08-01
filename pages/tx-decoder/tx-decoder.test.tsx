@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
-import TxDecoder from './tx-decoder';
+import TxDecoder from './tx-decoder.page';
 
 describe(TxDecoder.name, () => {
   it('decodes and displays transaction correctly', async () => {

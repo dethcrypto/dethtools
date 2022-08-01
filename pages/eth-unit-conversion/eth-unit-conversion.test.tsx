@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
-import EthUnitConversion from './eth-unit-conversion';
+import EthUnitConversion from './eth-unit-conversion.page';
 
 const WEI_IN_GWEI = 1e9;
 const WEI_IN_ETHER = 1e18;

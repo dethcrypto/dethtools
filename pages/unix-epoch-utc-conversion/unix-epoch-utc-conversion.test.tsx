@@ -3,7 +3,7 @@ import { expect } from 'earljs';
 
 import { UnixTimestampFormat } from '../../src/lib/convertUnixEpochToUtc';
 import { utcUnits } from '../../src/lib/convertUtcProperties';
-import UnixEpochUtcConversion from './unix-epoch-utc-conversion';
+import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
 
 type Root = any;
 

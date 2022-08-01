@@ -1,1 +1,1 @@
-export { default } from './constructor-encoder';
+export { default } from './constructor-encoder.page';
