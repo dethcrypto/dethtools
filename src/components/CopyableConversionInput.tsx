@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { ConversionInput,ConversionInputProps } from './ConversionInput';
+import { ConversionInput, ConversionInputProps } from './ConversionInput';
 import { CopyIcon } from './icons/CopyIcon';
 import { OkIcon } from './icons/OkIcon';
 
