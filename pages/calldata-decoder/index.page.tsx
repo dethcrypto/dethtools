@@ -242,6 +242,7 @@ export default function CalldataDecoder(): ReactElement {
         <span>Calldata</span>
       </label>
       <>
+        {/* todo */}
         <textarea
           id="calldata"
           value={
@@ -310,6 +311,7 @@ export default function CalldataDecoder(): ReactElement {
       {loading ? (
         <Spinner className="mx-auto pt-6" />
       ) : (
+        // todo
         decodeResults?.length! > 0 && (
           <section
             className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"

@@ -7,7 +7,7 @@ import { fetch4BytesBy } from '../../src/lib/decodeBySigHash';
 import { abiForToggleTest } from '../fixtures/abiForToggleTest';
 import { humanReadableAbi } from '../fixtures/hreAbi';
 import { jsonAbi } from '../fixtures/jsonAbi';
-import CalldataDecoder from './calldata-decoder';
+import CalldataDecoder from './index.page';
 
 describe(CalldataDecoder.name, () => {
   afterEach(() => {
