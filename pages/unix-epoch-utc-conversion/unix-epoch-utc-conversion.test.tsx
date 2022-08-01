@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
+import UnixEpochUtcConversion from './unix-epoch-utc-conversion';
 
-import { UnixTimestampFormat } from '../src/lib/convertUnixEpochToUtc';
-import { utcUnits } from '../src/lib/convertUtcProperties';
-import UnixEpochUtcConversion from './unix-epoch-utc-conversion.page';
+import { UnixTimestampFormat } from '../../src/lib/convertUnixEpochToUtc';
+import { utcUnits } from '../../src/lib/convertUtcProperties';
 
 type Root = any;
 

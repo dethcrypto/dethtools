@@ -11,27 +11,17 @@ export default function MyApp({
   Component,
   pageProps,
 }: AppProps): ReactElement {
-  const [isShowMobileTree, setIsShowMobileTree] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  function handleShowMobileTree(width: number): void {
-    setIsShowMobileTree(!isShowMobileTree);
-    if (width >= 480) {
-      setIsMobile(false);
-    } else {
-      setIsMobile(true);
-    }
-  }
+  const [showMobileTree, setShowMobileTree] = useState(false);
 
   return (
     <main className="mx-auto mt-12 h-full max-w-6xl">
       <ThemeProvider attribute="class" defaultTheme="dark">
-        <Navigation handleShowMobileTree={handleShowMobileTree} />
+        <Navigation useState={[showMobileTree, setShowMobileTree]} />
+
         <div className="mt-6 flex h-auto max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
           <ToolTree
             className="border-r border-gray-600 pr-8"
-            isShowMobileTree={isShowMobileTree}
-            isMobile={isMobile}
+            showMobileTree={showMobileTree}
           />
           <Component className="max-w-1/2 " {...pageProps} />
         </div>

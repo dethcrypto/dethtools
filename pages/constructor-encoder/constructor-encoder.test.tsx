@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect } from 'earljs';
 
-import ConstructorEncoder from './constructor-encoder.page';
+import ConstructorEncoder from './constructor-encoder';
 
 const abi = [
   {

@@ -1,18 +1,18 @@
 import { ReactElement, useState } from 'react';
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { SafeParseError, SafeParseReturnType } from 'zod';
 
-import { ConversionInput } from '../src/components/ConversionInput';
-import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
-import { convertBase } from '../src/lib/convertBase';
-import { Base, base } from '../src/lib/convertBaseProperties';
-import { binarySchema } from '../src/misc/schemas/binarySchema';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
-import { octalSchema } from '../src/misc/schemas/octalSchema';
-import { unitSchema } from '../src/misc/schemas/unitSchema';
-import { WithError } from '../src/misc/types';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
+import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
+import { convertBase } from '../../src/lib/convertBase';
+import { Base, base } from '../../src/lib/convertBaseProperties';
+import { binarySchema } from '../../src/misc/schemas/binarySchema';
+import { hexSchema } from '../../src/misc/schemas/hexSchema';
+import { octalSchema } from '../../src/misc/schemas/octalSchema';
+import { unitSchema } from '../../src/misc/schemas/unitSchema';
+import { WithError } from '../../src/misc/types';
+import { zodResultMessage } from '../../src/misc/zodResultMessage';
 
 interface BaseConversionState extends Record<Base, WithError<string>> {}
 
@@ -104,22 +104,22 @@ function ConversionInputs({
 }: ConversionInputsProps): JSX.Element {
   return (
     <>
-      <ConversionInput
+      <CopyableConversionInput
         name="Binary"
         {...state['binary']}
         onChange={(e) => handleChangeValue(e.target.value, 'binary')}
       />
-      <ConversionInput
+      <CopyableConversionInput
         name="Octal"
         {...state['octal']}
         onChange={(e) => handleChangeValue(e.target.value, 'octal')}
       />
-      <ConversionInput
+      <CopyableConversionInput
         name="Decimal"
         {...state['decimal']}
         onChange={(e) => handleChangeValue(e.target.value, 'decimal')}
       />
-      <ConversionInput
+      <CopyableConversionInput
         name="Hexadecimal"
         {...state['hexadecimal']}
         onChange={(e) => handleChangeValue(e.target.value, 'hexadecimal')}

@@ -1,23 +1,27 @@
 import { AssertionError } from 'assert';
 import React, { ReactElement, useState } from 'react';
 
-import { ConversionInput } from '../src/components/ConversionInput';
-import { CurrentEpochTime } from '../src/components/CurrentEpochTime';
-import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
-import { Button } from '../src/components/lib/Button';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
+import { ConversionInput } from '../../src/components/ConversionInput';
+import { CurrentEpochTime } from '../../src/components/CurrentEpochTime';
+import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Button } from '../../src/components/lib/Button';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
 import {
   convertUnixEpochToUtc,
   UnixTimestampFormat,
-} from '../src/lib/convertUnixEpochToUtc';
-import { UtcUnit, UtcUnits, utcUnits } from '../src/lib/convertUtcProperties';
-import { convertUtcToUnixEpoch } from '../src/lib/convertUtcToUnixEpoch';
-import { unixEpochSchema } from '../src/misc/schemas/unixEpochSchema';
-import { utcUnitToZodSchema } from '../src/misc/schemas/utcSchemas';
-import { stringToNumber } from '../src/misc/stringToNumber';
-import { toDefaultValues } from '../src/misc/toDefaultValues';
-import { WithErrorAndResult } from '../src/misc/types';
+} from '../../src/lib/convertUnixEpochToUtc';
+import {
+  UtcUnit,
+  UtcUnits,
+  utcUnits,
+} from '../../src/lib/convertUtcProperties';
+import { convertUtcToUnixEpoch } from '../../src/lib/convertUtcToUnixEpoch';
+import { unixEpochSchema } from '../../src/misc/schemas/unixEpochSchema';
+import { utcUnitToZodSchema } from '../../src/misc/schemas/utcSchemas';
+import { stringToNumber } from '../../src/misc/stringToNumber';
+import { toDefaultValues } from '../../src/misc/toDefaultValues';
+import { WithErrorAndResult } from '../../src/misc/types';
 
 export interface UtcConversionInputProps
   extends React.ComponentPropsWithoutRef<'input'> {
@@ -145,7 +149,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
         icon={<CalculatorIcon height={24} width={24} />}
         text={['Calculators', 'Unix Epoch - UTC Conversion']}
       />
-      <section className="w-full rounded-md border border-gray-600 bg-gray-900 p-3.75 text-lg text-white">
+      <section>
         <h3 className="mb-1 text-xl font-bold text-gray-200">
           Current Unix Epoch Time
         </h3>
@@ -194,25 +198,25 @@ export default function UnixEpochUtcConversion(): ReactElement {
           </div>
         )}
       </>
-      <div className="my-8 w-full border border-b border-dotted border-gray-600" />{' '}
+      <div className="my-8 w-full border border-b border-dotted border-gray-600" />
       <h3 className="mb-1 text-xl font-bold text-gray-200">
         Convert UTC to Unix Epoch
       </h3>
       <div className="flex items-center gap-3">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <UtcConversionInputs
             utc={utc}
             names={utcUnits}
             handleChangeUtc={handleChangeUtc}
           />
+          <Button
+            aria-label="convert utc"
+            onClick={handleConvertUTC}
+            className="mt-2 sm:ml-4"
+          >
+            Convert
+          </Button>
         </div>
-        <Button
-          aria-label="convert utc"
-          onClick={handleConvertUTC}
-          className="mt-2"
-        >
-          Convert
-        </Button>
       </div>
       <p role="alert" aria-atomic="true" className="text-error">
         {utc.error}

@@ -7,32 +7,33 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 
-import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
-import { ConversionInput } from '../src/components/ConversionInput';
-import { DecodersIcon } from '../src/components/icons/DecodersIcon';
-import { Button } from '../src/components/lib/Button';
-import { NodeBlock } from '../src/components/NodeBlock';
-import { Spinner } from '../src/components/Spinner';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
+import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
+
+import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
+import { Button } from '../../src/components/lib/Button';
+import { NodeBlock } from '../../src/components/NodeBlock';
+import { Spinner } from '../../src/components/Spinner';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
 import {
   decodeWithEventProps,
   fetch4BytesBy,
-} from '../src/lib/decodeBySigHash';
+} from '../../src/lib/decodeBySigHash';
 import {
   DecodedEventResult,
   decodeEvent,
   EventProps,
-} from '../src/lib/decodeEvent';
-import { parseAbi } from '../src/lib/parseAbi';
-import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
+} from '../../src/lib/decodeEvent';
+import { parseAbi } from '../../src/lib/parseAbi';
+import { parseEthersErrorMessage } from '../../src/misc/parseEthersErrorMessage';
+import { hexSchema } from '../../src/misc/schemas/hexSchema';
 import {
   WithOkAndErrorMsg,
   WithOkAndErrorMsgOptional,
-} from '../src/misc/types';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
+} from '../../src/misc/types';
+import { zodResultMessage } from '../../src/misc/zodResultMessage';
 
 interface HandleChangeTopic {
   index: number;
@@ -331,7 +332,7 @@ export default function EventDecoder(): ReactElement {
           {topics &&
             topics.map((_, index) => (
               <section className="mb-2 flex flex-1 flex-col" key={index}>
-                <ConversionInput
+                <CopyableConversionInput
                   name={`topic${index}`}
                   id={`${index}`}
                   type="text"
@@ -357,7 +358,7 @@ export default function EventDecoder(): ReactElement {
               </section>
             ))}
         </section>
-        <ConversionInput
+        <CopyableConversionInput
           name="data"
           type="text"
           placeholder="0x0.."

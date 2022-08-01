@@ -7,29 +7,29 @@ import {
   useState,
 } from 'react';
 
-import { AbiSourceTabs } from '../src/components/AbiSourceTabs';
-import { DecodedCalldataTree } from '../src/components/DecodedCalldataTree';
-import { DecodersIcon } from '../src/components/icons/DecodersIcon';
-import { Button } from '../src/components/lib/Button';
-import { Spinner } from '../src/components/Spinner';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
+import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
+import { DecodedCalldataTree } from '../../src/components/DecodedCalldataTree';
+import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
+import { Button } from '../../src/components/lib/Button';
+import { Spinner } from '../../src/components/Spinner';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
 import {
   decodeWithCalldata,
   fetch4BytesBy,
   sigHashFromCalldata,
-} from '../src/lib/decodeBySigHash';
+} from '../../src/lib/decodeBySigHash';
 import {
   decodeCalldata,
   Decoded,
   DecodeResult,
-} from '../src/lib/decodeCalldata';
-import { parseAbi } from '../src/lib/parseAbi';
-import { assert } from '../src/misc/assert';
-import { parseEthersErrorMessage } from '../src/misc/parseEthersErrorMessage';
-import { hexSchema } from '../src/misc/schemas/hexSchema';
-import { WithOkAndErrorMsgOptional } from '../src/misc/types';
-import { zodResultMessage } from '../src/misc/zodResultMessage';
+} from '../../src/lib/decodeCalldata';
+import { parseAbi } from '../../src/lib/parseAbi';
+import { assert } from '../../src/misc/assert';
+import { parseEthersErrorMessage } from '../../src/misc/parseEthersErrorMessage';
+import { hexSchema } from '../../src/misc/schemas/hexSchema';
+import { WithOkAndErrorMsgOptional } from '../../src/misc/types';
+import { zodResultMessage } from '../../src/misc/zodResultMessage';
 
 export default function CalldataDecoder(): ReactElement {
   const [loading, setLoading] = useState(false);

@@ -2,8 +2,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { expect } from 'earljs';
 import sinon from 'sinon';
 
-import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
-import EventDecoder from './event-decoder.page';
+import { fetch4BytesBy } from '../../src/lib/decodeBySigHash';
+import EventDecoder from './event-decoder';
 
 describe(EventDecoder.name, () => {
   afterEach(() => {

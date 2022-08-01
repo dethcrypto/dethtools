@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
-import NumberBaseConversion from './base-conversion.page';
+import NumberBaseConversion from './base-conversion';
 
 describe(NumberBaseConversion.name, () => {
   it('sets binary and gets a correct value in other fields', async () => {
