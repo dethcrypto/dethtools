@@ -7,10 +7,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 
 import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
-
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
 import { NodeBlock } from '../../src/components/NodeBlock';

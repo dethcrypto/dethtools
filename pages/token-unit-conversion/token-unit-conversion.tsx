@@ -1,9 +1,9 @@
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { CurrencyIcon } from '../../src/components/icons/Currency';
+import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertUnit } from '../../src/lib/convertUnits';

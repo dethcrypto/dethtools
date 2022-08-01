@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react';
-import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { SafeParseError, SafeParseReturnType } from 'zod';
 
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';

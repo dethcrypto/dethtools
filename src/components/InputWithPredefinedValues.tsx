@@ -1,13 +1,14 @@
 import {
-  ReactElement,
-  useState,
-  SVGProps,
   Dispatch,
+  ReactElement,
   SetStateAction,
+  SVGProps,
+  useState,
 } from 'react';
+import type { Primitive } from 'ts-essentials';
+
 import { WithError } from '../../src/misc/types';
 import { ConversionInput } from './ConversionInput';
-import type { Primitive } from 'ts-essentials';
 
 export function InputWithPredefinedValues<T extends WithError<Primitive>>({
   icon,
