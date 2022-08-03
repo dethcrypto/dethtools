@@ -13,7 +13,7 @@ import { ToolHeader } from '../../src/components/ToolHeader';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
 import { DecodedTx, decodeTx } from '../../src/lib/decodeTx';
 import { toEvenHex } from '../../src/lib/toEvenHex';
-import { hexSchema } from '../../src/misc/schemas/hexSchema';
+import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { WithOkAndErrorMsgOptional } from '../../src/misc/types';
 import { zodResultMessage } from '../../src/misc/zodResultMessage';
 

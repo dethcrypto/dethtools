@@ -7,10 +7,10 @@ import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertBase } from '../../src/lib/convertBase';
 import { Base, base } from '../../src/lib/convertBaseProperties';
-import { binarySchema } from '../../src/misc/schemas/binarySchema';
-import { hexSchema } from '../../src/misc/schemas/hexSchema';
-import { octalSchema } from '../../src/misc/schemas/octalSchema';
-import { unitSchema } from '../../src/misc/schemas/unitSchema';
+import { binarySchema } from '../../src/misc/validation/schemas/binarySchema';
+import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
+import { octalSchema } from '../../src/misc/validation/schemas/octalSchema';
+import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
 import { WithError } from '../../src/misc/types';
 import { zodResultMessage } from '../../src/misc/zodResultMessage';
 

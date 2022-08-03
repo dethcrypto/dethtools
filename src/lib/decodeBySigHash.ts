@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import fetch from 'node-fetch';
 
-import { hexSchema } from '../misc/schemas/hexSchema';
+import { hexSchema } from '../misc/validation/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
 import { parseAbi } from './parseAbi';

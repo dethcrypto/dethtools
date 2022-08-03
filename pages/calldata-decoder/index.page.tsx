@@ -20,17 +20,13 @@ import {
   fetch4BytesBy,
   sigHashFromCalldata,
 } from '../../src/lib/decodeBySigHash';
-import {
-  decodeCalldata,
-  Decoded,
-  DecodeResult,
-} from '../../src/lib/decodeCalldata';
+import { decodeCalldata, Decoded } from '../../src/lib/decodeCalldata';
 import { parseAbi } from '../../src/lib/parseAbi';
 import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
-import { parseEthersErrorMessage } from '../../src/misc/parseEthersErrorMessage';
-import { hexSchema } from '../../src/misc/schemas/hexSchema';
+import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { WithError } from '../../src/misc/types';
-import { zodResultMessage } from '../../src/misc/zodResultMessage';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
+import { abiValidator } from '../../src/misc/validation/validators/abiValidator';
 
 interface MappedDecodedResult {
   fnName?: string;
@@ -75,11 +71,7 @@ export default function CalldataDecoder(): ReactElement {
   const handleChangeEncodedCalldata = (newValue: string): void =>
     handleChangeValidated({
       newValue,
-      validateFn: (newValue) => {
-        const validated = hexSchema.safeParse(newValue);
-        if (validated.success) return { success: true };
-        else return { success: false, error: zodResultMessage(validated) };
-      },
+      validateFn: (newValue) => hexValidator(newValue),
       setState: setEncodedCalldata,
       flushFn: flushResults,
     });
@@ -87,17 +79,7 @@ export default function CalldataDecoder(): ReactElement {
   const handleChangeRawAbi = (newValue: string): void =>
     handleChangeValidated({
       newValue,
-      validateFn: (newValue) => {
-        try {
-          parseAbi(newValue);
-          return { success: true };
-        } catch (error) {
-          return {
-            success: false,
-            error: parseEthersErrorMessage((error as Error).message),
-          };
-        }
-      },
+      validateFn: (newValue) => abiValidator(newValue),
       setState: setRawAbi,
       flushFn: flushResults,
     });
@@ -127,8 +109,6 @@ export default function CalldataDecoder(): ReactElement {
   }
 
   function handleDecodeCalldataWithAbi(): void {
-    let decodeResult: DecodeResult | undefined;
-
     const abi = parseAbi(rawAbi.value);
     if (abi instanceof Error) {
       return setRawAbi({
@@ -137,20 +117,24 @@ export default function CalldataDecoder(): ReactElement {
           "Provided ABI was in the wrong format or it didn't matched calldata",
       });
     }
-    if (abi instanceof Interface && encodedCalldata.value)
-      decodeResult = decodeCalldata(abi, encodedCalldata.value);
-    if (!decodeResult)
-      return setRawAbi({ ...rawAbi, error: 'Signature is wrong or undefined' });
+    if (abi instanceof Interface) {
+      const decodeResult = decodeCalldata(abi, encodedCalldata.value);
+      if (!decodeResult)
+        return setRawAbi({
+          ...rawAbi,
+          error: 'Signature is wrong or undefined',
+        });
 
-    const { decoded, fragment } = decodeResult;
-    return setDecodeResults([
-      {
-        inputs: fragment.inputs,
-        fnName: fragment.name,
-        fnType: fragment.type,
-        decoded,
-      },
-    ]);
+      const { decoded, fragment } = decodeResult;
+      return setDecodeResults([
+        {
+          inputs: fragment.inputs,
+          fnName: fragment.name,
+          fnType: fragment.type,
+          decoded,
+        },
+      ]);
+    }
   }
 
   async function handleDecodeCalldata(): Promise<void> {
