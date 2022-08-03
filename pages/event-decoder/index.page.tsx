@@ -278,7 +278,7 @@ export default function EventDecoder(): ReactElement {
       ) : (
         !decodeResultsDisabled && (
           <section
-            className="relative mb-16 mt-8 rounded-md border border-gray-600 bg-gray-900 p-8"
+            className="relative mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"
             placeholder="Output"
           >
             <section className="flex flex-col gap-4 break-words">

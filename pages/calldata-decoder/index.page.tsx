@@ -187,6 +187,21 @@ export default function CalldataDecoder(): ReactElement {
       >
         Decode
       </Button>
+
+      <section className="pt-8 pb-3">
+        {decodeResults.length > 0 ? (
+          tab === '4-bytes' ? (
+            <p className="text-md pb-4 font-semibold">
+              Possible decoded results:
+            </p>
+          ) : (
+            'No results found'
+          )
+        ) : (
+          <p> Decoded output will appear here </p>
+        )}
+      </section>
+
       <CalldataResult
         loading={loading}
         error={error}
