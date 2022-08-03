@@ -261,15 +261,11 @@ export default function EventDecoder(): ReactElement {
 
       <section className="pt-8 pb-3">
         {decodeResults.length > 0 ? (
-          tab === '4-bytes' ? (
-            <p className="text-md pb-4 font-semibold">
-              Possible decoded results:
-            </p>
-          ) : (
-            'No results found'
-          )
+          <p className="text-md pb-4 font-semibold">
+            Possible decoded results:
+          </p>
         ) : (
-          <p> Decoded output will appear here </p>
+          <p>Decoded output will appear here if any results are found</p>
         )}
       </section>
 
