@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 import sinon from 'sinon';
-import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 
 import { fetch4BytesBy } from '../../src/lib/decodeBySigHash';
+import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 import EventDecoder from './index.page';
 
 describe(EventDecoder.name, () => {

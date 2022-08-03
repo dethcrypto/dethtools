@@ -23,10 +23,10 @@ import {
 import { decodeCalldata, Decoded } from '../../src/lib/decodeCalldata';
 import { parseAbi } from '../../src/lib/parseAbi';
 import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
-import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { WithError } from '../../src/misc/types';
-import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
+import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { abiValidator } from '../../src/misc/validation/validators/abiValidator';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 
 interface MappedDecodedResult {
   fnName?: string;

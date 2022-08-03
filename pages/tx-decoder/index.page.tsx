@@ -13,8 +13,8 @@ import { ToolHeader } from '../../src/components/ToolHeader';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
 import { DecodedTx, decodeTx } from '../../src/lib/decodeTx';
 import { toEvenHex } from '../../src/lib/toEvenHex';
-import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { WithOkAndErrorMsgOptional } from '../../src/misc/types';
+import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { zodResultMessage } from '../../src/misc/zodResultMessage';
 
 export default function TxDecoder(): ReactElement {

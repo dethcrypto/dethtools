@@ -8,8 +8,8 @@ import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertUnit } from '../../src/lib/convertUnits';
 import { decodeHex } from '../../src/lib/decodeHex';
-import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
 import { WithError } from '../../src/misc/types';
+import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
 
 const DEFAULT_DECIMALS = 18;
 

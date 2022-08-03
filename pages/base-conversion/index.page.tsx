@@ -7,11 +7,11 @@ import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertBase } from '../../src/lib/convertBase';
 import { Base, base } from '../../src/lib/convertBaseProperties';
+import { WithError } from '../../src/misc/types';
 import { binarySchema } from '../../src/misc/validation/schemas/binarySchema';
 import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
 import { octalSchema } from '../../src/misc/validation/schemas/octalSchema';
 import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
-import { WithError } from '../../src/misc/types';
 import { zodResultMessage } from '../../src/misc/zodResultMessage';
 
 interface BaseConversionState extends Record<Base, WithError<string>> {}

@@ -1,6 +1,5 @@
 import { zodResultMessage } from '../../../../src/misc/zodResultMessage';
 import { hexSchema } from '../schemas/hexSchema';
-
 import { ValidatorResult } from './result';
 
 export function hexValidator(newValue: string): ValidatorResult {

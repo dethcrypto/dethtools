@@ -6,7 +6,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
 
 import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
@@ -26,10 +25,11 @@ import {
   EventProps,
 } from '../../src/lib/decodeEvent';
 import { parseAbi } from '../../src/lib/parseAbi';
+import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
 import { parseEthersErrorMessage } from '../../src/misc/parseEthersErrorMessage';
 import { WithError } from '../../src/misc/types';
-import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 import { abiValidator } from '../../src/misc/validation/validators/abiValidator';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 
 const stateBeforeIndex = (
   state: WithError<string>[],
