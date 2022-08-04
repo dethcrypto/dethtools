@@ -7,7 +7,38 @@ import { DecodersIcon } from './icons/DecodersIcon';
 import { EncodersIcon } from './icons/EncodersIcon';
 import { MinusIcon } from './icons/MinusIcon';
 import { PlusIcon } from './icons/PlusIcon';
+import { NavigationSocial } from './NavigationSocial';
 
+interface ToolTreeProps extends React.ComponentPropsWithoutRef<'section'> {
+  showMobileTree: boolean;
+}
+
+export function ToolTree({
+  showMobileTree,
+  ...props
+}: ToolTreeProps): ReactElement {
+  return (
+    <>
+      {showMobileTree && (
+        <section
+          {...props}
+          className={`absolute top-0 left-0 z-10 mt-32 block h-full w-full bg-gray-900 sm:hidden ${props.className}`}
+        >
+          <ToolTreeElements className="mx-8 mt-8" />
+          <NavigationSocial className="mx-10 mt-12 flex items-center justify-between gap-12 sm:hidden" />
+        </section>
+      )}
+      <section
+        {...props}
+        className={`hidden w-4/12 sm:block lg:ml-0 ${props.className}`}
+      >
+        <ToolTreeElements />
+      </section>
+    </>
+  );
+}
+
+// @internal
 function ToolTreeElements({ className }: { className?: string }): ReactElement {
   return (
     <div className={`items-start" flex flex-col ${className}`}>
@@ -53,32 +84,7 @@ function ToolTreeElements({ className }: { className?: string }): ReactElement {
   );
 }
 
-export function ToolTree({
-  className,
-  isShowMobileTree,
-  isMobile,
-}: {
-  className?: string;
-  isShowMobileTree: boolean;
-  isMobile: boolean;
-}): ReactElement {
-  return (
-    <>
-      {isShowMobileTree && isMobile ? (
-        <section
-          className={`absolute top-0 left-0 z-10 mt-32 h-full w-full bg-gray-900 ${className}`}
-        >
-          <ToolTreeElements className="mx-8 mt-8" />
-        </section>
-      ) : (
-        <section className={`hidden w-4/12 md:block lg:ml-0 ${className}`}>
-          <ToolTreeElements />
-        </section>
-      )}
-    </>
-  );
-}
-
+// @internal
 const tree: Tree = {
   calculators: {
     icon: <CalculatorIcon height={20} width={20} />,
@@ -111,6 +117,7 @@ const tree: Tree = {
   },
 };
 
+// @internal
 interface Tool {
   title: string;
   pageHref: string;

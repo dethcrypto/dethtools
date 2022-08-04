@@ -6,7 +6,7 @@ import React, {
   TextareaHTMLAttributes,
 } from 'react';
 
-import { WithOkAndErrorMsgOptional } from '../misc/types';
+import { WithError } from '../misc/types';
 
 interface AbiSourceTabsProps<T, D> {
   rawAbi: T;
@@ -20,7 +20,7 @@ interface AbiSourceTabsProps<T, D> {
 
 export function AbiSourceTabs<
   R extends TextareaHTMLAttributes<HTMLTextAreaElement>['value'],
-  T extends WithOkAndErrorMsgOptional<R>,
+  T extends WithError<R>,
   D,
 >({
   rawAbi,
@@ -41,12 +41,12 @@ export function AbiSourceTabs<
               tab === '4-bytes'
                 ? 'rounded-l-md bg-pink'
                 : 'rounded-tl-md bg-gray-600'
-            }` + String(rawAbi.isOk ? ' border-gray-600' : ' border-error')
+            }` + String(!rawAbi.error ? ' border-gray-600' : ' border-error')
           }
           onClick={() => {
             setTab('4-bytes');
-            // @ts-ignore - this is a valid state change
-            setDecodeResults(undefined);
+            // @ts-ignore - this is a valid state chang
+            setDecodeResults([]);
           }}
         >
           4 bytes
@@ -61,12 +61,12 @@ export function AbiSourceTabs<
               tab === 'abi'
                 ? 'rounded-tr-md bg-pink'
                 : 'rounded-r-md bg-gray-600'
-            }` + String(rawAbi.isOk ? ' border-gray-600' : ' bg-error/75')
+            }` + String(!rawAbi.error ? ' border-gray-600' : ' bg-error/75')
           }
           onClick={() => {
             setTab('abi');
             // @ts-ignore - this is a valid state change
-            setDecodeResults(undefined);
+            setDecodeResults([]);
           }}
         >
           ABI
@@ -78,26 +78,18 @@ export function AbiSourceTabs<
           <textarea
             id="abi"
             aria-label="text area for abi"
-            value={
-              // Cast inner to 'always present', as we always want to
-              // display the abi, even if it's wrong
-              (
-                rawAbi as WithOkAndErrorMsgOptional<string> & {
-                  inner: string;
-                }
-              ).inner || ''
-            }
+            value={rawAbi.value}
             placeholder="e.g function transferFrom(address, ..)"
             className={
               'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
-              String(rawAbi.isOk ? ' border-gray-600' : ' border-error/75')
+              String(!rawAbi.error ? ' border-gray-600' : ' border-error/75')
             }
             onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
               handleChangeRawAbi(event)
             }
           />
           <p aria-label="raw abi error" className="pt-1 text-right text-error">
-            {!rawAbi.isOk && rawAbi.errorMsg}
+            {rawAbi.error}
           </p>
         </>
       )}

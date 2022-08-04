@@ -3,15 +3,15 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { isValidAddress, stripHexPrefix } from 'ethereumjs-util';
 import { ChangeEvent, ReactElement, useState } from 'react';
 
-import { CopyIcon } from '../src/components/icons/CopyIcon';
-import { DecodersIcon } from '../src/components/icons/DecodersIcon';
-import { OkIcon } from '../src/components/icons/OkIcon';
-import { Button } from '../src/components/lib/Button';
-import { Input } from '../src/components/lib/Input';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
-import { encodeConstructor } from '../src/lib/encodeContructor';
-import { parseAbi } from '../src/lib/parseAbi';
+import { CopyIcon } from '../../src/components/icons/CopyIcon';
+import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
+import { OkIcon } from '../../src/components/icons/OkIcon';
+import { Button } from '../../src/components/lib/Button';
+import { Input } from '../../src/components/lib/Input';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
+import { encodeConstructor } from '../../src/lib/encodeContructor';
+import { parseAbi } from '../../src/lib/parseAbi';
 
 export default function ConstructorEncoder(): ReactElement {
   const [error, setError] = useState<string | undefined>();

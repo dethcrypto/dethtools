@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
 
-import TokenUnitConversion from './token-unit-conversion.page';
+import TokenUnitConversion from './index.page';
 
 describe(TokenUnitConversion.name, () => {
   it('sets defualt value, thus user can calculate values without getting NaN', async () => {
@@ -146,9 +146,7 @@ describe(TokenUnitConversion.name, () => {
 
     fireEvent.click(predefinedDecimalsButton);
 
-    const rayDropdownElement = await root.findByLabelText(
-      'ray predefined decimal',
-    );
+    const rayDropdownElement = await root.findByLabelText('ray predefined row');
 
     fireEvent.click(rayDropdownElement);
 

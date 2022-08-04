@@ -1,24 +1,24 @@
-import {
-  Dispatch,
-  ReactElement,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ConversionInput } from '../src/components/ConversionInput';
-import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
-import { CurrencyIcon } from '../src/components/icons/Currency';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
-import { convertUnit } from '../src/lib/convertUnits';
-import { decodeHex } from '../src/lib/decodeHex';
-import { unitSchema } from '../src/misc/schemas/unitSchema';
-import { WithError } from '../src/misc/types';
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
+import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { CurrencyIcon } from '../../src/components/icons/Currency';
+import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
+import { convertUnit } from '../../src/lib/convertUnits';
+import { decodeHex } from '../../src/lib/decodeHex';
+import { WithError } from '../../src/misc/types';
+import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
 
 const DEFAULT_DECIMALS = 18;
+
+const predefinedDecimals = new Set([
+  { label: 'gwei', value: 15 },
+  { label: 'wad', value: 18 },
+  { label: 'ray', value: 27 },
+  { label: 'rad', value: 45 },
+]);
 
 type TokenUnitType = 'base' | 'unit';
 
@@ -108,8 +108,26 @@ export default function TokenUnitConversion(): ReactElement {
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Token Unit Conversion']}
         />
+
         <section className="flex w-full flex-col gap-5">
-          <DecimalsInput decimals={decimals} setDecimals={setDecimals} />
+          <InputWithPredefinedValues
+            name="Decimals"
+            predefinedValues={predefinedDecimals}
+            icon={<CurrencyIcon height={18} width={18} color="black" />}
+            useExternalState={[decimals, setDecimals]}
+            onChange={(event) => {
+              const { validationMessage, valueAsNumber } =
+                event.target as HTMLInputElement;
+
+              let error = validationMessage;
+
+              if (isNaN(valueAsNumber) || valueAsNumber < 0) {
+                error = 'The decimals must be a number greater than 0';
+              }
+              setDecimals({ value: valueAsNumber, error });
+            }}
+          />
+
           <ConversionInputs
             handleChangeValue={handleChangeValue}
             state={state}
@@ -117,85 +135,6 @@ export default function TokenUnitConversion(): ReactElement {
         </section>
       </form>
     </ToolContainer>
-  );
-}
-
-interface DecimalsInputProps {
-  decimals: WithError<number>;
-  setDecimals: Dispatch<SetStateAction<WithError<number>>>;
-}
-
-interface PredefinedDecimal {
-  name: string;
-  value: number;
-}
-
-const predefinedDecimals: PredefinedDecimal[] = [
-  { name: 'gwei', value: 15 },
-  { name: 'wad', value: 18 },
-  { name: 'ray', value: 27 },
-  { name: 'rad', value: 45 },
-];
-
-function DecimalsInput({
-  decimals,
-  setDecimals,
-}: DecimalsInputProps): ReactElement {
-  const [showPredefined, setShowPredefined] = useState(false);
-  return (
-    <div className="relative">
-      <ConversionInput
-        className="w-full pr-10"
-        name="Decimals"
-        value={decimals.value}
-        error={decimals.error}
-        type="number"
-        onChange={(e) => {
-          let error = e.target.validationMessage;
-          const value = e.target.valueAsNumber;
-          if (isNaN(value) || value < 0) {
-            error = 'The decimals must be a number greater than 0';
-          }
-          setDecimals({ value, error });
-        }}
-      />
-      <div
-        aria-label="predefined decimals button"
-        className="absolute top-10 right-20 z-50 cursor-pointer duration-200 hover:scale-105 active:scale-90"
-        onClick={() => setShowPredefined(!showPredefined)}
-      >
-        <CurrencyIcon width={18} height={18} color="#0000000" />
-      </div>
-      <section
-        aria-label="predefined decimals dropdown"
-        className={`absolute z-10 w-full rounded-md border border-gray-600 bg-gray-800 px-4 py-3 shadow-md ${
-          showPredefined ? 'opacity-1 block select-none' : 'hidden opacity-0'
-        }`}
-      >
-        {predefinedDecimals.map((decimal) => {
-          return (
-            <div
-              aria-label={`${decimal.name} predefined decimal`}
-              key={decimal.name}
-              onClick={() => {
-                setDecimals({ value: decimal.value });
-                setShowPredefined(!showPredefined);
-              }}
-              className="flex cursor-pointer rounded-md py-2 px-2 duration-200 
-                       hover:bg-gray-600 active:scale-95"
-            >
-              <p aria-label="predefined decimal name">{decimal.name}</p>
-              <sup
-                aria-label="predefined decimal value"
-                className="inline-block text-sm leading-none text-gray-300"
-              >
-                {decimal.value}
-              </sup>
-            </div>
-          );
-        })}
-      </section>
-    </div>
   );
 }
 
@@ -210,12 +149,12 @@ function ConversionInputs({
 }: ConversionInputsProps): JSX.Element {
   return (
     <>
-      <ConversionInput
+      <CopyableConversionInput
         name="Units"
         {...state['unit']}
         onChange={(e) => handleChangeValue(e.target.value, 'unit')}
       />
-      <ConversionInput
+      <CopyableConversionInput
         name="Base"
         {...state['base']}
         onChange={(e) => handleChangeValue(e.target.value, 'base')}
