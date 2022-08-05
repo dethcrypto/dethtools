@@ -1,21 +1,16 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 
-import { isHex } from '../lib/decodeHex';
-import { CopyIcon } from './icons/CopyIcon';
-import { OkIcon } from './icons/OkIcon';
-import { Bytes32StringToggle, HexDecToggle, ToggleProps } from './lib/Toggle';
+import { isHex } from '../../../lib/decodeHex';
+import { CopyIcon } from '../../icons/CopyIcon';
+import { OkIcon } from '../../icons/OkIcon';
+import { Bytes32StringToggle, HexDecToggle, ToggleProps } from '../Toggle';
 
 export function NodeBlock({
   children,
   className,
   str,
   nodeType,
-}: {
-  str: string;
-  children?: ReactNode;
-  className?: string;
-  nodeType?: string;
-}): ReactElement {
+}: NodeBlockProps): ReactElement {
   const [copyNotification, setCopyNotification] = useState(false);
 
   const [state, setState] = useState<{ isState: boolean; inner: string }>({
@@ -64,6 +59,24 @@ export function NodeBlock({
       </div>
     </div>
   );
+}
+
+// @internal
+export interface NodeBlockProps {
+  /*
+   * Value to display inside the node block
+   */
+  str: string;
+  /*
+   * Any children to display inside the node block
+   */
+  children?: ReactNode;
+  className?: string;
+  /*
+   * Because the node block is usually used to display Solidity types, we often want to
+   * display the type of the node. e.g "uint256" or "string"
+   */
+  nodeType?: string;
 }
 
 // @internal

@@ -7,9 +7,9 @@ import { ConversionInput } from '../../src/components/ConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
 import { DisclosureArrow } from '../../src/components/lib/DisclosureArrow';
-import { NodeBlock } from '../../src/components/NodeBlock';
+import { NodeBlock } from '../../src/components/lib/NodeBlock/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
+import { Header, Header } from '../../src/components/lib/Header';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
 import { DecodedTx, decodeTx } from '../../src/lib/decodeTx';
 import { toEvenHex } from '../../src/lib/toEvenHex';
@@ -88,7 +88,7 @@ export default function TxDecoder(): ReactElement {
 
   return (
     <ToolContainer>
-      <ToolHeader
+      <Header
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Tx Decoder']}
       />

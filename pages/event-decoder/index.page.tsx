@@ -7,14 +7,14 @@ import {
   useState,
 } from 'react';
 
-import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
+import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
-import { NodeBlock } from '../../src/components/NodeBlock';
+import { NodeBlock } from '../../src/components/lib/NodeBlock/NodeBlock';
 import { Spinner } from '../../src/components/Spinner';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
+import { Header } from '../../src/components/lib/Header';
 import {
   decodeWithEventProps,
   fetch4BytesBy,
@@ -189,7 +189,7 @@ export default function EventDecoder(): ReactElement {
 
   return (
     <ToolContainer>
-      <ToolHeader
+      <Header
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Event Decoder']}
       />

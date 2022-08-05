@@ -5,7 +5,7 @@ import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { CurrencyIcon } from '../../src/components/icons/Currency';
 import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
+import { Header } from '../../src/components/lib/Header';
 import { convertUnit } from '../../src/lib/convertUnits';
 import { decodeHex } from '../../src/lib/decodeHex';
 import { WithError } from '../../src/misc/types';
@@ -104,7 +104,7 @@ export default function TokenUnitConversion(): ReactElement {
   return (
     <ToolContainer>
       <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
-        <ToolHeader
+        <Header
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Token Unit Conversion']}
         />

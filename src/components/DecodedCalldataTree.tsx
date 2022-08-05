@@ -2,7 +2,7 @@ import { ParamType } from '@ethersproject/abi';
 import { ReactElement } from 'react';
 
 import { Decoded } from '../lib/decodeCalldata';
-import { NodeBlock } from './NodeBlock';
+import { NodeBlock } from './lib/NodeBlock/NodeBlock';
 
 interface Node {
   name: ParamType['name'];

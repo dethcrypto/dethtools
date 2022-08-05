@@ -1,14 +1,15 @@
-import { ComponentStory } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 
-import { meta } from '../../../../.storybook/utils';
 import { Input, InputProps } from './Input';
 
-export default meta(Input, {
+export default {
+  title: 'lib/Input',
+  component: Input,
   argTypes: {
     onChange: { action: 'changed' },
   },
-});
+} as ComponentMeta<typeof Input>;
 
 const Template: ComponentStory<typeof Input> = (props: InputProps) => (
   <Input {...props} />

@@ -1,10 +1,11 @@
-import { ComponentStory } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 
-import { meta } from '../../../../.storybook/utils';
 import { Button, variants } from './Button';
 
-export default meta(Button, {
+export default {
+  title: 'lib/Button',
+  component: Button,
   argTypes: {
     variant: {
       options: Object.keys(variants),
@@ -14,7 +15,7 @@ export default meta(Button, {
     },
     onClick: { action: 'clicked' },
   },
-});
+} as ComponentMeta<typeof Button>;
 
 const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 

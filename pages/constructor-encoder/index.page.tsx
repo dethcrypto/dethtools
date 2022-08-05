@@ -9,7 +9,7 @@ import { OkIcon } from '../../src/components/icons/OkIcon';
 import { Button } from '../../src/components/lib/Button';
 import { Input } from '../../src/components/lib/Input';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
+import { Header, Header } from '../../src/components/lib/Header/';
 import { encodeConstructor } from '../../src/lib/encodeContructor';
 import { parseAbi } from '../../src/lib/parseAbi';
 
@@ -96,7 +96,7 @@ export default function ConstructorEncoder(): ReactElement {
 
   return (
     <ToolContainer>
-      <ToolHeader
+      <Header
         icon={<DecodersIcon height={24} width={24} />}
         text={['Encoders', 'Constructor Encoder']}
       />
