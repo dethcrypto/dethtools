@@ -7,7 +7,7 @@ import { ConversionInput } from '../../src/components/ConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
 import { DisclosureArrow } from '../../src/components/lib/DisclosureArrow';
-import { Header, Header } from '../../src/components/lib/Header';
+import { Header } from '../../src/components/lib/Header';
 import { NodeBlock } from '../../src/components/lib/NodeBlock/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
