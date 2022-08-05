@@ -156,7 +156,7 @@ export default function CalldataDecoder(): ReactElement {
         text={['Decoders', 'Calldata Decoder']}
       />
       <TextArea
-        name="calldata"
+        name="Calldata"
         error={encodedCalldata.error}
         value={encodedCalldata.value}
         placeholder="e.g 0x23b8..3b2"
