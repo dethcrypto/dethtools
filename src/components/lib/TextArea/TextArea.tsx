@@ -18,7 +18,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         >
           <textarea
             id={name}
-            aria-label={name}
+            aria-label={props['aria-label'] || name}
             aria-invalid={!!error}
             ref={ref}
             className={`h-36 break-words rounded-md border border-gray-600 bg-gray-900 ring-pink focus:ring-0 ${
