@@ -1,13 +1,13 @@
 import React, { ReactElement, useState } from 'react';
 
-import { ConversionInput } from '../src/components/ConversionInput';
-import { CalculatorIcon } from '../src/components/icons/CalculatorIcon';
-import { ToolContainer } from '../src/components/ToolContainer';
-import { ToolHeader } from '../src/components/ToolHeader';
-import { UnitType, unitType } from '../src/lib/convertProperties';
-import { convertEthUnits } from '../src/lib/convertUnits';
-import { decodeHex } from '../src/lib/decodeHex';
-import { unitSchema } from '../src/misc/schemas/unitSchema';
+import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
+import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import { ToolHeader } from '../../src/components/ToolHeader';
+import { UnitType, unitType } from '../../src/lib/convertProperties';
+import { convertEthUnits } from '../../src/lib/convertUnits';
+import { decodeHex } from '../../src/lib/decodeHex';
+import { unitSchema } from '../../src/misc/validation/schemas/unitSchema';
 
 type EthUnitConversionState = Record<
   UnitType,
@@ -81,7 +81,7 @@ export default function EthUnitConversion(): ReactElement {
         />
         <section className="flex w-full flex-col gap-5">
           {unitType.values.map((unit) => (
-            <ConversionInput
+            <CopyableConversionInput
               key={unit}
               name={unit.toUpperCase()}
               {...state[unit]}

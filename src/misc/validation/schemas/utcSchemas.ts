@@ -1,6 +1,6 @@
 import { z, ZodNumber } from 'zod';
 
-import { UtcUnit } from '../../lib/convertUtcProperties';
+import { UtcUnit } from '../../../lib/convertUtcProperties';
 
 // @internal
 const utcSchemas = {

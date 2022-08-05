@@ -10,14 +10,17 @@ export function ToolHeader({ icon, text }: ToolHeaderProps): ReactElement {
   const last = text[text.length - 1];
 
   return (
-    <header className="mb-8 flex items-center gap-3 align-middle md:mb-11">
+    <header className="mb-8 flex flex-wrap items-center gap-3 align-middle md:mb-11">
       {icon}
       {dir.map((str, i) => (
-        <span key={i} className="text-xl text-gray-300 sm:text-lg">
-          {str} /
+        <span
+          key={i}
+          className="inline-flex gap-1 whitespace-nowrap text-xl text-gray-300"
+        >
+          {str} <p className="hidden sm:block">/</p>
         </span>
       ))}
-      <h3 className="text-2xl text-pink sm:text-xl">{last}</h3>
+      <h3 className="whitespace-nowrap text-2xl text-pink">{last}</h3>
     </header>
   );
 }

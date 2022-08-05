@@ -3,23 +3,24 @@ import userEvent from '@testing-library/user-event';
 import { expect } from 'earljs';
 import sinon from 'sinon';
 
-import { fetch4BytesBy } from '../src/lib/decodeBySigHash';
-import CalldataDecoder from './calldata-decoder.page';
-import { abiForToggleTest } from './fixtures/abiForToggleTest';
-import { humanReadableAbi } from './fixtures/hreAbi';
-import { jsonAbi } from './fixtures/jsonAbi';
+import { fetch4BytesBy } from '../../src/lib/decodeBySigHash';
+import { abiForToggleTest } from '../fixtures/abiForToggleTest';
+import { humanReadableAbi } from '../fixtures/hreAbi';
+import { jsonAbi } from '../fixtures/jsonAbi';
+import CalldataDecoder from './index.page';
 
 describe(CalldataDecoder.name, () => {
   afterEach(() => {
     sinon.restore();
   });
 
-  it('decodes and displays types and values correctly', async () => {
+  it('decodes and displays types and values correctly', () => {
     const root = render(<CalldataDecoder />);
 
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
+
     fireEvent.change(calldataField, {
       target: {
         value:
@@ -27,15 +28,11 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    expect(calldataField.value).toEqual(
-      '0x23b872dd0000000000000000000000008ba1f109551bd432803012645ac136ddd64dba72000000000000000000000000ab7c8803962c0f2f5bbbe3fa8bf41cd82aa1923c0000000000000000000000000000000000000000000000000de0b6b3a7640000',
-    );
+    userEvent.click(root.getByText('ABI'));
 
-    userEvent.click(await root.findByText('ABI'));
-
-    const abiField = (await root.findByLabelText(
+    const abiField = root.getByLabelText(
       'text area for abi',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(abiField, {
       target: {
@@ -43,14 +40,9 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    expect(abiField.value).toEqual(
-      'function transferFrom(address,address,uint256)',
-    );
+    userEvent.click(root.getByText('Decode'));
 
-    userEvent.click(await root.findByText('Decode'));
-
-    const sigHash = (await root.findByText('Signature hash')!)
-      .nextSibling as HTMLElement;
+    const sigHash = root.getByLabelText('signature hash')!;
 
     expect(sigHash.innerHTML).toEqual(expect.stringMatching('0x23b872dd'));
 
@@ -74,12 +66,13 @@ describe(CalldataDecoder.name, () => {
     });
   });
 
-  it('decodes and displays ABI with nested parameters', async () => {
+  it('decodes and displays ABI with nested parameters', () => {
     const root = render(<CalldataDecoder />);
 
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
+
     fireEvent.change(calldataField, {
       target: {
         value:
@@ -87,27 +80,22 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    expect(calldataField.value).toEqual(
-      '0x6a947f74000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000007b000000000000000000000000000000000000000000000000000000000000021c',
-    );
+    userEvent.click(root.getByText('ABI'));
 
-    userEvent.click(await root.findByText('ABI'));
-    const abiField = (await root.findByLabelText(
+    const abiField = root.getByLabelText(
       'text area for abi',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
+
     fireEvent.change(abiField, {
       target: {
         value:
           '[{"inputs":[{"components":[{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"}],"internalType":"struct MyStruct1","name":"parameter2","type":"tuple"}],"internalType":"struct MyStruct2","name":"parameter3","type":"tuple"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"}],"internalType":"struct MyStruct1","name":"parameter2","type":"tuple"}],"internalType":"struct MyStruct2","name":"parameter4","type":"tuple"}],"internalType":"struct MyType2","name":"myType","type":"tuple"},{"internalType":"uint256","name":"myUint","type":"uint256"}],"name":"store","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]',
       },
     });
-    expect(abiField.value).toEqual(
-      '[{"inputs":[{"components":[{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"}],"internalType":"struct MyStruct1","name":"parameter2","type":"tuple"}],"internalType":"struct MyStruct2","name":"parameter3","type":"tuple"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"},{"components":[{"internalType":"uint256","name":"parameter1","type":"uint256"}],"internalType":"struct MyStruct1","name":"parameter2","type":"tuple"}],"internalType":"struct MyStruct2","name":"parameter4","type":"tuple"}],"internalType":"struct MyType2","name":"myType","type":"tuple"},{"internalType":"uint256","name":"myUint","type":"uint256"}],"name":"store","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]',
-    );
 
-    userEvent.click(await root.findByText('Decode'));
+    userEvent.click(root.getByText('Decode'));
 
-    const sigHash = (await root.findByText('Signature hash')!)
+    const sigHash = root.getByText('Signature hash')!
       .nextSibling as HTMLElement;
 
     expect(sigHash.innerHTML).toEqual(expect.stringMatching('0x6a947f74'));
@@ -127,12 +115,12 @@ describe(CalldataDecoder.name, () => {
     });
   });
 
-  it('decodes with abi and calldata and gets correct function', async () => {
+  it('decodes with abi and calldata and gets correct function', () => {
     const root = render(<CalldataDecoder />);
 
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(calldataField, {
       target: {
@@ -141,11 +129,11 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    userEvent.click(await root.findByText('ABI'));
+    userEvent.click(root.getByText('ABI'));
 
-    const abiField = (await root.findByLabelText(
+    const abiField = root.getByLabelText(
       'text area for abi',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(abiField, {
       target: {
@@ -154,7 +142,7 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    userEvent.click(await root.findByText('Decode'));
+    userEvent.click(root.getByText('Decode'));
 
     expect(root.getByLabelText('function type').textContent).toEqual(
       expect.stringMatching('function'),
@@ -188,9 +176,9 @@ describe(CalldataDecoder.name, () => {
 
     const root = render(<CalldataDecoder />);
 
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(calldataField, {
       target: {
@@ -262,11 +250,11 @@ describe(CalldataDecoder.name, () => {
     expect(abiError.innerHTML).toEqual('');
   });
 
-  it('types wrong calldata, gets error message', async () => {
+  it('types wrong calldata, gets error message', () => {
     const root = render(<CalldataDecoder />);
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(calldataField, {
       target: {
@@ -276,7 +264,7 @@ describe(CalldataDecoder.name, () => {
 
     expect(calldataField.value).toEqual('ddd');
 
-    const calldataError = await root.findByLabelText('encoded calldata error');
+    const calldataError = root.getByLabelText('calldata error');
 
     expect(calldataError.innerHTML).toEqual(
       expect.stringMatching(
@@ -285,15 +273,15 @@ describe(CalldataDecoder.name, () => {
     );
   });
 
-  it('types wrong abi, gets error message', async () => {
+  it('types wrong abi, gets error message', () => {
     const root = render(<CalldataDecoder />);
     const abi = jsonAbi;
 
-    userEvent.click(await root.findByText('ABI'));
+    userEvent.click(root.getByText('ABI'));
 
-    const abiField = (await root.findByLabelText(
+    const abiField = root.getByLabelText(
       'text area for abi',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(abiField, {
       target: {
@@ -303,17 +291,17 @@ describe(CalldataDecoder.name, () => {
 
     expect(abiField.value).toEqual(abi);
 
-    const abiError = await root.findByLabelText('raw abi error');
+    const abiError = root.getByLabelText('raw abi error');
 
     expect(abiError.innerHTML).toEqual('invalid event string ');
   });
 
-  it('toggle changes value format', async () => {
+  it('toggle changes value format', () => {
     const root = render(<CalldataDecoder />);
 
-    const calldataField = (await root.findByLabelText(
+    const calldataField = root.getByLabelText(
       'Calldata',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(calldataField, {
       target: {
@@ -322,11 +310,11 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    userEvent.click(await root.findByText('ABI'));
+    userEvent.click(root.getByText('ABI'));
 
-    const abiField = (await root.findByLabelText(
+    const abiField = root.getByLabelText(
       'text area for abi',
-    )) as HTMLTextAreaElement;
+    ) as HTMLTextAreaElement;
 
     fireEvent.change(abiField, {
       target: {
@@ -334,7 +322,7 @@ describe(CalldataDecoder.name, () => {
       },
     });
 
-    userEvent.click(await root.findByText('Decode'));
+    userEvent.click(root.getByText('Decode'));
 
     {
       const toggle = root.getByLabelText('hex-dec toggle');
