@@ -4,8 +4,8 @@ import { CopyableConversionInput } from '../../src/components/CopyableConversion
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { CurrencyIcon } from '../../src/components/icons/Currency';
 import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
-import { ToolContainer } from '../../src/components/ToolContainer';
 import { Header } from '../../src/components/lib/Header';
+import { ToolContainer } from '../../src/components/ToolContainer';
 import { convertUnit } from '../../src/lib/convertUnits';
 import { decodeHex } from '../../src/lib/decodeHex';
 import { WithError } from '../../src/misc/types';

@@ -7,9 +7,9 @@ import { CopyIcon } from '../../src/components/icons/CopyIcon';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { OkIcon } from '../../src/components/icons/OkIcon';
 import { Button } from '../../src/components/lib/Button';
+import { Header, Header } from '../../src/components/lib/Header';
 import { Input } from '../../src/components/lib/Input';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { Header, Header } from '../../src/components/lib/Header/';
 import { encodeConstructor } from '../../src/lib/encodeContructor';
 import { parseAbi } from '../../src/lib/parseAbi';
 

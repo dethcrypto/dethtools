@@ -7,14 +7,14 @@ import {
   useState,
 } from 'react';
 
-import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { DecodedCalldataTree } from '../../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
+import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { Button } from '../../src/components/lib/Button';
-import { Spinner } from '../../src/components/Spinner';
-import { TextArea } from '../../src/components/lib/TextArea/TextArea';
-import { ToolContainer } from '../../src/components/ToolContainer';
 import { Header } from '../../src/components/lib/Header';
+import { TextArea } from '../../src/components/lib/TextArea/TextArea';
+import { Spinner } from '../../src/components/Spinner';
+import { ToolContainer } from '../../src/components/ToolContainer';
 import {
   decodeWithCalldata,
   fetch4BytesBy,

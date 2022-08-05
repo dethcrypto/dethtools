@@ -5,7 +5,6 @@ import React, { ReactElement, useState } from 'react';
 import { handleChangeValidated } from '../../../../src/misc/handleChangeValidated';
 import { WithError } from '../../../../src/misc/types';
 import { abiValidator } from '../../../../src/misc/validation/validators/abiValidator';
-
 import { AbiSourceTabs, AbiSourceTabsProps } from './AbiSourceTabs';
 
 export default {

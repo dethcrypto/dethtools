@@ -3,8 +3,8 @@ import { noop } from 'lodash';
 import React, { ReactElement, useState } from 'react';
 
 import {
-  sigHashFromCalldata,
   fetch4BytesBy,
+  sigHashFromCalldata,
 } from '../../../../src/lib/decodeBySigHash';
 import { handleChangeValidated } from '../../../../src/misc/handleChangeValidated';
 import { WithError } from '../../../../src/misc/types';

@@ -2,8 +2,8 @@ import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
-import { ToolContainer } from '../../src/components/ToolContainer';
 import { Header } from '../../src/components/lib/Header';
+import { ToolContainer } from '../../src/components/ToolContainer';
 import { UnitType, unitType } from '../../src/lib/convertProperties';
 import { convertEthUnits } from '../../src/lib/convertUnits';
 import { decodeHex } from '../../src/lib/decodeHex';
