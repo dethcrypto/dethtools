@@ -61,6 +61,7 @@ export default function EthUnitConversion(): ReactElement {
 
     setState((state) => {
       const newState = { ...state };
+      
       for (const unit of unitType.values) {
         if (unit === currentType) newState[unit] = { value: newValue };
         else if (parseFloat(newValue) >= 0) {
