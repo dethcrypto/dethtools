@@ -1,3 +1,4 @@
+import { noop } from 'lodash';
 import { ValidatorResult } from './validation/validators/result.d';
 
 /**
@@ -14,7 +15,7 @@ export function handleChangeValidated({
   newValue,
   setState,
   validateFn,
-  flushFn,
+  flushFn = noop,
   ...args
 }: HandleChangeValidatedArgs & AnyArgs): void {
   // flush component results
@@ -36,7 +37,7 @@ interface HandleChangeValidatedArgs {
   newValue: string;
   validateFn: (newValue: string) => ValidatorResult;
   setState: (...args: any[]) => void;
-  flushFn: () => void;
+  flushFn?: () => void;
 }
 
 type AnyArgs = { [key: string]: any };
