@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect } from 'earljs';
-import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 
+import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 import ConstructorEncoder from './index.page';
 
 const abi = [

@@ -2,20 +2,20 @@ import { TypedTransaction } from '@ethereumjs/tx';
 import { Disclosure } from '@headlessui/react';
 import { addHexPrefix } from 'ethereumjs-util';
 import { ReactElement, useState } from 'react';
-import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
-import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 
 import { ConversionInput } from '../../src/components/ConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
 import { DisclosureArrow } from '../../src/components/lib/DisclosureArrow';
+import { Toggle } from '../../src/components/lib/Toggle';
 import { NodeBlock } from '../../src/components/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
-import { WithError } from '../../src/misc/types';
 import { decodeTx } from '../../src/lib/decodeTx';
-import { Toggle } from '../../src/components/lib/Toggle';
+import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
+import { WithError } from '../../src/misc/types';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 
 export default function TxDecoder(): ReactElement {
   const [tx, setTx] = useState<WithError<string>>({

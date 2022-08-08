@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { expect } from 'earljs';
-import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 
+import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 import TxDecoder from './index.page';
 
 describe(TxDecoder.name, () => {
