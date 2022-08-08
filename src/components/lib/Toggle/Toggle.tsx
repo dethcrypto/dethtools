@@ -2,17 +2,23 @@ import {
   formatBytes32String,
   parseBytes32String,
 } from '@ethersproject/strings';
-import { Dispatch, ReactElement, SetStateAction, useEffect } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+} from 'react';
 
 import { decodeHex, encodeHex } from '../../../../src/lib/decodeHex';
 
 export function HexDecToggle({
-  isDisabled,
+  isDisabled = false,
   state,
   setState,
   isStateFn,
-}: ToggleProps<string, string>): ReactElement {
-  return Toggle<string, string>({
+}: ToggleWithSideEffectProps<string, string>): ReactElement {
+  return ToggleWithSideEffect<string, string>({
     isDisabled,
     state,
     isStateFn,
@@ -23,12 +29,12 @@ export function HexDecToggle({
 }
 
 export function Bytes32StringToggle({
-  isDisabled,
+  isDisabled = false,
   state,
   setState,
   isStateFn,
-}: ToggleProps<string, string>): ReactElement {
-  return Toggle<string, string>({
+}: ToggleWithSideEffectProps<string, string>): ReactElement {
+  return ToggleWithSideEffect<string, string>({
     isDisabled,
     state,
     isStateFn,
@@ -41,14 +47,50 @@ export function Bytes32StringToggle({
   });
 }
 
-// Public type hiding the impl. details of the toggle.
-export type ToggleProps<T, R> = Omit<
-  Toggle<T, R>,
-  'encoderAndDecoder' | 'buttonNames'
->;
+export function Toggle({
+  buttonNames,
+  isDisabled = false,
+  useExternalState,
+  className,
+  ...props
+}: ToggleProps): ReactElement {
+  const [leftToggleHalf, rightToggleHalf] = buttonNames;
+  const [externalState, setExternalState] = useExternalState;
+
+  return (
+    <div
+      className={`flex ${className}`}
+      aria-label={`${leftToggleHalf}-${rightToggleHalf} toggle`}
+      {...props}
+    >
+      <button
+        aria-label={`${leftToggleHalf}-${rightToggleHalf} left toggle button`}
+        disabled={isDisabled}
+        onClick={() => setExternalState(true)}
+        className={switchButtonStyle(isDisabled, externalState, true)}
+      >
+        <p aria-label="toggle left half label">{leftToggleHalf}</p>
+      </button>
+      <button
+        aria-label={`${leftToggleHalf}-${rightToggleHalf} right toggle button`}
+        disabled={isDisabled}
+        onClick={() => setExternalState(false)}
+        className={switchButtonStyle(isDisabled, !externalState, false)}
+      >
+        <p aria-label="toggle left half label">{rightToggleHalf}</p>
+      </button>
+    </div>
+  );
+}
+
+interface ToggleProps extends ComponentPropsWithoutRef<'div'> {
+  buttonNames: [string, string];
+  useExternalState: [boolean, (newValue: boolean) => void];
+  isDisabled?: boolean;
+}
 
 // @internal
-function Toggle<T, R>({
+function ToggleWithSideEffect<T, R>({
   isDisabled,
   state,
   setState,
@@ -59,12 +101,6 @@ function Toggle<T, R>({
   const { isState, inner } = state;
   const { encoder, decoder } = encoderAndDecoder;
   const [leftToggleHalf, rightToggleHalf] = buttonNames;
-
-  const switchButtonStyle =
-    'grow-0 cursor-pointer border bg-gray-800 ' +
-    'border-gray-500 bg-gray-700 py-0.5 px-3 ' +
-    String(isDisabled && ' opacity-30 cursor-not-allowed ') +
-    'duration-200 hover:bg-gray-700 active:bg-gray-800 ';
 
   useEffect(() => {
     if (isStateFn(state.inner)) {
@@ -78,8 +114,7 @@ function Toggle<T, R>({
       try {
         setState({ isState: false, inner: decoder(state.inner as R) });
       } catch (e) {
-        // consume error here to prevent it bubbling up
-        // (it shouldn't throw when the results are displayed)
+        // s/a
       }
     }
   }, [decoder, encoder, isStateFn, setState, state.inner, state.isState]);
@@ -96,18 +131,14 @@ function Toggle<T, R>({
           try {
             setState({ isState: true, inner: encoder(inner as T) });
           } catch (e) {
-            // consume error here to prevent it bubbling up
-            // (it shouldn't throw when the results are displayed)
+            // s/a
           }
         }}
-        className={
-          switchButtonStyle +
-          'rounded-l-md border-r ' +
-          String(isState && !isDisabled && 'border-gray-100')
-        }
+        className={switchButtonStyle(isDisabled!, !isState, true)}
       >
         <p aria-label="toggle left half">{leftToggleHalf}</p>
       </button>
+
       <button
         aria-label="right toggle button"
         disabled={isDisabled}
@@ -115,21 +146,33 @@ function Toggle<T, R>({
           try {
             setState({ isState: false, inner: decoder(inner as R) });
           } catch (e) {
-            // consume error here to prevent it bubbling up
-            // (it shouldn't throw when the results are displayed)
+            // s/a
           }
         }}
-        className={
-          switchButtonStyle +
-          'rounded-r-md border-l ' +
-          String(!isState && !isDisabled && 'border-gray-100')
-        }
+        className={switchButtonStyle(isDisabled!, isState, false)}
       >
         <p aria-label="toggle left half">{rightToggleHalf}</p>
       </button>
     </div>
   );
 }
+
+// Public type hiding the impl. details of the toggle.
+export type ToggleWithSideEffectProps<T, R> = Omit<
+  Toggle<T, R>,
+  'encoderAndDecoder' | 'buttonNames'
+>;
+
+const switchButtonStyle = (
+  isDisabled: boolean,
+  isState: boolean,
+  isLeftSide: boolean,
+): string =>
+  `grow-0 cursor-pointer border bg-gray-800 border-gray-500 bg-gray-700 py-0.5 px-3 ${
+    isDisabled && 'opacity-30 cursor-not-allowed'
+  } duration-400 hover:bg-gray-700 active:bg-gray-800 ${
+    isState && !isDisabled && 'border-gray-100'
+  } ${isLeftSide ? 'rounded-l-md border-r' : 'rounded-r-md border-l'}`;
 
 /**
  * @internal
@@ -141,7 +184,7 @@ function Toggle<T, R>({
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 interface Toggle<T, R> {
-  isDisabled: boolean;
+  isDisabled?: boolean;
   buttonNames: [string, string];
   state: { isState: boolean; inner: T | R };
   setState: Dispatch<SetStateAction<{ isState: boolean; inner: T | R }>>;
