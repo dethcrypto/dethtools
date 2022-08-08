@@ -1,7 +1,9 @@
 import { TypedTransaction } from '@ethereumjs/tx';
 import { Disclosure } from '@headlessui/react';
 import { addHexPrefix } from 'ethereumjs-util';
-import { ChangeEvent, ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
+import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 
 import { ConversionInput } from '../../src/components/ConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
@@ -11,80 +13,50 @@ import { NodeBlock } from '../../src/components/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
 import { bufferToHexString } from '../../src/lib/bufferToHexString';
-import { DecodedTx, decodeTx } from '../../src/lib/decodeTx';
-import { toEvenHex } from '../../src/lib/toEvenHex';
-import { WithOkAndErrorMsgOptional } from '../../src/misc/types';
-import { hexSchema } from '../../src/misc/validation/schemas/hexSchema';
-import { zodResultMessage } from '../../src/misc/zodResultMessage';
+import { WithError } from '../../src/misc/types';
+import { decodeTx } from '../../src/lib/decodeTx';
+import { Toggle } from '../../src/components/lib/Toggle';
 
 export default function TxDecoder(): ReactElement {
-  const [error, setError] = useState<string>();
-
-  const [rawTx, setRawTx] = useState<WithOkAndErrorMsgOptional<string>>({
-    isOk: true,
+  const [tx, setTx] = useState<WithError<string>>({
+    value: '',
   });
-  const [decodeResults, setDecodeResults] = useState<{
-    tx: TypedTransaction;
-    senderAddr: string;
-  }>();
+  const [error, setError] = useState<string>();
+  const [decodeResults, setDecodeResults] = useState<
+    WithError<{
+      tx: TypedTransaction;
+      senderAddr: string;
+    }>
+  >();
+  const [isPretty, setIsPretty] = useState(() => true);
 
-  function handleChangeRawTx(event: ChangeEvent<HTMLInputElement>): void {
-    // clear decode results and errors if something has changed
-    if (!rawTx.isOk || rawTx.inner?.length! <= 0) {
-      setDecodeResults(undefined);
-      setError(undefined);
-    }
+  const decodeButtonDisabled = !tx.value && !!tx.error && !!error;
 
-    let { value } = event.target;
-    value = toEvenHex(value);
-    setRawTx((state) => {
-      return { ...state, inner: value };
+  const flushResults = (): void => {
+    if (decodeResults) setDecodeResults(undefined);
+  };
+
+  const handleChangeRawTx = (newValue: string): void => {
+    setError(undefined);
+    return handleChangeValidated({
+      newValue,
+      validateFn: (newValue) => hexValidator(newValue),
+      setState: setTx,
+      flushFn: flushResults,
     });
-
-    const parseResult = hexSchema.safeParse(value);
-
-    if (parseResult.success) {
-      setRawTx((state) => {
-        return { ...state, isOk: true };
-      });
-    } else {
-      setRawTx((state) => {
-        return {
-          ...state,
-          isOk: false,
-          errorMsg: zodResultMessage(parseResult),
-        };
-      });
-    }
-    // 0x prefixed, thus length <= 2
-    if (value.length <= 2) {
-      setRawTx((state) => {
-        return {
-          ...state,
-          inner: value,
-          isOk: true,
-          errorMsg: undefined,
-        };
-      });
-    }
-  }
+  };
 
   function handleDecodeCalldata(): void {
-    setDecodeResults(undefined);
-    if (rawTx.isOk) {
-      let decoded: DecodedTx | undefined;
+    flushResults();
+    if (tx.value) {
       try {
-        if (rawTx.inner) {
-          decoded = decodeTx(rawTx.inner);
-        }
-      } catch (e) {
-        setError('Unable to decode transaction');
+        const decoded = decodeTx(tx.value);
+        if (decoded) setDecodeResults({ value: decoded });
+      } catch (error) {
+        setError((error as Error).message);
       }
-      if (decoded) setDecodeResults(decoded);
     }
   }
-
-  const decodeButtonDisabled = !rawTx.isOk;
 
   return (
     <ToolContainer>
@@ -93,28 +65,18 @@ export default function TxDecoder(): ReactElement {
         text={['Decoders', 'Tx Decoder']}
       />
       <section>
-        <>
-          <ConversionInput
-            name="raw transaction"
-            id="tx-input"
-            type="text"
-            placeholder="0x0.."
-            className={rawTx.isOk ? 'border-gray-600' : 'bg-gray-900'}
-            onChange={(event) => handleChangeRawTx(event)}
-          />
-          {error && (
-            <p aria-label="raw tx decode error" className="text-error">
-              {error} with{' '}
-              {rawTx.isOk &&
-                rawTx.inner &&
-                String(rawTx.inner.slice(0, 12)) + '...'}
-            </p>
-          )}
-        </>
+        <ConversionInput
+          name="raw transaction"
+          id="tx-input"
+          type="text"
+          placeholder="0x0.."
+          error={tx.error || error}
+          onChange={({ target }) => handleChangeRawTx(target.value)}
+        />
       </section>
 
       <Button
-        onClick={() => handleDecodeCalldata()}
+        onClick={handleDecodeCalldata}
         className="mt-4"
         disabled={decodeButtonDisabled}
         title={decodeButtonDisabled ? 'Please fill in the tx field' : undefined}
@@ -122,29 +84,28 @@ export default function TxDecoder(): ReactElement {
         Decode
       </Button>
 
-      {(!decodeResults && !rawTx.isOk) ||
-        ((rawTx as { inner?: string }).inner?.length! <= 0 && (
-          <p className="text-md py-5 font-semibold">
-            Possible decoded results:
-          </p>
-        ))}
-      {!error ||
-        (decodeResults && (
-          <p className="text-md py-5 font-semibold">
-            Decoded output will appear here
-          </p>
-        ))}
-      {decodeResults && (
+      {decodeResults?.value && (
         <section
-          className="relative mt-6 overflow-auto rounded-md border border-gray-600 bg-gray-900 p-8"
+          className="relative mt-6 overflow-hidden rounded-md border border-gray-600 bg-gray-900 p-8"
           placeholder="Output"
         >
-          <NodeBlock className="my-1" str={decodeResults.senderAddr}>
+          <NodeBlock className="my-1" str={decodeResults.value.senderAddr}>
             <p aria-label="decoded event arg index" className="text-gray-100">
               senderAddress
             </p>
           </NodeBlock>
-          {<TxDecoderResults decodeResults={decodeResults.tx} />}
+          <h3 className="mb-2 text-lg">Format type</h3>
+          <Toggle
+            className="mb-4"
+            buttonNames={['pretty', 'json']}
+            useExternalState={[isPretty, setIsPretty]}
+          />
+          <div className="rounded-md border-y border-l border-gray-600 p-2">
+            <TxDecoderResults
+              decodeResults={decodeResults.value.tx}
+              isPretty={isPretty}
+            />
+          </div>
         </section>
       )}
     </ToolContainer>
@@ -161,62 +122,92 @@ function isElementEmpty(
   }
 }
 
-function TxDecoderResults({
-  decodeResults,
-}: {
+interface AdequateTxDecoderResults {
+  isPretty: boolean;
   decodeResults: TypedTransaction;
-}): ReactElement {
+}
+
+type TxDecoderResultsProps = Omit<AdequateTxDecoderResults, 'isPretty'>;
+
+function TxDecoderResults({
+  isPretty,
+  decodeResults,
+}: AdequateTxDecoderResults): ReactElement {
+  return isPretty ? (
+    <TxResultsPrettyFormat decodeResults={decodeResults} />
+  ) : (
+    <TxResultsJsonFormat decodeResults={decodeResults} />
+  );
+}
+
+function TxResultsJsonFormat({
+  decodeResults,
+}: TxDecoderResultsProps): ReactElement {
   return (
-    <>
-      <div
-        aria-label="tx decoder results"
-        className="border-l border-gray-600 p-4"
-      >
-        {Object.entries(decodeResults).map(([key, value], i) => {
-          if (key === 'buf') {
-            return (
-              <NodeBlock
-                className="my-1"
-                str={addHexPrefix(bufferToHexString(value))}
-                key={i}
-              >
-                <p
-                  aria-label="decoded event arg index"
-                  className="text-gray-300"
-                >{`${key}`}</p>
-              </NodeBlock>
-            );
-          }
-          return typeof value === 'string' || typeof value === 'number' ? (
-            <NodeBlock className="my-1" str={value.toString()} key={i}>
+    <output aria-label="result in json format">
+      <div>
+        <pre className="items-left flex flex-col text-clip text-sm">
+          <p>{JSON.stringify(decodeResults, null, 2)}</p>
+        </pre>
+      </div>
+    </output>
+  );
+}
+
+function TxResultsPrettyFormat({
+  decodeResults,
+  isSubresult = false,
+}: TxDecoderResultsProps & { isSubresult?: boolean }): ReactElement {
+  return (
+    <div
+      aria-label={`${isSubresult ? 'subresult' : 'result'} in pretty format`}
+      className="border-l border-gray-600 pl-2"
+    >
+      {Object.entries(decodeResults).map(([key, value], i) => {
+        if (key === 'buf') {
+          return (
+            <NodeBlock str={addHexPrefix(bufferToHexString(value))} key={i}>
               <p
                 aria-label="decoded event arg index"
                 className="text-gray-300"
               >{`${key}`}</p>
             </NodeBlock>
-          ) : (
-            <>
-              {!isElementEmpty(value) && (
-                <Disclosure key={i} defaultOpen={true}>
-                  {({ open }) => (
-                    <>
-                      {value && <p className="text-gray-300">{key}</p>}
-                      <Disclosure.Button>
-                        {!isElementEmpty(value) && (
-                          <DisclosureArrow open={open} />
-                        )}
-                      </Disclosure.Button>
-                      <Disclosure.Panel>
-                        {value && <TxDecoderResults decodeResults={value} />}
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              )}
-            </>
           );
-        })}
-      </div>
-    </>
+        }
+        return typeof value === 'string' || typeof value === 'number' ? (
+          <NodeBlock className="mt-1" str={value.toString()} key={i}>
+            <p
+              aria-label="decoded event arg index"
+              className="text-gray-300"
+            >{`${key}`}</p>
+          </NodeBlock>
+        ) : (
+          !isElementEmpty(value) && (
+            <Disclosure key={i} defaultOpen={true}>
+              {({ open }) => (
+                <>
+                  <div className="flex gap-3">
+                    <Disclosure.Button>
+                      {!isElementEmpty(value) && (
+                        <DisclosureArrow fill="white" open={open} />
+                      )}
+                    </Disclosure.Button>
+                    {value && <p className="text-md text-gray-200">{key}</p>}
+                  </div>
+                  <Disclosure.Panel as="div">
+                    {value && (
+                      <TxResultsPrettyFormat
+                        isSubresult={true}
+                        decodeResults={value}
+                      />
+                    )}
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          )
+        );
+      })}
+    </div>
   );
 }
