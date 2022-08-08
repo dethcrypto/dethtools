@@ -4,7 +4,7 @@ import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 
 import StringBytes32Conversion from './index.page';
 
-describe.only(StringBytes32Conversion.name, () => {
+describe(StringBytes32Conversion.name, () => {
   it('gets error on wrong bytes32 input', () => {
     const root = render(<StringBytes32Conversion />);
     const bytes32Field = root.getByPlaceholderText(
@@ -87,6 +87,22 @@ describe.only(StringBytes32Conversion.name, () => {
 
     changeTargetValue(bytes32Field, '');
 
+    expect(() => root.getAllByRole('alert')[0]).toThrow();
+  });
+
+  it('flushes other field when the current one is modified (bytes => string)', () => {
+    const root = render(<StringBytes32Conversion />);
+    const bytes32Field = root.getByPlaceholderText(
+      'Enter a hexadecimal value',
+    ) as HTMLInputElement;
+
+    changeTargetValue(
+      bytes32Field,
+      '0x626c756562657272790000000000000000000000000000000000000000000000',
+    );
+
+    changeTargetValue(bytes32Field, '');
+
     const stringField = root.getByPlaceholderText(
       'Enter a string',
     ) as HTMLInputElement;
@@ -94,11 +110,20 @@ describe.only(StringBytes32Conversion.name, () => {
     expect(stringField.value).toEqual('');
   });
 
-  //   it('flushes second fields when the current on is modified', () => {
-  //     const root = render(<StringBytes32Conversion />);
-  //   });
+  it('flushes other field when the current one is modified (string => bytes)', () => {
+    const root = render(<StringBytes32Conversion />);
+    const stringField = root.getByPlaceholderText(
+      'Enter a string',
+    ) as HTMLInputElement;
 
-  //   it('flushes second fields when the current on is modified', () => {
-  //     const root = render(<StringBytes32Conversion />);
-  //   });
+    changeTargetValue(stringField, 'Hello world');
+
+    changeTargetValue(stringField, '');
+
+    const bytes32Field = root.getByPlaceholderText(
+      'Enter a hexadecimal value',
+    ) as HTMLInputElement;
+
+    expect(bytes32Field.value).toEqual('');
+  });
 });

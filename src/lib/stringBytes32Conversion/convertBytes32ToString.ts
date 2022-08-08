@@ -12,7 +12,7 @@ export const convertBytes32ToString: ConvertFunctionWithError = (value) => {
       data: value,
       error: capitalizeFirstLetter(
         parseEthersErrorMessage((error as Error).message),
-      ),
+      ).trim(),
     };
   }
 };

@@ -17,6 +17,10 @@ export default function StringBytes32Conversion(): ReactElement {
 
   const flushString = (): void => setString({ value: '', error: undefined });
   const flushBytes32 = (): void => setBytes32({ value: '', error: undefined });
+  const flushBoth = (): void => {
+    flushString();
+    flushBytes32();
+  };
 
   const handleChangeString = (newValue: string): void => {
     handleChangeValidated({
@@ -29,6 +33,9 @@ export default function StringBytes32Conversion(): ReactElement {
 
     if (result.success) setBytes32({ value: result.data, error: undefined });
     else setString({ value: result.data, error: result.error });
+
+    // flush other filed if current one is empty
+    if (newValue.length === 0) setBytes32({ value: '', error: undefined });
   };
 
   const handleChangeBytes32 = (newValue: string): void => {
@@ -42,6 +49,10 @@ export default function StringBytes32Conversion(): ReactElement {
 
     if (result.success) setString({ value: result.data, error: undefined });
     else setBytes32({ value: result.data, error: result.error });
+
+    // todo - in future this could be included in the handleChangeValidated if such pattern occurs often enough
+    // flush other filed if current one is empty
+    if (newValue.length === 0) flushBoth();
   };
 
   return (
