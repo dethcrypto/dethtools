@@ -1,4 +1,5 @@
 import { formatBytes32String } from '@ethersproject/strings';
+
 import { parseEthersErrorMessage } from '../../../src/misc/parseEthersErrorMessage';
 import { capitalizeFirstLetter } from '../capitalizeFirstLetter';
 import { ConvertFunctionWithError } from './types';

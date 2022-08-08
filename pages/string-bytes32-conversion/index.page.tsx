@@ -1,15 +1,15 @@
 import React, { ReactElement, useState } from 'react';
 
-import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
-import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { ToolHeader } from '../../src/components/ToolHeader';
-import { WithError } from '../../src/misc/types';
-import { stringValidator } from '../../src/misc/validation/validators/stringValiator';
 import { convertBytes32ToString } from '../../src/lib/stringBytes32Conversion/convertBytes32ToString';
 import { convertStringToBytes32 } from '../../src/lib/stringBytes32Conversion/convertStringToBytes32';
+import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
+import { WithError } from '../../src/misc/types';
+import { hexValidator } from '../../src/misc/validation/validators/hexValidator';
+import { stringValidator } from '../../src/misc/validation/validators/stringValiator';
 
 export default function StringBytes32Conversion(): ReactElement {
   const [bytes32, setBytes32] = useState<WithError<string>>({ value: '' });

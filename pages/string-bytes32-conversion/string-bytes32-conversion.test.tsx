@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { expect } from 'earljs';
-import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 
+import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 import StringBytes32Conversion from './index.page';
 
 describe(StringBytes32Conversion.name, () => {
