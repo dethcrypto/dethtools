@@ -18,7 +18,7 @@ export default function MyApp({
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Navigation useState={[showMobileTree, setShowMobileTree]} />
 
-        <div className="mt-6 flex h-auto max-w-6xl gap-12 rounded-md bg-gray-700 p-12 align-top">
+        <div className="mt-6 flex h-auto max-w-6xl gap-12 rounded-md bg-gray-700/80 p-12 align-top">
           <ToolTree
             className="border-r border-gray-600 pr-8"
             showMobileTree={showMobileTree}
