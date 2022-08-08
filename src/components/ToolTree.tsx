@@ -96,6 +96,10 @@ const tree: Tree = {
         pageHref: 'unix-epoch-utc-conversion',
       },
       { title: 'Base Conversion', pageHref: 'base-conversion' },
+      {
+        title: 'String Bytes32 Conversion',
+        pageHref: 'string-bytes32-conversion',
+      },
     ],
   },
   decoders: {
