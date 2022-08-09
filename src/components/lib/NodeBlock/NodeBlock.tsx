@@ -1,9 +1,13 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 
-import { isHex } from '../lib/decodeHex';
-import { CopyIcon } from './icons/CopyIcon';
-import { OkIcon } from './icons/OkIcon';
-import { Bytes32StringToggle, HexDecToggle, ToggleProps } from './lib/Toggle';
+import { CopyIcon } from '../../../../src/components/icons/CopyIcon';
+import { OkIcon } from '../../../../src/components/icons/OkIcon';
+import { isHex } from '../../../../src/lib/decodeHex';
+import {
+  Bytes32StringToggle,
+  HexDecToggle,
+  ToggleWithSideEffectProps,
+} from '../Toggle';
 
 export function NodeBlock({
   children,

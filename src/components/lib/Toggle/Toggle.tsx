@@ -17,6 +17,7 @@ export function HexDecToggle({
   state,
   setState,
   isStateFn,
+  className,
 }: ToggleWithSideEffectProps<string, string>): ReactElement {
   return ToggleWithSideEffect<string, string>({
     isDisabled,
@@ -34,6 +35,7 @@ export function Bytes32StringToggle({
   state,
   setState,
   isStateFn,
+  className,
 }: ToggleWithSideEffectProps<string, string>): ReactElement {
   return ToggleWithSideEffect<string, string>({
     isDisabled,
@@ -125,7 +127,7 @@ function ToggleWithSideEffect<T, R>({
   return (
     <div
       aria-label={`${leftToggleHalf}-${rightToggleHalf} toggle`}
-      className="flex"
+      className={`flex ${className}`}
     >
       <button
         type="button"
@@ -190,7 +192,7 @@ const switchButtonStyle = (
  * @param buttonNames - an array of strings to display on the buttons [firstHalf, secondHalf]
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-interface Toggle<T, R> {
+interface Toggle<T, R> extends ComponentPropsWithoutRef<'div'> {
   isDisabled?: boolean;
   buttonNames: [string, string];
   /**
