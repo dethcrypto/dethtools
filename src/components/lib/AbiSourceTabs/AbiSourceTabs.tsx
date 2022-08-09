@@ -6,17 +6,8 @@ import React, {
   TextareaHTMLAttributes,
 } from 'react';
 
-import { WithError } from '../misc/types';
-
-interface AbiSourceTabsProps<T, D> {
-  rawAbi: T;
-  tabState: {
-    tab: 'abi' | '4-bytes';
-    setTab: Dispatch<SetStateAction<'abi' | '4-bytes'>>;
-  };
-  setDecodeResults: Dispatch<React.SetStateAction<D>>;
-  handleChangeRawAbi: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-}
+import { WithError } from '../../../misc/types';
+import { TextArea } from '../TextArea';
 
 export function AbiSourceTabs<
   R extends TextareaHTMLAttributes<HTMLTextAreaElement>['value'],
@@ -35,17 +26,15 @@ export function AbiSourceTabs<
         <button
           role="tab"
           aria-selected={tab === '4-bytes'}
-          className={
-            `h-12 flex-1 cursor-pointer p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+          className={`h-12 flex-1 cursor-pointer p-1 text-center
+            text-white duration-300 active:scale-105 active:bg-pink/50 ${
               tab === '4-bytes'
                 ? 'rounded-l-md bg-pink'
                 : 'rounded-tl-md bg-gray-600'
-            }` + String(!rawAbi.error ? ' border-gray-600' : ' border-error')
-          }
+            } ${!rawAbi.error ? ' border-gray-600' : ' border-error'}`}
           onClick={() => {
             setTab('4-bytes');
-            // @ts-ignore - this is a valid state chang
+            // @ts-ignore - this is a valid state change
             setDecodeResults([]);
           }}
         >
@@ -55,14 +44,12 @@ export function AbiSourceTabs<
         <button
           role="tab"
           aria-selected={tab === 'abi'}
-          className={
-            `h-12 flex-1 cursor-pointer p-1
-            text-center duration-300 active:scale-105 active:bg-pink/50 ${
+          className={`h-12 flex-1 cursor-pointer p-1 text-center
+            text-white duration-300 active:scale-105 active:bg-pink/50 ${
               tab === 'abi'
                 ? 'rounded-tr-md bg-pink'
                 : 'rounded-r-md bg-gray-600'
-            }` + String(!rawAbi.error ? ' border-gray-600' : ' bg-error/75')
-          }
+            } ${!rawAbi.error ? ' border-gray-600' : ' bg-error/75'}`}
           onClick={() => {
             setTab('abi');
             // @ts-ignore - this is a valid state change
@@ -75,18 +62,13 @@ export function AbiSourceTabs<
 
       {tab === 'abi' && (
         <>
-          <textarea
+          <TextArea
             id="abi"
             aria-label="text area for abi"
-            value={rawAbi.value}
+            name="abi"
             placeholder="e.g function transferFrom(address, ..)"
-            className={
-              'flex h-48 w-full break-words rounded-b-md border-t-0 bg-gray-900 p-5' +
-              String(!rawAbi.error ? ' border-gray-600' : ' border-error/75')
-            }
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-              handleChangeRawAbi(event)
-            }
+            value={rawAbi.value}
+            onChange={(event) => handleChangeRawAbi(event)}
           />
           <p aria-label="raw abi error" className="pt-1 text-right text-error">
             {rawAbi.error}
@@ -95,4 +77,15 @@ export function AbiSourceTabs<
       )}
     </div>
   );
+}
+
+// @internal
+export interface AbiSourceTabsProps<T, D> {
+  rawAbi: T;
+  tabState: {
+    tab: 'abi' | '4-bytes';
+    setTab: Dispatch<SetStateAction<'abi' | '4-bytes'>>;
+  };
+  setDecodeResults: Dispatch<React.SetStateAction<D>>;
+  handleChangeRawAbi: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }

@@ -25,6 +25,7 @@ export function HexDecToggle({
     setState,
     buttonNames: ['hex', 'dec'],
     encoderAndDecoder: { encoder: encodeHex, decoder: decodeHex },
+    className,
   });
 }
 
@@ -44,6 +45,7 @@ export function Bytes32StringToggle({
       encoder: formatBytes32String,
       decoder: parseBytes32String,
     },
+    className,
   });
 }
 
@@ -97,6 +99,7 @@ function ToggleWithSideEffect<T, R>({
   encoderAndDecoder,
   buttonNames,
   isStateFn,
+  className,
 }: Toggle<T, R>): ReactElement {
   const { isState, inner } = state;
   const { encoder, decoder } = encoderAndDecoder;
@@ -125,8 +128,10 @@ function ToggleWithSideEffect<T, R>({
       className="flex"
     >
       <button
+        type="button"
         aria-label="left toggle button"
         disabled={isDisabled}
+        aria-disabled={isDisabled}
         onClick={() => {
           try {
             setState({ isState: true, inner: encoder(inner as T) });
@@ -140,8 +145,10 @@ function ToggleWithSideEffect<T, R>({
       </button>
 
       <button
+        type="button"
         aria-label="right toggle button"
         disabled={isDisabled}
+        aria-disabled={isDisabled}
         onClick={() => {
           try {
             setState({ isState: false, inner: decoder(inner as R) });
@@ -186,8 +193,21 @@ const switchButtonStyle = (
 interface Toggle<T, R> {
   isDisabled?: boolean;
   buttonNames: [string, string];
+  /**
+   * State hook that returns whether the state is in the left half, and the state itself.
+   */
   state: { isState: boolean; inner: T | R };
+  /**
+   * State hook that sets the state.
+   */
   setState: Dispatch<SetStateAction<{ isState: boolean; inner: T | R }>>;
+  /**
+   * A function that returns true if the state is in the first half.
+   * e.g isStateFn = isHex(...): boolean
+   */
   isStateFn: (inner: T | R) => boolean;
+  /**
+   * Encoder and decoder functions respectively to [T => R, R => T].
+   */
   encoderAndDecoder: { encoder: (value: T) => R; decoder: (value: R) => T };
 }

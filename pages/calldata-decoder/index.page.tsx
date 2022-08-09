@@ -7,14 +7,14 @@ import {
   useState,
 } from 'react';
 
-import { AbiSourceTabs } from '../../src/components/AbiSourceTabs';
 import { DecodedCalldataTree } from '../../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
+import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { Button } from '../../src/components/lib/Button';
+import { Header } from '../../src/components/lib/Header';
+import { TextArea } from '../../src/components/lib/TextArea/TextArea';
 import { Spinner } from '../../src/components/Spinner';
-import { TextArea } from '../../src/components/TextArea';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
 import {
   decodeWithCalldata,
   fetch4BytesBy,
@@ -151,12 +151,12 @@ export default function CalldataDecoder(): ReactElement {
 
   return (
     <ToolContainer>
-      <ToolHeader
+      <Header
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Calldata Decoder']}
       />
       <TextArea
-        name="calldata"
+        name="Calldata"
         error={encodedCalldata.error}
         value={encodedCalldata.value}
         placeholder="e.g 0x23b8..3b2"

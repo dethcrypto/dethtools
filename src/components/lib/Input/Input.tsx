@@ -45,16 +45,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           aria-invalid={!!errorFromProps}
           {...(autoComplete === 'off' && autoCompleteProps)}
-          className={
-            'w-full rounded-md border-gray-600 bg-gray-900 pr-12 ring-pink focus:ring-0 ' +
-            'p-3.75 text-lg leading-none text-white focus:outline-none ' +
-            'invalid:border-error invalid:caret-error ' +
-            'disabled:text-white/50 ' +
-            (errorFromProps
-              ? 'border-error caret-error '
-              : 'focus:border-pink focus:caret-pink ') +
-            (className ? ` ${className}` : '')
-          }
+          className={`w-full rounded-md border-gray-600 bg-gray-900 p-3.75 pr-12 text-lg 
+            leading-none text-white ring-pink invalid:border-error invalid:caret-error
+            focus:outline-none focus:ring-0
+            disabled:text-white/50
+            ${
+              errorFromProps
+                ? 'border-error caret-error '
+                : 'focus:border-pink focus:caret-pink '
+            } ${className}`}
           onChange={(event) => {
             onChange?.(event);
             const validationMessage = event.target.validationMessage;

@@ -3,8 +3,8 @@ import { SafeParseError, SafeParseReturnType } from 'zod';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Header } from '../../src/components/lib/Header/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertBase } from '../../src/lib/convertBase';
 import { Base, base } from '../../src/lib/convertBaseProperties';
 import { WithError } from '../../src/misc/types';
@@ -79,7 +79,7 @@ export default function NumberBaseConversion(): ReactElement {
   return (
     <ToolContainer>
       <form className="mr-auto flex w-full flex-col items-start sm:items-center md:items-start">
-        <ToolHeader
+        <Header
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Number Base Conversion']}
         />

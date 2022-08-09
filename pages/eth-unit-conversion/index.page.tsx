@@ -2,8 +2,8 @@ import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
 import { UnitType, unitType } from '../../src/lib/convertProperties';
 import { convertEthUnits } from '../../src/lib/convertUnits';
 import { decodeHex } from '../../src/lib/decodeHex';
@@ -75,7 +75,7 @@ export default function EthUnitConversion(): ReactElement {
   return (
     <ToolContainer>
       <form className="flex w-full flex-col items-start sm:mr-auto sm:items-center md:items-start">
-        <ToolHeader
+        <Header
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Eth Unit Conversion']}
         />
