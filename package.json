@@ -36,6 +36,7 @@
     "@ethersproject/units": "^5.5.0",
     "@headlessui/react": "^1.5.0",
     "@storybook/builder-webpack5": "^6.4.19",
+    "@storybook/client-api": "^6.5.10",
     "@storybook/manager-webpack5": "^6.4.19",
     "bignumber.js": "^9.0.2",
     "lodash": "^4.17.21",

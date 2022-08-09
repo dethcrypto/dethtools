@@ -264,7 +264,7 @@ describe(CalldataDecoder.name, () => {
 
     expect(calldataField.value).toEqual('ddd');
 
-    const calldataError = root.getByLabelText('calldata error');
+    const calldataError = root.getByLabelText('Calldata error');
 
     expect(calldataError.innerHTML).toEqual(
       expect.stringMatching(

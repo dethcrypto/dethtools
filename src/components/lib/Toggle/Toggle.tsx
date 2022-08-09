@@ -2,7 +2,13 @@ import {
   formatBytes32String,
   parseBytes32String,
 } from '@ethersproject/strings';
-import { Dispatch, ReactElement, SetStateAction, useEffect } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+} from 'react';
 
 import { decodeHex, encodeHex } from '../../../../src/lib/decodeHex';
 
@@ -11,6 +17,7 @@ export function HexDecToggle({
   state,
   setState,
   isStateFn,
+  className,
 }: ToggleProps<string, string>): ReactElement {
   return Toggle<string, string>({
     isDisabled,
@@ -19,6 +26,7 @@ export function HexDecToggle({
     setState,
     buttonNames: ['hex', 'dec'],
     encoderAndDecoder: { encoder: encodeHex, decoder: decodeHex },
+    className,
   });
 }
 
@@ -27,6 +35,7 @@ export function Bytes32StringToggle({
   state,
   setState,
   isStateFn,
+  className,
 }: ToggleProps<string, string>): ReactElement {
   return Toggle<string, string>({
     isDisabled,
@@ -38,6 +47,7 @@ export function Bytes32StringToggle({
       encoder: formatBytes32String,
       decoder: parseBytes32String,
     },
+    className,
   });
 }
 
@@ -48,23 +58,23 @@ export type ToggleProps<T, R> = Omit<
 >;
 
 // @internal
-function Toggle<T, R>({
+export function Toggle<T, R>({
   isDisabled,
   state,
   setState,
   encoderAndDecoder,
   buttonNames,
   isStateFn,
+  className,
 }: Toggle<T, R>): ReactElement {
   const { isState, inner } = state;
   const { encoder, decoder } = encoderAndDecoder;
   const [leftToggleHalf, rightToggleHalf] = buttonNames;
 
-  const switchButtonStyle =
-    'grow-0 cursor-pointer border bg-gray-800 ' +
-    'border-gray-500 bg-gray-700 py-0.5 px-3 ' +
-    String(isDisabled && ' opacity-30 cursor-not-allowed ') +
-    'duration-200 hover:bg-gray-700 active:bg-gray-800 ';
+  const switchButtonStyle = `grow-0 cursor-pointer border bg-gray-800 border-gray-500 bg-gray-700 py-0.5 px-3 ${
+    isDisabled &&
+    'opacity-30 cursor-not-allowed duration-200 hover:bg-gray-700 active:bg-gray-800'
+  }`;
 
   useEffect(() => {
     if (isStateFn(state.inner)) {
@@ -78,8 +88,7 @@ function Toggle<T, R>({
       try {
         setState({ isState: false, inner: decoder(state.inner as R) });
       } catch (e) {
-        // consume error here to prevent it bubbling up
-        // (it shouldn't throw when the results are displayed)
+        // s/a
       }
     }
   }, [decoder, encoder, isStateFn, setState, state.inner, state.isState]);
@@ -90,40 +99,38 @@ function Toggle<T, R>({
       className="flex"
     >
       <button
+        type="button"
         aria-label="left toggle button"
         disabled={isDisabled}
+        aria-disabled={isDisabled}
         onClick={() => {
           try {
             setState({ isState: true, inner: encoder(inner as T) });
           } catch (e) {
-            // consume error here to prevent it bubbling up
-            // (it shouldn't throw when the results are displayed)
+            // s/a
           }
         }}
-        className={
-          switchButtonStyle +
-          'rounded-l-md border-r ' +
-          String(isState && !isDisabled && 'border-gray-100')
-        }
+        className={`${switchButtonStyle} rounded-l-md border-r ${
+          isState && !isDisabled && 'border-gray-100'
+        } ${className}`}
       >
         <p aria-label="toggle left half">{leftToggleHalf}</p>
       </button>
       <button
+        type="button"
         aria-label="right toggle button"
         disabled={isDisabled}
+        aria-disabled={isDisabled}
         onClick={() => {
           try {
             setState({ isState: false, inner: decoder(inner as R) });
           } catch (e) {
-            // consume error here to prevent it bubbling up
-            // (it shouldn't throw when the results are displayed)
+            // s/a
           }
         }}
-        className={
-          switchButtonStyle +
-          'rounded-r-md border-l ' +
-          String(!isState && !isDisabled && 'border-gray-100')
-        }
+        className={`${switchButtonStyle} rounded-r-md border-l ${
+          !isState && !isDisabled && 'border-gray-100'
+        } ${className}`}
       >
         <p aria-label="toggle left half">{rightToggleHalf}</p>
       </button>
@@ -140,11 +147,27 @@ function Toggle<T, R>({
  * @param buttonNames - an array of strings to display on the buttons [firstHalf, secondHalf]
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-interface Toggle<T, R> {
+export interface Toggle<T, R> extends ComponentPropsWithoutRef<'div'> {
   isDisabled: boolean;
+  /**
+   * Names of the controls [left, right].
+   */
   buttonNames: [string, string];
+  /**
+   * State hook that returns whether the state is in the left half, and the state itself.
+   */
   state: { isState: boolean; inner: T | R };
+  /**
+   * State hook that sets the state.
+   */
   setState: Dispatch<SetStateAction<{ isState: boolean; inner: T | R }>>;
+  /**
+   * A function that returns true if the state is in the first half.
+   * e.g isStateFn = isHex(...): boolean
+   */
   isStateFn: (inner: T | R) => boolean;
+  /**
+   * Encoder and decoder functions respectively to [T => R, R => T].
+   */
   encoderAndDecoder: { encoder: (value: T) => R; decoder: (value: R) => T };
 }
