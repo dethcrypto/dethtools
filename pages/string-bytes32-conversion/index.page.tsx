@@ -2,8 +2,8 @@ import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
-import { ToolHeader } from '../../src/components/ToolHeader';
 import { convertBytes32ToString } from '../../src/lib/stringBytes32Conversion/convertBytes32ToString';
 import { convertStringToBytes32 } from '../../src/lib/stringBytes32Conversion/convertStringToBytes32';
 import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
@@ -58,7 +58,7 @@ export default function StringBytes32Conversion(): ReactElement {
   return (
     <ToolContainer>
       <form className="flex w-full flex-col items-start sm:mr-auto sm:items-center md:items-start">
-        <ToolHeader
+        <Header
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'String-Bytes32 Conversion']}
         />
