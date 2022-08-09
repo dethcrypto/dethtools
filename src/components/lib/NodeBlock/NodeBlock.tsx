@@ -1,9 +1,13 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 
-import { isHex } from '../../../lib/decodeHex';
-import { CopyIcon } from '../../icons/CopyIcon';
-import { OkIcon } from '../../icons/OkIcon';
-import { Bytes32StringToggle, HexDecToggle, ToggleProps } from '../Toggle';
+import { CopyIcon } from '../../../../src/components/icons/CopyIcon';
+import { OkIcon } from '../../../../src/components/icons/OkIcon';
+import { isHex } from '../../../../src/lib/decodeHex';
+import {
+  Bytes32StringToggle,
+  HexDecToggle,
+  ToggleWithSideEffectProps,
+} from '../Toggle';
 
 export function NodeBlock({
   children,
@@ -22,7 +26,7 @@ export function NodeBlock({
   return (
     <div className="flex items-center gap-2">
       <div
-        className={`my-1 mx-2 flex h-12 cursor-pointer 
+        className={`flex h-12 cursor-pointer
         items-center gap-3 overflow-auto rounded-md pr-4
         font-mono text-sm duration-200 ${className}`}
       >
@@ -47,7 +51,11 @@ export function NodeBlock({
           border-gray-600 p-1 px-2 duration-200 hover:bg-gray-700
             hover:outline active:bg-gray-800"
         >
-          <code aria-label="decoded value" id="node-value">
+          <code
+            className="whitespace-nowrap"
+            aria-label="decoded value"
+            id="node-value"
+          >
             {state.inner}
           </code>
           {!copyNotification ? (
@@ -81,7 +89,7 @@ export interface NodeBlockProps {
 
 // @internal
 type AdequateToggle = Omit<
-  ToggleProps<string, string>,
+  ToggleWithSideEffectProps<string, string>,
   'isDisabled' | 'isStateFn'
 > & {
   str: string;

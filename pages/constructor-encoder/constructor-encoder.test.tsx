@@ -1,7 +1,8 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect } from 'earljs';
 
+import { changeTargetValue } from '../../test/helpers/changeTargetValue';
 import ConstructorEncoder from './index.page';
 
 const abi = [
@@ -17,102 +18,63 @@ const abi = [
 ];
 
 describe(ConstructorEncoder.name, () => {
-  it('encodes constructor arguments correctly', async () => {
+  it('encodes constructor arguments correctly', () => {
     const root = render(<ConstructorEncoder />);
 
-    const abiField = (await root.findByLabelText('ABI')) as HTMLTextAreaElement;
-    fireEvent.change(abiField, {
-      target: {
-        value: JSON.stringify(abi),
-      },
-    });
+    const abiField = root.getByLabelText('ABI') as HTMLTextAreaElement;
+
+    changeTargetValue(abiField, JSON.stringify(abi));
 
     expect(abiField.value).toEqual(JSON.stringify(abi));
 
-    const oneField = (await root.findByLabelText(/one/)) as HTMLInputElement;
-    const twoField = (await root.findByLabelText(/two/)) as HTMLInputElement;
-    const threeField = (await root.findByLabelText(
-      /three/,
-    )) as HTMLInputElement;
-    fireEvent.change(oneField, {
-      target: {
-        value: '0x42',
-      },
-    });
-    fireEvent.change(twoField, {
-      target: {
-        value: '42',
-      },
-    });
-    fireEvent.change(threeField, {
-      target: {
-        value: '0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45',
-      },
-    });
+    const oneField = root.getByLabelText(/one/) as HTMLInputElement;
+    const twoField = root.getByLabelText(/two/) as HTMLInputElement;
+    const threeField = root.getByLabelText(/three/) as HTMLInputElement;
 
-    userEvent.click(await root.findByText('Decode'));
+    changeTargetValue(oneField, '0x42');
+    changeTargetValue(twoField, '42');
+    changeTargetValue(threeField, '0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45');
 
-    const encodedRows = await root.findAllByLabelText('encoded-row');
+    userEvent.click(root.getByText('Decode'));
 
-    expect(encodedRows[0].innerHTML).toEqual(
-      expect.stringMatching(
-        '0000000000000000000000000000000000000000000000000000000000000042',
-      ),
+    const encodedRows = root.getAllByLabelText('encoded-row');
+
+    expect(encodedRows[0].textContent).toEqual(
+      '0000000000000000000000000000000000000000000000000000000000000042',
     );
-    expect(encodedRows[1].innerHTML).toEqual(
-      expect.stringMatching(
-        '000000000000000000000000000000000000000000000000000000000000002a',
-      ),
+    expect(encodedRows[1].textContent).toEqual(
+      '000000000000000000000000000000000000000000000000000000000000002a',
     );
-    expect(encodedRows[2].innerHTML).toEqual(
-      expect.stringMatching(
-        '00000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45',
-      ),
+    expect(encodedRows[2].textContent).toEqual(
+      '00000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45',
     );
   });
-  it('validates data correctly', async () => {
+
+  it('validates data correctly', () => {
     const root = render(<ConstructorEncoder />);
 
-    const abiField = (await root.findByLabelText('ABI')) as HTMLTextAreaElement;
-    fireEvent.change(abiField, {
-      target: {
-        value: '{',
-      },
-    });
+    const abiField = root.getByLabelText('ABI') as HTMLTextAreaElement;
 
-    expect((await root.findByLabelText('abi decode error')).innerHTML).toEqual(
+    changeTargetValue(abiField, '{');
+
+    expect(root.getByLabelText('abi decode error').textContent).toEqual(
       'ABI parsing failed: Unexpected end of JSON input',
     );
-    fireEvent.change(abiField, {
-      target: {
-        value: JSON.stringify(abi),
-      },
-    });
 
-    const oneField = (await root.findByLabelText(/one/)) as HTMLInputElement;
-    const threeField = (await root.findByLabelText(
-      /three/,
-    )) as HTMLInputElement;
-    fireEvent.change(oneField, {
-      target: {
-        value: '0xqwerty',
-      },
-    });
-    expect((await root.findByRole('alert')).innerHTML).toEqual(
+    changeTargetValue(abiField, JSON.stringify(abi));
+
+    const oneField = root.getByLabelText(/one/) as HTMLInputElement;
+    const threeField = root.getByLabelText(/three/) as HTMLInputElement;
+
+    changeTargetValue(oneField, '0xqwerty');
+
+    expect(root.getByRole('alert').textContent).toEqual(
       'invalid BigNumber string',
     );
-    fireEvent.change(oneField, {
-      target: {
-        value: '0x42',
-      },
-    });
-    fireEvent.change(threeField, {
-      target: {
-        value: '0x42',
-      },
-    });
-    expect((await root.findByRole('alert')).innerHTML).toEqual(
-      'invalid address',
-    );
+
+    changeTargetValue(oneField, '0x42');
+    changeTargetValue(threeField, '0x42');
+
+    expect(root.getByRole('alert').textContent).toEqual('invalid address');
   });
 });

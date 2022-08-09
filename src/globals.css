@@ -6,14 +6,13 @@
 
 html {
   height: 100vh;
-
   font-family: Inconsolata, monospace;
 
   @apply bg-gray-900;
 }
 
 *::selection {
-  @apply bg-purple/50;
+  @apply bg-purple/40;
 }
 
 #__next {

@@ -180,11 +180,6 @@ export default function ConstructorEncoder(): ReactElement {
       {!error && encodedResult?.length! > 0 && (
         <p className="text-md pb-4 pt-8 font-semibold">Encoded constructor:</p>
       )}
-      {!encodedResult && (
-        <p className="text-md py-5 font-semibold">
-          Decoded output will appear here
-        </p>
-      )}
       {encodedResult && (
         <section
           className="relative  mb-16 rounded-md border border-gray-600 bg-gray-900 p-8"

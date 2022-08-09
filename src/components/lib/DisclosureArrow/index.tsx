@@ -1,16 +1,20 @@
-import * as React from 'react';
+import React from 'react';
 
 import { DownArrowIcon } from '../../../components/icons/DownIcon';
 import { UpArrowIcon } from '../../../components/icons/UpIcon';
 
-export function DisclosureArrow({ open }: { open: boolean }): JSX.Element {
-  return (
-    <React.Fragment>
-      {!open ? (
-        <UpArrowIcon width={12} height={12} />
-      ) : (
-        <DownArrowIcon width={12} height={12} />
-      )}
-    </React.Fragment>
+interface DisclosureArrowProps extends React.SVGProps<SVGSVGElement> {
+  open: boolean;
+}
+
+export function DisclosureArrow({
+  open,
+  ...props
+}: DisclosureArrowProps): JSX.Element {
+  const def = { width: props.width || 12, height: props.width || 12 };
+  return !open ? (
+    <UpArrowIcon {...def} {...props} />
+  ) : (
+    <DownArrowIcon {...def} {...props} />
   );
 }
