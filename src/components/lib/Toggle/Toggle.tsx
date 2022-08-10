@@ -141,7 +141,7 @@ function ToggleWithSideEffect<T, R>({
             // s/a
           }
         }}
-        className={switchButtonStyle(isDisabled!, !isState, true)}
+        className={switchButtonStyle(isDisabled!, isState, true)}
       >
         <p aria-label="toggle left half">{leftToggleHalf}</p>
       </button>
@@ -158,7 +158,7 @@ function ToggleWithSideEffect<T, R>({
             // s/a
           }
         }}
-        className={switchButtonStyle(isDisabled!, isState, false)}
+        className={switchButtonStyle(isDisabled!, !isState, false)}
       >
         <p aria-label="toggle left half">{rightToggleHalf}</p>
       </button>
