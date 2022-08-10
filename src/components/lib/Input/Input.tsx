@@ -39,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const error = errorFromProps || validationMessage;
 
     return (
-      <div>
+      <>
         <input
           name={name}
           ref={ref}
@@ -70,7 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </p>
           )}
         </div>
-      </div>
+      </>
     );
   },
 );
