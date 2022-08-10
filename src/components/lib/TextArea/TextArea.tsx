@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
-import { TextAreaProps } from '.';
 
 import { FormLabel } from '../../../../src/components/FormLabel';
+import { TextAreaProps } from '.';
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, error, name, hideLabel = false, ...props }, ref) => {
