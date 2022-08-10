@@ -5,6 +5,7 @@ import { MyLink } from '../components/MyLink';
 import { CalculatorIcon } from './icons/CalculatorIcon';
 import { DecodersIcon } from './icons/DecodersIcon';
 import { EncodersIcon } from './icons/EncodersIcon';
+import { GeneratorIcon } from './icons/GeneratorIcon';
 import { MinusIcon } from './icons/MinusIcon';
 import { PlusIcon } from './icons/PlusIcon';
 import { NavigationSocial } from './NavigationSocial';
@@ -116,6 +117,15 @@ const tree: Tree = {
       {
         title: 'Constructor Encoder',
         pageHref: 'constructor-encoder',
+      },
+    ],
+  },
+  generators: {
+    icon: <GeneratorIcon height={20} width={20} />,
+    tools: [
+      {
+        title: 'Vanity Address Generator',
+        pageHref: 'vanity-address-generator',
       },
     ],
   },
