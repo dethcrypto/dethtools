@@ -1,20 +1,17 @@
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { TextAreaProps } from '.';
 
 import { FormLabel } from '../../../../src/components/FormLabel';
 
-export interface TextAreaProps extends ComponentPropsWithoutRef<'textarea'> {
-  name: string;
-  error?: string;
-}
-
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, error, name, ...props }, ref) => {
+  ({ className, error, name, hideLabel = false, ...props }, ref) => {
     return (
       <>
         <FormLabel
           className="text-white"
           htmlFor={name}
           label={<span>{name}</span>}
+          hideLabel={hideLabel}
         >
           <textarea
             id={name}
@@ -40,5 +37,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     );
   },
 );
+
+export interface TextAreaProps extends ComponentPropsWithoutRef<'textarea'> {
+  name: string;
+  error?: string;
+  hideLabel?: boolean;
+}
 
 TextArea.displayName = 'TextArea';
