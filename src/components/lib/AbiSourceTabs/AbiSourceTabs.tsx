@@ -68,6 +68,7 @@ export function AbiSourceTabs<
             name="abi"
             placeholder="e.g function transferFrom(address, ..)"
             value={rawAbi.value}
+            hideLabel={true}
             onChange={(event) => handleChangeRawAbi(event)}
           />
           <p aria-label="raw abi error" className="pt-1 text-right text-error">

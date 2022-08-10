@@ -9,6 +9,7 @@ export function ConversionInput({
   value,
   error,
   extraLabel,
+  labelClassName,
   ...rest
 }: ConversionInputProps): ReactElement {
   return (
@@ -20,6 +21,7 @@ export function ConversionInput({
           {extraLabel}
         </>
       }
+      className={labelClassName}
     >
       <Input
         id={id}
@@ -35,6 +37,7 @@ export function ConversionInput({
 
 export interface ConversionInputProps
   extends React.ComponentPropsWithoutRef<'input'> {
+  labelClassName?: React.ComponentPropsWithoutRef<'input'>['className'];
   error?: string;
   extraLabel?: React.ReactNode;
 }
