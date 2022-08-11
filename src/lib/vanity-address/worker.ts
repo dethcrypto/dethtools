@@ -4,7 +4,11 @@ import {
   VanityAddressParallelConfig,
 } from './vanity-address';
 
-onmessage = (event: MessageEvent<VanityAddressParallelConfig>) => {
+onmessage = (event: MessageEvent<VanityAddressParallelConfig | string>) => {
+  if (event.data === 'suicide') {
+    // eslint-disable-next-line no-restricted-globals
+    self.close();
+  }
   if (isVanityAddressParallelConfig(event.data)) {
     try {
       const result = searchForMatchingWallet(event.data);

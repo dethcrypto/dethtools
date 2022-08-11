@@ -3,8 +3,8 @@ import React, {
   ReactElement,
   ReactNode,
   useEffect,
+  useState,
 } from 'react';
-import { useState } from 'react';
 import { ConversionInput } from 'src/components/ConversionInput';
 import { Button } from 'src/components/lib/Button';
 import { NodeBlock } from 'src/components/lib/NodeBlock';
@@ -18,7 +18,7 @@ import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import {
   getCpuCoreCount,
-  searchForMatchingWalletInParallel,
+  VanityAddressWorkerPool,
   Wallet,
 } from '../../src/lib/vanity-address';
 
@@ -46,12 +46,21 @@ export default function VanityAddressGenerator(): ReactElement {
   ]);
 
   const [error, setError] = useState('');
+
   const [prefix, setPrefix] = useState<WithError<string>>({ value: '' });
   const [suffix, setSuffix] = useState<WithError<string>>({ value: '' });
-  const [cpuCores, setCpuCores] = useState<WithError<number>>({ value: 4 });
-  const [result, setResult] = useState<Wallet>();
 
-  const flushResults = (): void => {};
+  const [isCaseSensitive, setIsCaseSensitive] = useState(false);
+  const [cpuCores, setCpuCores] = useState<WithError<number>>({ value: 4 });
+  const [workerPool, setWorkerPool] = useState<VanityAddressWorkerPool>();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [timeEstimate, setTimeEstimate] = useState<string>('0');
+  const [results, setResults] = useState<Wallet>();
+
+  const flushResults = (): void => {
+    if (results) setResults(undefined);
+  };
 
   const handleChangePrefix = (newValue: string): void =>
     handleChangeValidated({
@@ -77,13 +86,28 @@ export default function VanityAddressGenerator(): ReactElement {
       flushFn: flushResults,
     });
 
+  async function handleAbort(): Promise<void> {
+    setIsLoading(false);
+    await workerPool?.terminateWorkers();
+  }
+
   async function handleGenerate(): Promise<void> {
-    const result = await searchForMatchingWalletInParallel({
+    flushResults();
+
+    const vanityAddressWorkerPool = new VanityAddressWorkerPool({
       prefix: prefix.value,
       suffix: suffix.value,
       cpuCoreCount: cpuCores.value,
     });
-    return setResult(result);
+
+    setWorkerPool(vanityAddressWorkerPool);
+
+    setIsLoading(true);
+
+    vanityAddressWorkerPool
+      .searchForMatchingWalletInParallel()
+      .then((wallet) => setResults(wallet))
+      .finally(() => setIsLoading(false));
   }
 
   useEffect(() => {
@@ -106,7 +130,6 @@ export default function VanityAddressGenerator(): ReactElement {
         icon={<GeneratorIcon height={24} width={24} />}
         text={['Generators', 'Vanity Address Generator']}
       />
-
       <section className="mb-6">
         <div className="flex gap-2">
           <ConversionInput
@@ -127,26 +150,38 @@ export default function VanityAddressGenerator(): ReactElement {
         </Entity>
       </section>
 
-      <ConversionInput
-        type="number"
-        name="cpu cores"
-        value={cpuCores.value}
-        error={cpuCores.error}
-        onChange={({ target }) => handleChangeCpuCoreCount(target.value)}
-      />
+      <section className="flex items-center justify-between">
+        <ConversionInput
+          type="number"
+          name="cpu cores"
+          value={cpuCores.value}
+          error={cpuCores.error}
+          labelClassName="basis-3/5"
+          onChange={({ target }) => handleChangeCpuCoreCount(target.value)}
+        />
+        <div className="mx-auto flex items-center gap-3">
+          <span>Case sensitive</span>
+          <input
+            value={String(isCaseSensitive)}
+            onChange={() => setIsCaseSensitive(!isCaseSensitive)}
+            type="checkbox"
+            className="rounded-md border-none bg-gray-900 p-3 text-gray-800
+            focus:outline-none focus:ring-0 focus:ring-inset focus:ring-offset-0"
+          />
+        </div>
+      </section>
 
       <section className="flex gap-3">
         <Button className="basis-3/4" onClick={handleGenerate}>
           Generate
         </Button>
-        <Button variant="secondary" className="basis-1/4">
+        <Button variant="secondary" className="basis-1/4" onClick={handleAbort}>
           Abort
         </Button>
       </section>
 
-      {result && <GeneratorResult result={result} />}
-
-      {/* <NotificationPanel notifications={notifications} /> */}
+      <TimeEstimation className="mt-6" />
+      <GeneratorResult isLoading={isLoading} results={results} />
     </ToolContainer>
   );
 }
@@ -183,26 +218,74 @@ function replaceZeroAddrAt(
   setState(result);
 }
 
-interface GeneratorResultProps {
-  result: Wallet;
-}
-
-function GeneratorResult({ result }: GeneratorResultProps): ReactElement {
+function GeneratorResult({
+  results,
+  isLoading = false,
+}: GeneratorResultProps): ReactElement {
   return (
-    <Entity className="mt-5" title="Generated wallet">
-      <NodeBlock className="ml-1 mt-1" toggle={false} str={result.address}>
-        Address:
-      </NodeBlock>
-      <NodeBlock className="ml-1" toggle={false} str={result.privateKey}>
-        Private key:
-      </NodeBlock>
+    <Entity className="mt-4 h-44" title="Generated wallet">
+      {results ? (
+        <>
+          <NodeBlock className="ml-1 mt-1" toggle={false} str={results.address}>
+            Address:
+          </NodeBlock>
+          <NodeBlock
+            className="ml-1 mt-1"
+            toggle={false}
+            str={results.privateKey}
+          >
+            Private key:
+          </NodeBlock>
+        </>
+      ) : isLoading ? (
+        <>
+          <LoadingBlock isLoading={true} />
+          <LoadingBlock isLoading={true} />
+        </>
+      ) : (
+        <>
+          <LoadingBlock isLoading={false} />
+          <LoadingBlock isLoading={false} />
+        </>
+      )}
     </Entity>
   );
 }
 
-interface EntityProps extends ComponentPropsWithoutRef<'div'> {
-  title: string;
-  children: ReactNode;
+function TimeEstimation({ ...props }: TimeEstimationProps): ReactElement {
+  return (
+    <Entity {...props} title="Estimated time">
+      <div className="flex gap-2"></div>
+    </Entity>
+  );
+}
+
+type TimeEstimationProps = ComponentPropsWithoutRef<'div'>;
+
+function LoadingBlock({ isLoading }: LoadingBlockProps): ReactElement {
+  return (
+    <section className="flex">
+      <div
+        className={`mt-4 h-4 w-1/6 rounded-md bg-gray-800 p-4 ${
+          isLoading ? 'animate-pulse' : ''
+        }`}
+      />
+      <div
+        className={`ml-4 mt-4 h-4 w-4/6 rounded-md bg-gray-800 p-4 ${
+          isLoading ? 'animate-pulse' : ''
+        }`}
+      />
+    </section>
+  );
+}
+
+interface LoadingBlockProps {
+  isLoading: boolean;
+}
+
+interface GeneratorResultProps {
+  results?: Wallet;
+  isLoading?: boolean;
 }
 
 function Entity({ title, children, className }: EntityProps): ReactElement {
@@ -216,30 +299,7 @@ function Entity({ title, children, className }: EntityProps): ReactElement {
   );
 }
 
-// export function NotificationPanel({
-//   notifications,
-// }: {
-//   notifications: Notification[];
-// }): ReactElement {
-//   return (
-//     <>
-//       {notifications.map((notification) => {
-//         const { type, message, when } = notification(notification.context);
-//         return (
-//           when && (
-//             <section className="mt-10 w-full">
-//               <output
-//                 className="flex cursor-pointer items-center gap-3 rounded-md border border-gray-600 bg-gray-700
-//                 p-3 text-white duration-200 hover:bg-gray-600 active:scale-75 active:bg-gray-700"
-//                 onClick={() => {}}
-//               >
-//                 <LightbulbIcon className="animate-pulse" />
-//                 <p className="select-none">{text}</p>
-//               </output>
-//             </section>
-//           )
-//         );
-//       })}
-//     </>
-//   );
-// }
+interface EntityProps extends ComponentPropsWithoutRef<'div'> {
+  title: string;
+  children: ReactNode;
+}
