@@ -1,6 +1,5 @@
 import { randomBytes } from 'crypto';
 import { keccak, privateToAddress } from 'ethereumjs-util';
-import { range } from 'lodash';
 import { privateKeyVerify, publicKeyCreate } from 'secp256k1';
 
 import { RequireAtLeastOne } from '../../types/util.d';
@@ -30,6 +29,7 @@ export type VanityAddressConfig = RequireAtLeastOne<
   {
     prefix?: string;
     suffix?: string;
+    isCaseSensitive?: boolean;
   },
   'prefix' | 'suffix'
 >;
@@ -65,8 +65,10 @@ export function getAddress(publicKey: Buffer): string {
 export const searchForMatchingWallet: SearchForMatchingWallet<
   VanityAddressConfig
 > = (config) => {
-  const { prefix, suffix } = config;
-  const pattern = `^0x${prefix || ''}.+${suffix || ''}$`;
+  const { prefix, suffix, isCaseSensitive } = config;
+  const pattern = `^0x${prefix || ''}.+${suffix || ''}$${
+    isCaseSensitive ? '/gi' : ''
+  }`;
   const regex = new RegExp(pattern);
 
   let tries = 0;
@@ -93,39 +95,4 @@ export function getCpuCoreCount(): number | undefined {
   return typeof window !== 'undefined'
     ? window.navigator.hardwareConcurrency
     : undefined;
-}
-
-export async function searchForMatchingWalletInParallel(
-  config: VanityAddressParallelConfig,
-): Promise<Wallet> {
-  return new Promise((resolve) => {
-    if (typeof window.Worker === 'undefined')
-      throw new Error('Web workers are not supported in this browser');
-
-    const workerList: Worker[] = [];
-    const cpuCoreCount = getCpuCoreCount();
-
-    if (cpuCoreCount)
-      for (const _ of range(cpuCoreCount)) {
-        const worker = new Worker(
-          // @ts-ignore - ignore ts error because of `import.meta.url` - it's working fine
-          new URL('worker.ts', import.meta.url),
-          { type: 'module' },
-        );
-
-        // send config to worker
-        worker.postMessage(config);
-
-        worker.onmessage = (
-          event: MessageEvent<Wallet | VanityAddressParallelConfig>,
-        ) => {
-          if (isWallet(event.data)) {
-            workerList.forEach((worker) => worker.terminate());
-            resolve(event.data);
-          }
-        };
-
-        workerList.push(worker);
-      }
-  });
 }

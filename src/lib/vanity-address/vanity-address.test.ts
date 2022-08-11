@@ -35,3 +35,5 @@ describe.only('vanity-address', () => {
     console.log(result);
   });
 });
+
+export {};

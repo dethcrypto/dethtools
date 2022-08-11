@@ -55,6 +55,5 @@ export class VanityAddressWorkerPool {
 
   public async terminateWorkers(): Promise<void> {
     this._workers.forEach((worker) => worker.postMessage('suicide'));
-    this._workers.forEach((worker) => worker.terminate());
   }
 }
