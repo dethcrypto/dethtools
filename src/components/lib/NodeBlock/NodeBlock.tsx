@@ -51,8 +51,8 @@ export function NodeBlock({
             }
           }}
           className="flex h-10 items-center gap-3 rounded-md border 
-          border-gray-600 p-1 px-2 duration-200 hover:bg-gray-700
-            hover:outline active:bg-gray-800"
+          border-gray-600 bg-gray-700 p-1 px-2 shadow-md shadow-gray-800 
+          duration-200 hover:bg-gray-800 active:bg-gray-800"
         >
           <code
             className="whitespace-nowrap"

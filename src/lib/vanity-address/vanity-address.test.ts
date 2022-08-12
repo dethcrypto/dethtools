@@ -6,8 +6,7 @@ import {
   searchForMatchingWallet,
 } from './vanity-address';
 
-// eslint-disable-next-line no-only-tests/no-only-tests
-describe.only('vanity-address', () => {
+describe('vanity-address', () => {
   it(getPrivateKey.name, () => {
     const privateKey = getPrivateKey();
     console.log(privateKey.toString());
