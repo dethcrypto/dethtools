@@ -43,7 +43,7 @@ export function NodeBlock({
             const value =
               event.currentTarget.children.namedItem('node-value')?.textContent;
             if (value) {
-              await navigator.clipboard.writeText(value);
+              void window.navigator.clipboard.writeText(value);
               setCopyNotification(true);
               setTimeout(() => {
                 setCopyNotification(false);

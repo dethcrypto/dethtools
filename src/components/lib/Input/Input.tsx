@@ -4,6 +4,7 @@ import { constrain } from '../../../misc/constrain';
 
 export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   error?: string;
+  message?: string;
 }
 
 /**
@@ -26,6 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className,
       name,
       error: errorFromProps,
+      message,
       autoComplete = 'off',
       onChange,
       ...rest
@@ -63,7 +65,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           }}
           {...rest}
         />
-        <div className="whitespace-normal pt-2">
+        <div className="whitespace-normal">
+          {message && (
+            <p role="alert" aria-atomic="true" className="text-purple">
+              {message}
+            </p>
+          )}
+        </div>
+        <div className="whitespace-normal">
           {error && (
             <p role="alert" aria-atomic="true" className="text-error">
               {error}
