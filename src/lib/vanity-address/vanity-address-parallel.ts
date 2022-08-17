@@ -1,5 +1,5 @@
 import {
-  getCpuCoreCount,
+  cpu,
   isWallet,
   VanityAddressParallelConfig,
   Wallet,
@@ -15,15 +15,13 @@ export class VanityAddressWorkerPool {
     if (typeof window.Worker === 'undefined')
       throw new Error('Web workers are not supported in this browser');
 
-    const cpuCoreCount = getCpuCoreCount();
+    const cpuCoreCount = cpu.coreCount();
 
     if (cpuCoreCount)
       for (let i = 0; i <= cpuCoreCount; i++) {
-        const worker = new Worker(
-          // @ts-ignore - ignore ts error because of `import.meta.url` - it's working fine
-          new URL('worker.ts', import.meta.url),
-          { type: 'module' },
-        );
+        const worker = new Worker(new URL('worker.ts', import.meta.url), {
+          type: 'module',
+        });
         this._workers.push(worker);
       }
   }
@@ -35,9 +33,7 @@ export class VanityAddressWorkerPool {
 
     const searchForWallet = (worker: Worker): Promise<Wallet> =>
       new Promise((resolve) => {
-        // send config to worker
         worker.postMessage(config);
-
         worker.onmessage = (
           event: MessageEvent<Wallet | VanityAddressParallelConfig>,
         ) => {
@@ -48,12 +44,10 @@ export class VanityAddressWorkerPool {
         };
       });
 
-    for (const worker of this._workers) {
-      return searchForWallet(worker);
-    }
+    return Promise.race(this._workers.map(searchForWallet));
   }
 
   public async terminateWorkers(): Promise<void> {
-    this._workers.forEach((worker) => worker.postMessage('suicide'));
+    this._workers.forEach((worker) => worker.terminate());
   }
 }
