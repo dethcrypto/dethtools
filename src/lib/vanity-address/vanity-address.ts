@@ -18,7 +18,7 @@ const MAX_TRIES = 100_000;
 
 type SearchForMatchingWallet<C extends VanityAddressConfig> = (
   config: C,
-) => Wallet | void | undefined;
+) => Promise<Wallet>;
 
 export interface Wallet {
   privateKey: string;
@@ -76,50 +76,58 @@ export function getAddress(publicKey: Buffer): string {
 
 export const searchForMatchingWallet: SearchForMatchingWallet<
   VanityAddressConfig
-> = (config) => {
-  let { prefix, suffix, isCaseSensitive } = config;
-  isCaseSensitive = isCaseSensitive || false;
+> = async (config) => {
+  return new Promise((resolve) => {
+    let { prefix, suffix, isCaseSensitive } = config;
+    isCaseSensitive = isCaseSensitive || false;
 
-  const pattern = `^0x${prefix || ''}.+${suffix || ''}$`;
-  const flag = isCaseSensitive ? 'g' : 'gi';
-  const regex = new RegExp(pattern, flag);
+    const pattern = `^0x${prefix || ''}.+${suffix || ''}$`;
+    const flag = isCaseSensitive ? 'g' : 'gi';
+    const regex = new RegExp(pattern, flag);
 
-  let tries = 0;
+    let tries = 0;
 
-  while (tries <= MAX_TRIES) {
-    const privateKey = getPrivateKey();
-    const publicKey = getPublicKey(privateKey);
-    const address = getAddress(publicKey);
+    while (tries <= MAX_TRIES) {
+      const privateKey = getPrivateKey();
+      const publicKey = getPublicKey(privateKey);
+      const address = getAddress(publicKey);
 
-    if (regex.test(address)) {
-      return {
-        privateKey: privateKey.toString('hex'),
-        publicKey: publicKey.toString('hex'),
-        address,
-      };
-    } else {
-      tries += 1;
+      if (regex.test(address)) {
+        return resolve({
+          privateKey: privateKey.toString('hex'),
+          publicKey: publicKey.toString('hex'),
+          address,
+        });
+      } else {
+        tries += 1;
+      }
     }
-  }
-  throw new Error('No matching wallet found');
+    throw new Error('No matching wallet found');
+  });
 };
 
-export function getCpuCoreCount(): number | undefined {
-  return typeof window !== 'undefined'
-    ? window.navigator.hardwareConcurrency
-    : undefined;
-}
+export const workers = {
+  available: (): boolean => {
+    return typeof window.Worker !== 'undefined';
+  },
+};
+
+export const cpu = {
+  coreCount: (): number | undefined => {
+    return typeof window !== 'undefined'
+      ? window.navigator.hardwareConcurrency
+      : undefined;
+  },
+};
 
 export function replaceZeroAddrAt(
   prefix: string,
   suffix: string,
-  defaultAddress: string,
-  setState: (newState: string) => void,
-): void {
+  defaultAddress: string = ZERO_ADDRESS_NO_PREFIX,
+): string {
   const lengthToFill = defaultAddress.length - prefix.length - suffix.length;
   const zeroes = [...Array(lengthToFill).keys()].map(() => '0').join('');
-  const result = prefix + zeroes + suffix;
-  setState(result);
+  return prefix + zeroes + suffix;
 }
 
 export function estimateTime(
@@ -131,7 +139,7 @@ export function estimateTime(
     Math.floor(Math.log(0.5) / Math.log(1 - 1 / difficulty));
 
   const totalLength = prefixLength + suffixLength;
-  const time = Math.pow(16, totalLength);
+  const time = Math.pow(4, totalLength);
 
   if (isCaseSensitive)
     return formatTime(probability(time * Math.pow(2, totalLength)));
