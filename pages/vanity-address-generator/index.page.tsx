@@ -1,39 +1,41 @@
-import { Transition } from '@headlessui/react';
 import React, {
   ComponentPropsWithoutRef,
   ReactElement,
-  ReactNode,
   useEffect,
   useState,
 } from 'react';
-import { ConversionInput } from 'src/components/ConversionInput';
-import { Button } from 'src/components/lib/Button';
-import { NodeBlock } from 'src/components/lib/NodeBlock';
-import { handleChangeValidated } from 'src/misc/handleChangeValidated';
-import { WithError } from 'src/misc/types';
-import { hexWithoutPrefixValidator } from 'src/misc/validation/validators/hexValidator';
-import { numberValidator } from 'src/misc/validation/validators/numberValidator';
 
+import { ConversionInput } from '../../src/components/ConversionInput';
 import { GeneratorIcon } from '../../src/components/icons/GeneratorIcon';
+import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
+import { LoadingEntity } from '../../src/components/lib/LoadingEntity';
+import { NodeBlock } from '../../src/components/lib/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import {
+  cpu,
   estimateTime,
-  getCpuCoreCount,
   replaceZeroAddrAt,
+  searchForMatchingWallet,
   VanityAddressWorkerPool,
   Wallet,
+  workers,
   ZERO_ADDRESS_NO_PREFIX,
 } from '../../src/lib/vanity-address';
+import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
+import { WithError } from '../../src/misc/types';
+import { hexWithoutPrefixValidator } from '../../src/misc/validation/validators/hexValidator';
+import { numberValidator } from '../../src/misc/validation/validators/numberValidator';
+
+export type WithMessage<T> = { value: T; error?: string; message?: string };
 
 export default function VanityAddressGenerator(): ReactElement {
-  const [, setError] = useState('');
-
   const [prefix, setPrefix] = useState<WithError<string>>({ value: '' });
   const [suffix, setSuffix] = useState<WithError<string>>({ value: '' });
 
   const [isCaseSensitive, setIsCaseSensitive] = useState(false);
-  const [cpuCores, setCpuCores] = useState<WithError<number>>({ value: 4 });
+  const [cpuCores, setCpuCores] = useState<WithMessage<number>>({ value: 4 });
   const [workerPool, setWorkerPool] = useState<VanityAddressWorkerPool>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -68,43 +70,60 @@ export default function VanityAddressGenerator(): ReactElement {
     });
 
   async function handleAbort(): Promise<void> {
-    setIsLoading(false);
-    await workerPool?.terminateWorkers();
+    workerPool?.terminateWorkers().finally(() => setIsLoading(false));
   }
 
   async function handleGenerate(): Promise<void> {
     flushResults();
 
-    const vanityAddressWorkerPool = new VanityAddressWorkerPool({
-      prefix: prefix.value,
-      suffix: suffix.value,
-      isCaseSensitive: isCaseSensitive,
-      cpuCoreCount: cpuCores.value,
-    });
+    if (!cpuCores.message && !cpuCores.error) {
+      const vanityAddressWorkerPool = new VanityAddressWorkerPool({
+        prefix: prefix.value,
+        suffix: suffix.value,
+        isCaseSensitive: isCaseSensitive,
+        cpuCoreCount: cpuCores.value,
+      });
 
-    setWorkerPool(vanityAddressWorkerPool);
+      setWorkerPool(vanityAddressWorkerPool);
+      setIsLoading(true);
 
-    setIsLoading(true);
+      vanityAddressWorkerPool
+        .searchForMatchingWalletInParallel()
+        .then((wallet) => setResults(wallet))
+        .finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(true);
 
-    vanityAddressWorkerPool
-      .searchForMatchingWalletInParallel()
-      .then((wallet) => setResults(wallet))
-      .finally(() => setIsLoading(false));
+      await searchForMatchingWallet({
+        prefix: prefix.value,
+        suffix: suffix.value,
+        isCaseSensitive: isCaseSensitive,
+      })
+        .then((wallet) => setResults(wallet))
+        .finally(() => setIsLoading(false));
+    }
   }
 
   useEffect(() => {
     void (async () => {
-      if (typeof window.Worker !== 'undefined') {
-        const cpuCoreCount = getCpuCoreCount();
+      if (workers.available()) {
+        const cpuCoreCount = cpu.coreCount();
         if (cpuCoreCount)
           setCpuCores({
             value: cpuCoreCount,
           });
       } else {
-        setError('Web workers are not supported in this browser');
+        setCpuCores((cpuCores) => ({
+          ...cpuCores,
+          message: 'Web workers are not supported in this browser',
+        }));
       }
     })();
   }, []);
+
+  const generationIsPossible = !prefix.error && !suffix.error && !isLoading;
+
+  const abortIsPossible = isLoading;
 
   return (
     <ToolContainer>
@@ -112,6 +131,7 @@ export default function VanityAddressGenerator(): ReactElement {
         icon={<GeneratorIcon height={24} width={24} />}
         text={['Generators', 'Vanity Address Generator']}
       />
+
       <Entity title="configuration">
         <section>
           <div className="flex gap-2">
@@ -129,13 +149,17 @@ export default function VanityAddressGenerator(): ReactElement {
             />
           </div>
         </section>
+
         <section className="flex items-center justify-between">
           <ConversionInput
             type="number"
             name="cpu cores"
             value={cpuCores.value}
             error={cpuCores.error}
+            message={cpuCores.message}
+            disabled={!!cpuCores.message}
             labelClassName="basis-3/5"
+            placeholder="4"
             onChange={({ target }) => handleChangeCpuCoreCount(target.value)}
           />
           <div className="mx-auto flex items-center gap-3">
@@ -145,22 +169,34 @@ export default function VanityAddressGenerator(): ReactElement {
               onChange={() => setIsCaseSensitive(!isCaseSensitive)}
               type="checkbox"
               className="rounded-md border-none bg-gray-900 p-3 text-gray-800
-            focus:outline-none focus:ring-0 focus:ring-inset focus:ring-offset-0"
+              focus:outline-none focus:ring-0 focus:ring-inset focus:ring-offset-0"
             />
           </div>
         </section>
       </Entity>
+
       <section className="flex gap-3">
-        <Button className="basis-3/4" onClick={handleGenerate}>
+        <Button
+          disabled={!generationIsPossible}
+          className="basis-3/4"
+          onClick={handleGenerate}
+        >
           Generate
         </Button>
-        <Button variant="secondary" className="basis-1/4" onClick={handleAbort}>
+        <Button
+          disabled={!abortIsPossible}
+          variant="secondary"
+          className="basis-1/4"
+          onClick={handleAbort}
+        >
           Abort
         </Button>
       </section>
+
       <Entity className="mt-8" title="Desired address">
         <AddressPreview prefix={prefix.value} suffix={suffix.value} />
       </Entity>
+
       <TimeEstimation
         prefixLength={prefix.value.length}
         suffixLength={suffix.value.length}
@@ -171,21 +207,23 @@ export default function VanityAddressGenerator(): ReactElement {
   );
 }
 
+function AddressPreview({ prefix, suffix }: AddressPreviewProps): ReactElement {
+  const [state, setState] = useState(ZERO_ADDRESS_NO_PREFIX);
+  useEffect(
+    () => setState(replaceZeroAddrAt(prefix, suffix)),
+    [prefix, state, suffix],
+  );
+  return (
+    <h3 aria-label="address preview" className="text-xl">
+      0x{state}
+    </h3>
+  );
+}
+
 type AddressPreviewProps = {
   prefix: string;
   suffix: string;
 };
-
-function AddressPreview({ prefix, suffix }: AddressPreviewProps): ReactElement {
-  const [state, setState] = useState(ZERO_ADDRESS_NO_PREFIX);
-
-  useEffect(
-    () => replaceZeroAddrAt(prefix, suffix, state, setState),
-    [prefix, state, suffix],
-  );
-
-  return <h3 className="text-xl">0x{state}</h3>;
-}
 
 function GeneratorResult({
   results,
@@ -202,16 +240,11 @@ function GeneratorResult({
             Private key:
           </NodeBlock>
         </>
-      ) : isLoading ? (
-        <>
-          <LoadingBlock className="w-8/12" isLoading={true} />
-          <LoadingBlock className="w-full" isLoading={true} />
-        </>
       ) : (
-        <>
-          <LoadingBlock className="w-8/12" isLoading={false} />
-          <LoadingBlock className="w-full" isLoading={false} />
-        </>
+        <div>
+          <LoadingEntity className="w-8/12" isLoading={isLoading} />
+          <LoadingEntity className="w-full" isLoading={isLoading} />
+        </div>
       )}
     </Entity>
   );
@@ -227,7 +260,7 @@ function TimeEstimation({
     <Entity {...props} title="Estimated time">
       <div className="flex gap-2 text-xl">
         up to{' '}
-        <p className="font-bold">
+        <p aria-label="estimated time" className="font-bold">
           {estimateTime(prefixLength, suffixLength, isCaseSensitive)}
         </p>
       </div>
@@ -241,76 +274,7 @@ interface TimeEstimationProps extends ComponentPropsWithoutRef<'div'> {
   isCaseSensitive: boolean;
 }
 
-function LoadingBlock({
-  isLoading,
-  className,
-}: LoadingBlockProps): ReactElement {
-  return (
-    <section className="flex">
-      <Transition
-        className={className}
-        show={true}
-        appear={true}
-        enter="transition-opacity duration-1000"
-        enterFrom="opacity-50"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-1000"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div
-          className={`relative isolate mt-4 h-8 w-full
-          overflow-hidden rounded-md border border-gray-700 
-        bg-gray-800 shadow-md shadow-gray-800
-        ${
-          isLoading
-            ? `before:absolute before:inset-0 before:h-full before:w-full 
-          before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r 
-          before:from-transparent before:via-gray-700 before:to-transparent`
-            : ''
-        }`}
-        />
-      </Transition>
-    </section>
-  );
-}
-
-interface LoadingBlockProps extends ComponentPropsWithoutRef<'div'> {
-  isLoading: boolean;
-}
-
 interface GeneratorResultProps {
   results?: Wallet;
   isLoading?: boolean;
-}
-
-function Entity({
-  title,
-  children,
-  isLoading = false,
-  className,
-}: EntityProps): ReactElement {
-  return (
-    <div
-      className={`relative isolate h-auto w-full overflow-hidden rounded-md pb-4
-      ${
-        isLoading
-          ? `before:absolute before:inset-0 before:h-full before:w-full 
-            before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r 
-            before:from-transparent before:via-gray-600 before:to-transparent`
-          : ''
-      } ${className}`}
-    >
-      <p className="text-md mb-3 font-bold uppercase tracking-widest text-gray-300">
-        {title}
-      </p>
-      {children}
-    </div>
-  );
-}
-
-interface EntityProps extends ComponentPropsWithoutRef<'div'> {
-  title: string;
-  isLoading?: boolean;
-  children: ReactNode;
 }
