@@ -1,6 +1,7 @@
 import {
   cpu,
   isWallet,
+  Stats,
   VanityAddressParallelConfig,
   Wallet,
 } from './vanity-address';
@@ -8,9 +9,14 @@ import {
 export class VanityAddressWorkerPool {
   public _workers: Worker[] = [];
   private readonly _config: VanityAddressParallelConfig;
+  private readonly _updateStats: (stats: Stats) => void;
 
-  constructor(public readonly config: VanityAddressParallelConfig) {
+  constructor(
+    readonly config: VanityAddressParallelConfig,
+    readonly updateStats: (stats: Stats) => void,
+  ) {
     this._config = config;
+    this._updateStats = updateStats;
 
     if (typeof window.Worker === 'undefined')
       throw new Error('Web workers are not supported in this browser');
@@ -37,6 +43,9 @@ export class VanityAddressWorkerPool {
         worker.onmessage = (
           event: MessageEvent<Wallet | VanityAddressParallelConfig>,
         ) => {
+          if ('time' in event.data) {
+            this._updateStats(event.data);
+          }
           if (isWallet(event.data)) {
             this._workers.forEach((worker) => worker.terminate());
             resolve(event.data);

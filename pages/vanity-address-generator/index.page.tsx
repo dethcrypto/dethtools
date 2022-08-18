@@ -15,9 +15,10 @@ import { NodeBlock } from '../../src/components/lib/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import {
   cpu,
-  estimateTime,
+  formatTime,
   replaceZeroAddrAt,
   searchForMatchingWallet,
+  Stats,
   VanityAddressWorkerPool,
   Wallet,
   workers,
@@ -40,6 +41,28 @@ export default function VanityAddressGenerator(): ReactElement {
 
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<Wallet>();
+
+  const [estimatedTime, setEstimatedTime] = useState<number>(0);
+
+  function updateStats(stats: Stats): void {
+    const { time, tries } = stats;
+
+    const speed = Math.floor((tries * cpuCores.value) / time);
+
+    const totalLength = prefix.value.length + suffix.value.length;
+    const possibilities = Math.pow(16, totalLength);
+
+    const secondsToFind = Math.floor(possibilities / speed);
+
+    // reject overestimated time
+    if (secondsToFind > estimatedTime && estimatedTime !== 0) return;
+
+    if (!isNaN(secondsToFind)) {
+      if (isCaseSensitive)
+        setEstimatedTime(secondsToFind * Math.pow(2, totalLength));
+      else setEstimatedTime(secondsToFind);
+    }
+  }
 
   const flushResults = (): void => {
     if (results) setResults(undefined);
@@ -77,12 +100,15 @@ export default function VanityAddressGenerator(): ReactElement {
     flushResults();
 
     if (!cpuCores.message && !cpuCores.error) {
-      const vanityAddressWorkerPool = new VanityAddressWorkerPool({
-        prefix: prefix.value,
-        suffix: suffix.value,
-        isCaseSensitive: isCaseSensitive,
-        cpuCoreCount: cpuCores.value,
-      });
+      const vanityAddressWorkerPool = new VanityAddressWorkerPool(
+        {
+          prefix: prefix.value,
+          suffix: suffix.value,
+          isCaseSensitive: isCaseSensitive,
+          cpuCoreCount: cpuCores.value,
+        },
+        updateStats,
+      );
 
       setWorkerPool(vanityAddressWorkerPool);
       setIsLoading(true);
@@ -94,11 +120,14 @@ export default function VanityAddressGenerator(): ReactElement {
     } else {
       setIsLoading(true);
 
-      await searchForMatchingWallet({
-        prefix: prefix.value,
-        suffix: suffix.value,
-        isCaseSensitive: isCaseSensitive,
-      })
+      await searchForMatchingWallet(
+        {
+          prefix: prefix.value,
+          suffix: suffix.value,
+          isCaseSensitive: isCaseSensitive,
+        },
+        updateStats,
+      )
         .then((wallet) => setResults(wallet))
         .finally(() => setIsLoading(false));
     }
@@ -197,11 +226,7 @@ export default function VanityAddressGenerator(): ReactElement {
         <AddressPreview prefix={prefix.value} suffix={suffix.value} />
       </Entity>
 
-      <TimeEstimation
-        prefixLength={prefix.value.length}
-        suffixLength={suffix.value.length}
-        isCaseSensitive={isCaseSensitive}
-      />
+      <TimeEstimation estimatedTime={estimatedTime} />
       <GeneratorResult isLoading={isLoading} results={results} />
     </ToolContainer>
   );
@@ -251,9 +276,7 @@ function GeneratorResult({
 }
 
 function TimeEstimation({
-  prefixLength,
-  suffixLength,
-  isCaseSensitive,
+  estimatedTime,
   ...props
 }: TimeEstimationProps): ReactElement {
   return (
@@ -261,7 +284,7 @@ function TimeEstimation({
       <div className="flex gap-2 text-xl">
         up to{' '}
         <p aria-label="estimated time" className="font-bold">
-          {estimateTime(prefixLength, suffixLength, isCaseSensitive)}
+          {formatTime(estimatedTime)}
         </p>
       </div>
     </Entity>
@@ -269,9 +292,7 @@ function TimeEstimation({
 }
 
 interface TimeEstimationProps extends ComponentPropsWithoutRef<'div'> {
-  prefixLength: number;
-  suffixLength: number;
-  isCaseSensitive: boolean;
+  estimatedTime: number;
 }
 
 interface GeneratorResultProps {

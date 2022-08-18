@@ -147,24 +147,6 @@ describe(VanityAddressGenerator.name, () => {
     expect(abortButton.disabled).toEqual(false);
   });
 
-  it('estimated time changes accordingly to inputs', () => {
-    const root = render(<VanityAddressGenerator />);
-    const suffixField = root.getByLabelText('suffix');
-    const prefixField = root.getByLabelText('prefix');
-    const estimatedTime = root.getByLabelText('estimated time');
-
-    expect(estimatedTime.innerHTML).toEqual(
-      expect.stringMatching('0 hours  0 minutes'),
-    );
-
-    changeTargetValue(prefixField, 'AA');
-    changeTargetValue(suffixField, '0c');
-
-    expect(estimatedTime.innerHTML).toEqual(
-      expect.stringMatching('0 hours  2 minutes  57 seconds'),
-    );
-  });
-
   it('generates correct wallet in reasonable time', async () => {
     const root = render(<VanityAddressGenerator />);
     const prefixField = root.getByLabelText('prefix');

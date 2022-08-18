@@ -1,4 +1,5 @@
 import { expect } from 'earljs';
+import { noop } from 'lodash';
 
 import {
   formatTime,
@@ -74,7 +75,7 @@ describe('vanity-address', () => {
       prefix: 'a',
       suffix: '',
     };
-    const result = await searchForMatchingWallet(config);
+    const result = await searchForMatchingWallet(config, noop);
 
     expect(isWallet(result)).toEqual(true);
   });

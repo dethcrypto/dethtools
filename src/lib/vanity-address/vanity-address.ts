@@ -1,3 +1,4 @@
+import { currentEpochTime } from '../currentEpochTime';
 import { randomBytes } from 'crypto';
 import {
   addHexPrefix,
@@ -14,10 +15,11 @@ import { RequireAtLeastOne } from '../../types/util.d';
 
 export const ZERO_ADDRESS_NO_PREFIX = stripHexPrefix(zeroAddress());
 
-const MAX_TRIES = 100_000;
+const MAX_TRIES = 100_000_000;
 
 type SearchForMatchingWallet<C extends VanityAddressConfig> = (
   config: C,
+  updateStats: (stats: Stats) => void,
 ) => Promise<Wallet>;
 
 export interface Wallet {
@@ -74,20 +76,33 @@ export function getAddress(publicKey: Buffer): string {
   );
 }
 
+const canUpdateStats = (tries: number): boolean => {
+  if (tries >= 300) return (tries % 5_000) * Math.round(tries) === 0;
+  else return true;
+};
+
 export const searchForMatchingWallet: SearchForMatchingWallet<
   VanityAddressConfig
-> = async (config) => {
+> = async (config, updateStats) => {
   return new Promise((resolve) => {
     let { prefix, suffix, isCaseSensitive } = config;
+
     isCaseSensitive = isCaseSensitive || false;
 
     const pattern = `^0x${prefix || ''}.+${suffix || ''}$`;
     const flag = isCaseSensitive ? 'g' : 'gi';
     const regex = new RegExp(pattern, flag);
 
+    const startTime = currentEpochTime.get();
+
     let tries = 0;
+    let time = 0;
 
     while (tries <= MAX_TRIES) {
+      time = currentEpochTime.get() - startTime;
+
+      if (canUpdateStats(tries)) updateStats({ tries, time });
+
       const privateKey = getPrivateKey();
       const publicKey = getPublicKey(privateKey);
       const address = getAddress(publicKey);
@@ -130,20 +145,9 @@ export function replaceZeroAddrAt(
   return prefix + zeroes + suffix;
 }
 
-export function estimateTime(
-  prefixLength: number,
-  suffixLength: number,
-  isCaseSensitive: boolean,
-): string {
-  const probability = (difficulty: number): number =>
-    Math.floor(Math.log(0.5) / Math.log(1 - 1 / difficulty));
-
-  const totalLength = prefixLength + suffixLength;
-  const time = Math.pow(4, totalLength);
-
-  if (isCaseSensitive)
-    return formatTime(probability(time * Math.pow(2, totalLength)));
-  else return formatTime(probability(time));
+export interface Stats {
+  tries: number;
+  time: number;
 }
 
 export function formatTime(seconds: number): string {
