@@ -1,4 +1,3 @@
-import { currentEpochTime } from '../currentEpochTime';
 import { randomBytes } from 'crypto';
 import {
   addHexPrefix,
@@ -12,6 +11,7 @@ import {
 import { privateKeyVerify, publicKeyCreate } from 'secp256k1';
 
 import { RequireAtLeastOne } from '../../types/util.d';
+import { currentEpochTime } from '../currentEpochTime';
 
 export const ZERO_ADDRESS_NO_PREFIX = stripHexPrefix(zeroAddress());
 
