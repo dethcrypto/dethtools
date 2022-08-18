@@ -10,14 +10,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         {...rest}
         ref={ref}
-        className={
-          'bg-black cursor-pointer rounded-md px-4 py-3 text-white ' +
-          'disabled:cursor-not-allowed disabled:bg-gray-600 ' +
-          'transition-shadow ' +
-          'hover:outline hover:outline-2 ' +
-          variants[variant] +
-          (className ? ` ${className}` : '')
-        }
+        className={`bg-black cursor-pointer rounded-md px-4 py-3
+        text-white transition-shadow hover:outline hover:outline-2 disabled:cursor-not-allowed 
+        ${rest.disabled ? 'bg-gray-600' : variants[variant]} ${className}`}
       />
     );
   },

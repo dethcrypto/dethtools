@@ -1,4 +1,5 @@
 // @see https://nextjs.org/docs/messages/failed-loading-swc
 {
-  "presets": ["next/babel"]
+  "presets": ["next/babel", "@babel/preset-env"],
+  "plugins": [["@babel/plugin-transform-runtime"]]
 }

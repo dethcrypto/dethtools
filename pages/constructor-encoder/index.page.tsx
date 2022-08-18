@@ -212,7 +212,7 @@ function EncodedBlock({
       onClick={(e) => {
         const value =
           e.currentTarget.children.namedItem('node-value')?.textContent;
-        void navigator.clipboard.writeText(value ?? '');
+        void window.navigator.clipboard.writeText(value ?? '');
 
         setCopyNotification(true);
         setTimeout(() => {

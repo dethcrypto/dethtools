@@ -4,6 +4,7 @@ import { constrain } from '../../../misc/constrain';
 
 export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   error?: string;
+  message?: string;
 }
 
 /**
@@ -26,6 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className,
       name,
       error: errorFromProps,
+      message,
       autoComplete = 'off',
       onChange,
       ...rest
@@ -39,13 +41,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const error = errorFromProps || validationMessage;
 
     return (
-      <div>
+      <>
         <input
           name={name}
           ref={ref}
           aria-invalid={!!errorFromProps}
           {...(autoComplete === 'off' && autoCompleteProps)}
-          className={`w-full rounded-md border-gray-600 bg-gray-900 p-3.75 pr-12 text-lg 
+          className={`w-full rounded-md border-gray-600 bg-gray-900 p-3.75 text-lg 
             leading-none text-white ring-pink invalid:border-error invalid:caret-error
             focus:outline-none focus:ring-0
             disabled:text-white/50
@@ -63,14 +65,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           }}
           {...rest}
         />
-        <div className="whitespace-normal pt-2">
+        <div className="whitespace-normal">
+          {message && (
+            <p role="alert" aria-atomic="true" className="text-purple">
+              {message}
+            </p>
+          )}
+        </div>
+        <div className="whitespace-normal">
           {error && (
             <p role="alert" aria-atomic="true" className="text-error">
               {error}
             </p>
           )}
         </div>
-      </div>
+      </>
     );
   },
 );

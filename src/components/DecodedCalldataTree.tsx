@@ -134,7 +134,7 @@ export function DecodedCalldataTree({
           <code aria-label="function type" className="font-bold text-purple">
             {fnType}
           </code>
-          <code aria-label="function name">{fnName} </code>
+          <code aria-label="function name"> {fnName} </code>
         </p>
 
         {tree.map((node, index) => (

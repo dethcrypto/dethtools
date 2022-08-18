@@ -14,6 +14,7 @@ export function NodeBlock({
   className,
   str,
   nodeType,
+  toggle = true,
 }: NodeBlockProps): ReactElement {
   const [copyNotification, setCopyNotification] = useState(false);
 
@@ -27,10 +28,12 @@ export function NodeBlock({
     <div className="flex items-center gap-2">
       <div
         className={`flex h-12 cursor-pointer
-        items-center gap-3 overflow-auto rounded-md pr-4
-        font-mono text-sm duration-200 ${className}`}
+        items-center gap-3 overflow-auto whitespace-nowrap rounded-md
+        pr-4 font-mono text-sm duration-200 ${className}`}
       >
-        <AdequateToggle str={str} state={state} setState={setState} />
+        {toggle && (
+          <AdequateToggle str={str} state={state} setState={setState} />
+        )}
         {children}
         <code id="node-type" className="text-purple">
           {nodeType}
@@ -40,7 +43,7 @@ export function NodeBlock({
             const value =
               event.currentTarget.children.namedItem('node-value')?.textContent;
             if (value) {
-              await navigator.clipboard.writeText(value);
+              void window.navigator.clipboard.writeText(value);
               setCopyNotification(true);
               setTimeout(() => {
                 setCopyNotification(false);
@@ -48,8 +51,8 @@ export function NodeBlock({
             }
           }}
           className="flex h-10 items-center gap-3 rounded-md border 
-          border-gray-600 p-1 px-2 duration-200 hover:bg-gray-700
-            hover:outline active:bg-gray-800"
+          border-gray-600 bg-gray-700 p-1 px-2 shadow-md shadow-gray-800 
+          duration-200 hover:bg-gray-800 active:bg-gray-800"
         >
           <code
             className="whitespace-nowrap"
@@ -85,6 +88,10 @@ export interface NodeBlockProps {
    * display the type of the node. e.g "uint256" or "string"
    */
   nodeType?: string;
+  /*
+   * Should the toggle be displayed (default: true)
+   */
+  toggle?: boolean;
 }
 
 // @internal

@@ -57,7 +57,7 @@ function InputCopy({ name, useState, ...props }: InputCopyProps): ReactElement {
                 .value;
             else throw new Error('Copyable ConversionInput must have a name');
             if (inputValue) {
-              await navigator.clipboard.writeText(inputValue);
+              void window.navigator.clipboard.writeText(inputValue);
               setWasCopied(true);
               setTimeout(() => setWasCopied(false), 1500);
             }

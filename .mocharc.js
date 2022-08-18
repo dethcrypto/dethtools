@@ -2,10 +2,12 @@ process.env.NODE_ENV = 'test';
 
 module.exports = {
   require: [
-    'global-jsdom/register',
+    'raf/polyfill',
+    'jsdom-global/register',
     'ts-node/register/transpile-only',
-    'earljs/mocha',
     './test/require-extensions.ts',
+    'earljs/mocha',
+    'esm',
   ],
   extension: ['ts', 'tsx'],
   watchExtensions: ['ts', 'tsx'],
