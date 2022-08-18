@@ -55,7 +55,7 @@ export default function VanityAddressGenerator(): ReactElement {
     const secondsToFind = Math.floor(possibilities / speed);
 
     // reject overestimated time
-    if (secondsToFind > estimatedTime && estimatedTime !== 0) return;
+    if (secondsToFind > estimatedTime && estimatedTime > 0) return;
 
     if (!isNaN(secondsToFind)) {
       if (isCaseSensitive)
@@ -68,21 +68,25 @@ export default function VanityAddressGenerator(): ReactElement {
     if (results) setResults(undefined);
   };
 
-  const handleChangePrefix = (newValue: string): void =>
+  const handleChangePrefix = (newValue: string): void => {
+    setEstimatedTime(0);
     handleChangeValidated({
       newValue,
       validateFn: (newValue) => hexWithoutPrefixValidator(newValue),
       setState: setPrefix,
       flushFn: flushResults,
     });
+  };
 
-  const handleChangeSuffix = (newValue: string): void =>
+  const handleChangeSuffix = (newValue: string): void => {
+    setEstimatedTime(0);
     handleChangeValidated({
       newValue,
       validateFn: (newValue) => hexWithoutPrefixValidator(newValue),
       setState: setSuffix,
       flushFn: flushResults,
     });
+  };
 
   const handleChangeCpuCoreCount = (newValue: string): void =>
     handleChangeValidated({
