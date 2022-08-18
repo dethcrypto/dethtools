@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, {
+  ComponentPropsWithoutRef,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { currentEpochTime } from '../lib/currentEpochTime';
 import { CopyIcon } from './icons/CopyIcon';
@@ -24,7 +30,9 @@ function useInterval(callback: () => void, delay: number): void {
   }, [delay]);
 }
 
-export function CurrentEpochTime(): ReactElement {
+export function CurrentEpochTime({
+  ...props
+}: CurrentEpochTimeProps): ReactElement {
   const [state, setState] = React.useState<number>(currentEpochTime.get());
   const [copyNotification, setCopyNotification] = useState(false);
 
@@ -34,32 +42,33 @@ export function CurrentEpochTime(): ReactElement {
 
   return (
     <div className="items-left">
-      <div>
-        <div
-          className="mb-2 mt-2 inline-flex cursor-pointer items-center gap-1 rounded-md border
-                   border-gray-600 px-2 py-1 text-lg duration-200
-                   hover:bg-gray-700 hover:outline active:bg-gray-800"
-          onClick={async (e) => {
-            const value = e.currentTarget.children.namedItem(
-              'current-unix-epoch-time',
-            )?.textContent;
-            await navigator.clipboard.writeText(value ?? '');
-            setCopyNotification(true);
-            setTimeout(() => {
-              setCopyNotification(false);
-            }, 1500);
-          }}
-        >
-          <p aria-label="current unix epoch time" id="current-unix-epoch-time">
-            {state}
-          </p>
-          {!copyNotification ? (
-            <CopyIcon className="cursor-pointer" />
-          ) : (
-            <OkIcon className="delay-300" />
-          )}
-        </div>
+      <div
+        className={`mb-2 mt-2 inline-flex cursor-pointer items-center gap-1 rounded-md border 
+        border-gray-600 px-3 py-2 text-lg duration-200 hover:bg-gray-700 hover:outline 
+        active:bg-gray-800 ${props.className}`}
+        onClick={async (e) => {
+          const value = e.currentTarget.children.namedItem(
+            'current-unix-epoch-time',
+          )?.textContent;
+          await navigator.clipboard.writeText(value ?? '');
+          setCopyNotification(true);
+          setTimeout(() => {
+            setCopyNotification(false);
+          }, 1500);
+        }}
+        {...props}
+      >
+        <p aria-label="current unix epoch time" id="current-unix-epoch-time">
+          {state}
+        </p>
+        {!copyNotification ? (
+          <CopyIcon className="cursor-pointer" />
+        ) : (
+          <OkIcon className="delay-300" />
+        )}
       </div>
     </div>
   );
 }
+
+type CurrentEpochTimeProps = ComponentPropsWithoutRef<'div'>;

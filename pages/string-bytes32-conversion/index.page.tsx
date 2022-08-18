@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { convertBytes32ToString } from '../../src/lib/stringBytes32Conversion/convertBytes32ToString';
@@ -62,24 +63,26 @@ export default function StringBytes32Conversion(): ReactElement {
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'String-Bytes32 Conversion']}
         />
-        <section className="flex w-full flex-col gap-5">
-          <CopyableConversionInput
-            key="string"
-            name="String"
-            value={string.value}
-            error={string.error}
-            placeholder="Enter a string"
-            onChange={({ target }) => handleChangeString(target.value)}
-          />
-          <CopyableConversionInput
-            key="bytes32"
-            name="Bytes32"
-            value={bytes32.value}
-            error={bytes32.error}
-            placeholder="Enter a hexadecimal value"
-            onChange={({ target }) => handleChangeBytes32(target.value)}
-          />
-        </section>
+        <Entity title="conversion inputs" titleClassName="mb-6">
+          <section className="flex w-full flex-col gap-5">
+            <CopyableConversionInput
+              key="string"
+              name="String"
+              value={string.value}
+              error={string.error}
+              placeholder="Enter a string"
+              onChange={({ target }) => handleChangeString(target.value)}
+            />
+            <CopyableConversionInput
+              key="bytes32"
+              name="Bytes32"
+              value={bytes32.value}
+              error={bytes32.error}
+              placeholder="Enter a hexadecimal value"
+              onChange={({ target }) => handleChangeBytes32(target.value)}
+            />
+          </section>
+        </Entity>
       </form>
     </ToolContainer>
   );

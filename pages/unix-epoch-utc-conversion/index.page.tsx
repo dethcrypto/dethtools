@@ -5,6 +5,7 @@ import { ConversionInput } from '../../src/components/ConversionInput';
 import { CurrentEpochTime } from '../../src/components/CurrentEpochTime';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import {
@@ -149,17 +150,11 @@ export default function UnixEpochUtcConversion(): ReactElement {
         icon={<CalculatorIcon height={24} width={24} />}
         text={['Calculators', 'Unix Epoch - UTC Conversion']}
       />
-      <section>
-        <h3 className="mb-1 text-xl font-bold text-gray-200">
-          Current Unix Epoch Time
-        </h3>
+      <Entity title="current unix epoch time">
         <CurrentEpochTime />
-      </section>
-      <div className="my-8 w-full border border-b border-dotted border-gray-600" />
-      <>
-        <h3 className="mb-1 text-xl font-bold text-gray-200">
-          Convert Unix Epoch to UTC
-        </h3>
+      </Entity>
+
+      <Entity title="Convert Unix Epoch to UTC" titleClassName="mb-2 mt-6">
         <div className="flex items-center gap-3">
           <ConversionInput
             name="UnixEpoch"
@@ -174,6 +169,7 @@ export default function UnixEpochUtcConversion(): ReactElement {
             Convert
           </Button>
         </div>
+
         <p role="alert" aria-atomic="true" className="text-error">
           {unixEpoch.inner && unixEpoch.error}
         </p>
@@ -197,46 +193,45 @@ export default function UnixEpochUtcConversion(): ReactElement {
             )}
           </div>
         )}
-      </>
-      <div className="my-8 w-full border border-b border-dotted border-gray-600" />
-      <h3 className="mb-1 text-xl font-bold text-gray-200">
-        Convert UTC to Unix Epoch
-      </h3>
-      <div className="flex items-center gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <UtcConversionInputs
-            utc={utc}
-            names={utcUnits}
-            handleChangeUtc={handleChangeUtc}
-          />
-          <Button
-            aria-label="convert utc"
-            onClick={handleConvertUTC}
-            className="mt-2 sm:ml-4"
-          >
-            Convert
-          </Button>
+      </Entity>
+      <Entity title="Convert UTC to Unix Epoch" titleClassName="mb-2 mt-4">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <UtcConversionInputs
+              utc={utc}
+              names={utcUnits}
+              handleChangeUtc={handleChangeUtc}
+            />
+            <Button
+              aria-label="convert utc"
+              onClick={handleConvertUTC}
+              className="mt-2 sm:ml-4"
+            >
+              Convert
+            </Button>
+          </div>
         </div>
-      </div>
-      <p role="alert" aria-atomic="true" className="text-error">
-        {utc.error}
-      </p>
-      <div>
-        {utc.result && (
-          <section
-            className="relative mb-2 rounded-md border border-gray-600 bg-gray-900 p-8"
-            placeholder="Output"
-          >
-            <div className="flex gap-2 text-lg">
-              <p>Unix epoch </p>
-              <p className="font-semibold">(in miliseconds): </p>
-              <p aria-label="unix epoch" className="font-bold">
-                {utc.result}
-              </p>
-            </div>
-          </section>
-        )}
-      </div>
+
+        <p role="alert" aria-atomic="true" className="text-error">
+          {utc.error}
+        </p>
+        <div>
+          {utc.result && (
+            <section
+              className="relative mb-2 rounded-md border border-gray-600 bg-gray-900 p-8"
+              placeholder="Output"
+            >
+              <div className="flex gap-2 text-lg">
+                <p>Unix epoch </p>
+                <p className="font-semibold">(in miliseconds): </p>
+                <p aria-label="unix epoch" className="font-bold">
+                  {utc.result}
+                </p>
+              </div>
+            </section>
+          )}
+        </div>
+      </Entity>
     </ToolContainer>
   );
 }

@@ -7,6 +7,7 @@ import { ConversionInput } from '../../src/components/ConversionInput';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { Button } from '../../src/components/lib/Button';
 import { DisclosureArrow } from '../../src/components/lib/DisclosureArrow';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { NodeBlock } from '../../src/components/lib/NodeBlock/NodeBlock';
 import { Toggle } from '../../src/components/lib/Toggle';
@@ -64,7 +65,7 @@ export default function TxDecoder(): ReactElement {
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Tx Decoder']}
       />
-      <section>
+      <Entity title="data input" titleClassName="mb-6">
         <ConversionInput
           name="raw transaction"
           id="tx-input"
@@ -73,7 +74,7 @@ export default function TxDecoder(): ReactElement {
           error={tx.error || error}
           onChange={({ target }) => handleChangeRawTx(target.value)}
         />
-      </section>
+      </Entity>
 
       <Button
         onClick={handleDecodeCalldata}

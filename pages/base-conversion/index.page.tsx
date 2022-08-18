@@ -3,6 +3,7 @@ import { SafeParseError, SafeParseReturnType } from 'zod';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { convertBase } from '../../src/lib/convertBase';
@@ -83,12 +84,14 @@ export default function NumberBaseConversion(): ReactElement {
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Number Base Conversion']}
         />
-        <section className="flex w-full flex-col gap-5">
-          <ConversionInputs
-            handleChangeValue={handleChangeValue}
-            state={state}
-          />
-        </section>
+        <Entity title="conversion inputs" titleClassName="mb-6">
+          <section className="flex w-full flex-col gap-5">
+            <ConversionInputs
+              handleChangeValue={handleChangeValue}
+              state={state}
+            />
+          </section>
+        </Entity>
       </form>
     </ToolContainer>
   );
