@@ -1,16 +1,14 @@
+import { Combobox, Dialog } from '@headlessui/react';
+import { uniqBy } from 'lodash';
 import { GetStaticProps, NextPage } from 'next';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { ChainEntity } from 'src/components/Chain';
 import { StackIcon } from 'src/components/icons/StackIcon';
+import { Button } from 'src/components/lib/Button';
+import { Entity } from 'src/components/lib/Entity';
 import { Header } from 'src/components/lib/Header';
 import { ToolContainer } from 'src/components/ToolContainer';
 import { safeFetch } from 'src/misc/safeFetch';
-
-import { Button } from 'src/components/lib/Button';
-
-import { Combobox, Dialog } from '@headlessui/react';
-import { uniqBy } from 'lodash';
-import { Entity } from 'src/components/lib/Entity';
 
 function MyDialog({ isOpenState, selectedChain }: MyDialogProps): ReactElement {
   const [isOpen, setIsOpen] = isOpenState;
