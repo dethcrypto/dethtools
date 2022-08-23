@@ -43,7 +43,7 @@ function MyCombobox({
   setIsOpen,
 }: MyComboboxProps<Chain>): ReactElement {
   const [selectedItem, setSelectedItem] = selectedItemState;
-  const [query, setQuery] = queryState;
+  const [, setQuery] = queryState;
 
   return (
     <Combobox
@@ -80,7 +80,7 @@ function MyCombobox({
                 key={chain.chainId}
                 value={chain.name}
               >
-                {({ active, selected }) => (
+                {({ active }) => (
                   <h1
                     className={`pl-4 text-sm font-medium uppercase tracking-[3px] ${
                       active ? 'text-pink' : 'text-gray-200'
@@ -136,7 +136,7 @@ export const getStaticProps: GetStaticProps = async (): Promise<{
 };
 
 const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
-  const [chains, setChains] = useState<Chain[]>(fetchedChains);
+  const [chains] = useState<Chain[]>(fetchedChains);
   const [filtered, setFiltered] = useState<Chain[]>([]);
   const [page, setPage] = useState({ currentPage: 1, chainsPerPage: 10 });
 
