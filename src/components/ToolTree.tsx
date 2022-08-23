@@ -8,6 +8,7 @@ import { EncodersIcon } from './icons/EncodersIcon';
 import { GeneratorIcon } from './icons/GeneratorIcon';
 import { MinusIcon } from './icons/MinusIcon';
 import { PlusIcon } from './icons/PlusIcon';
+import { StackIcon } from './icons/StackIcon';
 import { NavigationSocial } from './NavigationSocial';
 
 interface ToolTreeProps extends React.ComponentPropsWithoutRef<'section'> {
@@ -126,6 +127,15 @@ const tree: Tree = {
       {
         title: 'Vanity Address Generator',
         pageHref: 'vanity-address-generator',
+      },
+    ],
+  },
+  lists: {
+    icon: <StackIcon height={20} width={20} />,
+    tools: [
+      {
+        title: 'Chain list',
+        pageHref: 'chain-list',
       },
     ],
   },
