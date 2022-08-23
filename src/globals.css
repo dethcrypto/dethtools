@@ -29,3 +29,29 @@ input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   opacity: 1;
 }
+
+.blur {
+  content: '';
+  -webkit-filter: blur(0.4px);
+  filter: blur(0.4px);
+}
+
+.blur-xl {
+  filter: blur(36px);
+}
+
+.animate-gradient {
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
