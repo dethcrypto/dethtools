@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi';
-import { safeFetch } from '../../src/misc/safeFetch';
 
+import { safeFetch } from '../../src/misc/safeFetch';
 import { hexSchema } from '../misc/validation/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
