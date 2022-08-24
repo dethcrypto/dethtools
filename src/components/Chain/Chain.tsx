@@ -4,23 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, {
   ComponentPropsWithoutRef,
-  Dispatch,
-  FC,
   ReactElement,
-  ReactNode,
-  SetStateAction,
   useMemo,
   useState,
 } from 'react';
+import { Chain } from 'src/types/liamaChainAPI';
 
-import { Chain } from '../../../pages/chain-list/index.page';
 import { CoinStackIcon } from '../icons/CoinStackIcon';
 import { EthereumIcon } from '../icons/EthereumIcon';
 import { ExploreIcon } from '../icons/ExploreIcon';
-import { LinkIcon } from '../icons/LinkIcon';
 import { Table } from '../Table';
-
-const colors = require('../../../tailwind.config').theme.colors;
+import { ChainDetailPanelElement, ChainDetails } from './ChainDetails';
 
 const rgbToHex = (r: number, g: number, b: number): string =>
   '#' +
@@ -31,14 +25,9 @@ const rgbToHex = (r: number, g: number, b: number): string =>
     })
     .join('');
 
-const ChainDetailPanelElements = [
-  'RPC',
-  'Explorers',
-  'Faucets',
-  'URL',
-] as const;
+type ChainEntityColorCacheKey = `chain-icon-${number}`;
 
-type ChainDetailPanelElement = typeof ChainDetailPanelElements[number];
+const chainEntityColorCache: Record<ChainEntityColorCacheKey, string[]> = {};
 
 export function ChainEntity({
   chain,
@@ -52,7 +41,8 @@ export function ChainEntity({
   const icon = useMemo(() => {
     try {
       return (
-        chain.icon && `https://defillama.com/chain-icons/rsz_${chain.icon}.jpg`
+        chain.chainSlug &&
+        `https://defillama.com/chain-icons/rsz_${chain.chainSlug}.jpg`
       );
     } catch (error) {}
   }, [chain]);
@@ -61,8 +51,9 @@ export function ChainEntity({
 
   return (
     <div
-      className={`relative w-full overflow-hidden rounded-md border border-gray-600 bg-gradient-to-tr 
-      from-gray-800 to-transparent shadow-md shadow-pink/5 ${className}`}
+      className={`relative w-full overflow-hidden rounded-md border 
+      border-gray-600 bg-gradient-to-tr from-gray-800 to-transparent 
+      shadow-md shadow-pink/5 ${className}`}
       {...props}
     >
       {dominantColors ? (
@@ -75,16 +66,19 @@ export function ChainEntity({
             style={{
               background: `linear-gradient(-45deg, ${dominantColors[0]}, ${dominantColors[1]}, ${dominantColors[2]})`,
             }}
-            className={`mb-1 h-2 animate-gradient-x rounded-t bg-gradient-to-r from-pink to-purple`}
+            className={`mb-1 h-2 animate-gradient-x rounded-t 
+            bg-gradient-to-r from-pink to-purple`}
           />
         </>
       ) : (
         <>
           <div
-            className={`absolute right-64 z-0 h-full w-full rounded-lg bg-pink opacity-[3%] blur-xl`}
+            className={`absolute right-64 z-0 h-full w-full rounded-lg 
+            bg-pink opacity-[3%] blur-xl`}
           />
           <div
-            className={`mb-1 h-2 animate-gradient-x rounded-t bg-gradient-to-r from-pink to-purple opacity-50`}
+            className={`mb-1 h-2 animate-gradient-x rounded-t 
+            bg-gradient-to-r from-pink to-purple opacity-50`}
           />
         </>
       )}
@@ -99,10 +93,18 @@ export function ChainEntity({
                 <Image
                   id={`chain-icon-${chain.chainId}`}
                   onLoad={() => {
+                    const currentKey: ChainEntityColorCacheKey = `chain-icon-${chain.chainId}`;
+                    if (currentKey in chainEntityColorCache)
+                      return setDominantColors(
+                        chainEntityColorCache[currentKey],
+                      );
+
                     const img = document.getElementById(
                       `chain-icon-${chain.chainId}`,
                     );
+
                     const colorThief = new colorthief();
+
                     try {
                       const result = colorThief.getPalette(
                         img,
@@ -111,6 +113,10 @@ export function ChainEntity({
                       const hexArray = result.map((rgb) =>
                         rgbToHex(rgb[0], rgb[1], rgb[2]),
                       );
+
+                      const cacheChainId: ChainEntityColorCacheKey = `chain-icon-${chain.chainId}`;
+                      chainEntityColorCache[cacheChainId] = hexArray;
+
                       setDominantColors(hexArray);
                     } catch (error) {}
                   }}
@@ -155,7 +161,7 @@ export function ChainEntity({
           </div>
         </div>
 
-        <ChainDetails className="w-full">
+        <ChainDetails className="h-full">
           <div className="flex w-full justify-between">
             <ChainDetails.Panel>
               <ChainDetails.Element
@@ -206,7 +212,7 @@ export function ChainEntity({
             </div>
           </div>
 
-          <ChainDetails.Data selected={selected}>
+          <ChainDetails.Data>
             {chain.explorers &&
               chain.explorers.length > 0 &&
               selected === 'Explorers' && (
@@ -238,15 +244,13 @@ export function ChainEntity({
               <>
                 <Table>
                   <Table.Head>
-                    <Table.HeadRow>alive</Table.HeadRow>
-                    <Table.HeadRow>latency</Table.HeadRow>
+                    <Table.HeadRow>id</Table.HeadRow>
                     <Table.HeadRow>url</Table.HeadRow>
                   </Table.Head>
-                  {chain.rpc.map((url) => {
+                  {chain.rpc.map((url, id) => {
                     return (
                       <Table.Rows>
-                        <Table.Row>yes</Table.Row>
-                        <Table.Row>0ms</Table.Row>
+                        <Table.Row>{id + 1}</Table.Row>
                         <Table.Row>{url}</Table.Row>
                       </Table.Rows>
                     );
@@ -285,98 +289,3 @@ export function ChainEntity({
 interface ChainEntityProps extends ComponentPropsWithoutRef<'div'> {
   chain: Chain;
 }
-
-function ChainDetailsRoot({
-  children,
-  ...props
-}: ChainDetailsRootProps): ReactElement {
-  return (
-    <div className="flex items-center justify-between" {...props}>
-      <div className="flex-col items-center">{children}</div>
-    </div>
-  );
-}
-
-interface ChainDetailsRootProps extends ComponentPropsWithoutRef<'div'> {
-  children: ReactNode;
-}
-
-// this type guard is really narrowed, as ReactNode
-// could be also a boolean, null etc.,
-// but for this use case it does its job
-function isChildReactElement(
-  children: ReactElement | ReactNode,
-): children is ReactElement {
-  return (
-    (children && typeof children === 'object' && 'type' in children) || false
-  );
-}
-
-const Element: FC<ElementProps> = ({
-  children,
-  type = 'button',
-  selectedState,
-  show = true,
-  name,
-}): ReactElement | null => {
-  const [selected, setSelected] = selectedState;
-
-  return show ? (
-    <>
-      {type === 'button' ? (
-        <button
-          name={name}
-          onClick={() => {
-            if (selected === name) setSelected(undefined);
-            else setSelected(name);
-          }}
-          className={`${
-            selected === 'RPC' ? 'text-white' : 'text-gray-300'
-          } text-md cursor-pointer font-semibold capitalize`}
-        >
-          <p>
-            {isChildReactElement(children) ? (
-              React.cloneElement(children, {
-                fill: `${name === selected ? 'white' : colors.gray[300]}`,
-              })
-            ) : (
-              <>{children}</>
-            )}
-          </p>
-        </button>
-      ) : (
-        <a href={children as string}>
-          <LinkIcon
-            fill={`${selected === children ? 'white' : colors.gray[300]}`}
-            className="cursor-pointer"
-          />
-        </a>
-      )}
-    </>
-  ) : null;
-};
-
-interface ElementProps {
-  type?: 'button' | 'link';
-  show?: boolean;
-  name: ChainDetailPanelElement;
-  children: ReactElement | string;
-  selectedState: [
-    ChainDetailPanelElement | undefined,
-    Dispatch<SetStateAction<ChainDetailPanelElement | undefined>>,
-  ];
-}
-
-const Panel: FC = ({ children }) => {
-  return <div className="flex items-center gap-3">{children}</div>;
-};
-
-const Data: FC<DataProps> = ({ children, selected }) => {
-  return <>{children}</>;
-};
-
-interface DataProps {
-  selected?: ChainDetailPanelElement;
-}
-
-const ChainDetails = Object.assign(ChainDetailsRoot, { Panel, Data, Element });
