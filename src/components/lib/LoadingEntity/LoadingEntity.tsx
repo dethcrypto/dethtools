@@ -25,8 +25,8 @@ export function LoadingEntity({
         ${
           isLoading
             ? `before:absolute before:inset-0 before:h-full before:w-full 
-          before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r 
-          before:from-transparent before:via-gray-700 before:to-transparent`
+              before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r 
+              before:from-transparent before:via-gray-700 before:to-transparent`
             : ''
         }`}
         />

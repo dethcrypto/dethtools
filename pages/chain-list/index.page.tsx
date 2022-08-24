@@ -2,15 +2,16 @@ import { Combobox, Dialog } from '@headlessui/react';
 import { uniqBy } from 'lodash';
 import { GetStaticProps, NextPage } from 'next';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { ChainEntity } from 'src/components/Chain';
-import { StackIcon } from 'src/components/icons/StackIcon';
-import { Button } from 'src/components/lib/Button';
-import { Entity } from 'src/components/lib/Entity';
-import { Header } from 'src/components/lib/Header';
-import { ToolContainer } from 'src/components/ToolContainer';
-import chainIds from 'src/misc/liamaChainSlugs';
-import { safeFetch } from 'src/misc/safeFetch';
-import { Chain, ChainTVL } from 'src/types/liamaChainAPI';
+
+import { ChainEntity } from '../../src/components/Chain';
+import { StackIcon } from '../../src/components/icons/StackIcon';
+import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
+import { Header } from '../../src/components/lib/Header';
+import { ToolContainer } from '../../src/components/ToolContainer';
+import chainIds from '../../src/misc/liamaChainSlugs';
+import { safeFetch } from '../../src/misc/safeFetch';
+import { Chain, ChainTVL } from '../../src/types/liamaChainAPI';
 
 interface ChainFilterProps<T> {
   filtered: T[];
@@ -51,7 +52,7 @@ export const getStaticProps: GetStaticProps = async (): Promise<{
   };
 };
 
-const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
+const ChainList: NextPage<PageProps> = ({ fetchedChains, mockIcon }) => {
   const [filtered, setFiltered] = useState<Chain[]>([]);
   const [page, setPage] = useState({ currentPage: 1, chainsPerPage: 10 });
 
@@ -78,6 +79,10 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
   const indexOfFirstPost = indexOfLastPost - page.chainsPerPage;
   const currentChains = fetchedChains.slice(indexOfFirstPost, indexOfLastPost);
 
+  const isPreviousButtonDisabled = page.currentPage <= 1;
+  const isNextButtonDisabled =
+    page.currentPage * page.chainsPerPage >= fetchedChains.length;
+
   return (
     <ToolContainer>
       <Header
@@ -101,6 +106,7 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
         <Entity title="Browse pages">
           <Button
             variant="secondary"
+            disabled={isPreviousButtonDisabled}
             onClick={() => {
               setFiltered([]);
               if (page.currentPage > 1)
@@ -117,6 +123,7 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
 
           <Button
             className="ml-2"
+            disabled={isNextButtonDisabled}
             variant="primary"
             onClick={() => {
               setFiltered([]);
@@ -134,19 +141,24 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains }) => {
         </Entity>
       </div>
       <PaginatedChains
+        mockIcon={mockIcon}
         chains={filtered.length > 0 ? filtered : currentChains}
       />
     </ToolContainer>
   );
 };
 
-function PaginatedChains({ chains }: PaginatedChainsProps): ReactElement {
+function PaginatedChains({
+  chains,
+  mockIcon,
+}: PaginatedChainsProps): ReactElement {
   return (
     <div className="flex-col">
       {chains.map((chain) => {
         return (
           <ChainEntity
             key={chain.chainId}
+            mockIcon={mockIcon}
             chain={chain}
             className="m-4 w-full"
           />
@@ -158,11 +170,13 @@ function PaginatedChains({ chains }: PaginatedChainsProps): ReactElement {
 
 interface PaginatedChainsProps {
   chains: Chain[];
+  mockIcon?: JSX.Element;
 }
 
 // @internal
 interface PageProps {
   fetchedChains: Array<Chain & { tvl?: number }>;
+  mockIcon?: JSX.Element;
 }
 
 // @internal
@@ -219,7 +233,8 @@ function ChainFilter({
       <div className="relative z-20">
         <Combobox.Input
           placeholder="Ethereum Mainnet"
-          className="rounded-md bg-gradient-to-tr from-gray-800 to-gray-700 focus:border-pink focus:outline-none focus:ring-0"
+          className="rounded-md bg-gradient-to-tr from-gray-800 to-gray-700 
+          py-3 focus:border-pink focus:outline-none focus:ring-0"
           onChange={(event) => setQuery(event.target.value)}
           onClick={() => setSelectedItem(undefined)}
         />
