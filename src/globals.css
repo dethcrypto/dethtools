@@ -19,6 +19,10 @@ html {
   height: 100vh;
 }
 
+* {
+  @apply focus-visible:outline-none;
+}
+
 @layer base {
   a {
     @apply no-underline;
