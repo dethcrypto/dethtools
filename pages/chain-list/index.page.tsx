@@ -75,6 +75,28 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains, mockIcon }) => {
     if (filtered) setFiltered(filtered);
   }, [query, fetchedChains]);
 
+  function handleNextPage(): void {
+    setFiltered([]);
+    if (page.currentPage * page.chainsPerPage < fetchedChains.length)
+      setPage((page) => {
+        return {
+          ...page,
+          currentPage: page.currentPage + 1,
+        };
+      });
+  }
+
+  function handlePreviousPage(): void {
+    setFiltered([]);
+    if (page.currentPage > 1)
+      setPage((page) => {
+        return {
+          ...page,
+          currentPage: page.currentPage - 1,
+        };
+      });
+  }
+
   const indexOfLastPost = page.currentPage * page.chainsPerPage;
   const indexOfFirstPost = indexOfLastPost - page.chainsPerPage;
   const currentChains = fetchedChains.slice(indexOfFirstPost, indexOfLastPost);
@@ -107,16 +129,7 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains, mockIcon }) => {
           <Button
             variant="secondary"
             disabled={isPreviousButtonDisabled}
-            onClick={() => {
-              setFiltered([]);
-              if (page.currentPage > 1)
-                setPage((page) => {
-                  return {
-                    ...page,
-                    currentPage: page.currentPage - 1,
-                  };
-                });
-            }}
+            onClick={handlePreviousPage}
           >
             Previous page
           </Button>
@@ -125,16 +138,7 @@ const ChainList: NextPage<PageProps> = ({ fetchedChains, mockIcon }) => {
             className="ml-2"
             disabled={isNextButtonDisabled}
             variant="primary"
-            onClick={() => {
-              setFiltered([]);
-              if (page.currentPage * page.chainsPerPage < fetchedChains.length)
-                setPage((page) => {
-                  return {
-                    ...page,
-                    currentPage: page.currentPage + 1,
-                  };
-                });
-            }}
+            onClick={handleNextPage}
           >
             Next Page
           </Button>
@@ -153,7 +157,7 @@ function PaginatedChains({
   mockIcon,
 }: PaginatedChainsProps): ReactElement {
   return (
-    <div className="flex-col">
+    <div aria-label="chain list" className="flex-col">
       {chains.map((chain) => {
         return (
           <ChainEntity
@@ -217,7 +221,14 @@ function ChainFilter({
   setIsOpen,
 }: ChainFilterProps<Chain>): ReactElement {
   const [selectedItem, setSelectedItem] = selectedItemState;
+  const [showResults, setShowResults] = useState(true);
   const [, setQuery] = queryState;
+
+  function handleChangeInput(newValue: string): void {
+    if (newValue === '') setShowResults(false);
+    else setShowResults(true);
+    setQuery(newValue);
+  }
 
   return (
     <Combobox
@@ -235,45 +246,50 @@ function ChainFilter({
           placeholder="Ethereum Mainnet"
           className="rounded-md bg-gradient-to-tr from-gray-800 to-gray-700 
           py-3 focus:border-pink focus:outline-none focus:ring-0"
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={({ target }) => handleChangeInput(target.value)}
           onClick={() => setSelectedItem(undefined)}
         />
-        <Combobox.Options
-          className="absolute mt-4 h-64 w-96 overflow-scroll 
+        {showResults && (
+          <Combobox.Options
+            className="absolute mt-4 h-64 w-96 overflow-scroll 
             rounded-md border border-gray-600 bg-gray-800 p-4 shadow-md shadow-pink/5"
-        >
-          <div
-            className={`absolute right-64 z-0 h-full w-full rounded-lg bg-pink opacity-[3%] blur-xl`}
-          />
+          >
+            <div
+              className={`absolute right-64 z-0 h-full w-full rounded-lg bg-pink opacity-[3%] blur-xl`}
+            />
 
-          <div className="relative z-10 flex h-full flex-wrap gap-3">
-            {filtered.length > 0 ? (
-              filtered.map((chain) => (
-                <Combobox.Option
-                  className={`relative flex h-12 w-full cursor-pointer items-center rounded-md border 
+            <div
+              aria-label="chain filter query results"
+              className="relative z-10 flex h-full flex-wrap gap-3"
+            >
+              {filtered.length > 0 ? (
+                filtered.map((chain) => (
+                  <Combobox.Option
+                    className={`relative flex h-12 w-full cursor-pointer items-center rounded-md border 
                   border-gray-600 bg-gradient-to-tr from-gray-800 to-transparent shadow-md shadow-pink/5
                   hover:bg-gray-600`}
-                  key={chain.chainId}
-                  value={chain.name}
-                >
-                  {({ active }) => (
-                    <h1
-                      className={`pl-4 text-sm font-medium uppercase tracking-[3px] ${
-                        active ? 'text-pink' : 'text-gray-200'
-                      } `}
-                    >
-                      {chain.name}
-                    </h1>
-                  )}
-                </Combobox.Option>
-              ))
-            ) : (
-              <div className="mx-auto my-auto px-10 text-center">
-                Looks like there are no results for this query :(
-              </div>
-            )}
-          </div>
-        </Combobox.Options>
+                    key={chain.chainId}
+                    value={chain.name}
+                  >
+                    {({ active }) => (
+                      <h1
+                        className={`pl-4 text-sm font-medium uppercase tracking-[3px] ${
+                          active ? 'text-pink' : 'text-gray-200'
+                        } `}
+                      >
+                        {chain.name}
+                      </h1>
+                    )}
+                  </Combobox.Option>
+                ))
+              ) : (
+                <div className="mx-auto my-auto px-10 text-center">
+                  Looks like there are no results for this query :(
+                </div>
+              )}
+            </div>
+          </Combobox.Options>
+        )}
       </div>
     </Combobox>
   );
