@@ -62,9 +62,9 @@ async function fetch4Bytes(
     return cached;
   }
   try {
-    const { results } = await safeFetch<FourBytesResponse>(
-      `${urlTo(hexSigType)}${hexSig}`,
-    );
+    const results = (
+      await safeFetch<FourBytesResponse>(`${urlTo(hexSigType)}${hexSig}`)
+    ).results.reverse();
     bytes4Cache[hexSigType][hexSig] = results;
     result = results;
   } catch (error) {
