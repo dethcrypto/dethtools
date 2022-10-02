@@ -101,6 +101,10 @@ const tree: Tree = {
         title: 'String Bytes32 Conversion',
         pageHref: 'string-bytes32-conversion',
       },
+      {
+        title: 'Contract Address Calculator',
+        pageHref: 'contract-address-calculator',
+      },
     ],
   },
   decoders: {
