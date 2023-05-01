@@ -1,4 +1,3 @@
-import { getContractAddress } from '@ethersproject/address';
 import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
@@ -7,6 +6,7 @@ import { Button } from '../../src/components/lib/Button';
 import { Header } from '../../src/components/lib/Header';
 import { NodeBlock } from '../../src/components/lib/NodeBlock';
 import { ToolContainer } from '../../src/components/ToolContainer';
+import { getContractAddress } from '../../src/lib/contractAddress';
 import { handleChangeValidated } from '../../src/misc/handleChangeValidated';
 import { WithError } from '../../src/misc/types';
 import { addressValidator } from '../../src/misc/validation/validators/addressValidator';
