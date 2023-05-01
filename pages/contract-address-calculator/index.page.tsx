@@ -24,25 +24,29 @@ export default function ContractAddressCalculator(): ReactElement {
     string | undefined
   >();
 
-  const flushResults = (): void => setCalculatedContractAddress(undefined);
+  function flushResults(): void {
+    setCalculatedContractAddress(undefined);
+  }
 
-  const handleChangeFromAddress = (newValue: string): void =>
+  function handleChangeFromAddress(newValue: string): void {
     handleChangeValidated({
       newValue,
       validateFn: (newValue) => addressValidator(newValue),
       setState: setFromAddress,
       flushFn: flushResults,
     });
+  }
 
-  const handleChangeNonce = (newValue: string): void =>
+  function handleChangeNonce(newValue: string): void {
     handleChangeValidated({
       newValue,
       validateFn: (newValue) => numberValidator(newValue),
       setState: setNonce,
       flushFn: flushResults,
     });
+  }
 
-  const handleCalculateContractAddress = (): void => {
+  function handleCalculateContractAddress(): void {
     try {
       setCalculatedContractAddress(
         getContractAddress({
@@ -53,7 +57,7 @@ export default function ContractAddressCalculator(): ReactElement {
     } catch {
       flushResults();
     }
-  };
+  }
 
   const calculateButtonIsDisabled = Boolean(
     !fromAddress.value || fromAddress.error || !nonce.value || nonce.error,
