@@ -11,6 +11,7 @@ import { CopyableConversionInput } from '../../src/components/CopyableConversion
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { NodeBlock } from '../../src/components/lib/NodeBlock/NodeBlock';
 import { Spinner } from '../../src/components/Spinner';
@@ -193,7 +194,7 @@ export default function EventDecoder(): ReactElement {
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Event Decoder']}
       />
-      <>
+      <Entity title="data inputs" titleClassName="mb-6">
         <section className="mb-4">
           {topics.map((_, index) => (
             <section className="mb-2 flex flex-1 flex-col" key={index}>
@@ -235,16 +236,20 @@ export default function EventDecoder(): ReactElement {
             handleChangeData(event.target.value)
           }
         />
-      </>
+      </Entity>
 
-      <div className="mt-6 flex flex-col">
-        <AbiSourceTabs
-          rawAbi={rawAbi}
-          setDecodeResults={setDecodeResults}
-          handleChangeRawAbi={(event) => handleChangeRawAbi(event.target.value)}
-          tabState={{ tab, setTab }}
-        />
-      </div>
+      <Entity title="bytecode representation source">
+        <div className="mt-6 flex flex-col">
+          <AbiSourceTabs
+            rawAbi={rawAbi}
+            setDecodeResults={setDecodeResults}
+            handleChangeRawAbi={(event) =>
+              handleChangeRawAbi(event.target.value)
+            }
+            tabState={{ tab, setTab }}
+          />
+        </div>
+      </Entity>
 
       <Button
         onClick={() => void handleDecodeCalldata()}

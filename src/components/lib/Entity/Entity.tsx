@@ -4,6 +4,7 @@ export function Entity({
   title,
   children,
   className,
+  titleClassName,
   isLoading = false,
   ...props
 }: EntityProps): ReactElement {
@@ -19,7 +20,9 @@ export function Entity({
       } ${className}`}
       {...props}
     >
-      <p className="text-md mb-3 font-bold uppercase tracking-widest text-gray-300">
+      <p
+        className={`text-md font-bold uppercase tracking-widest text-gray-300 ${titleClassName}`}
+      >
         {title}
       </p>
       {children}
@@ -32,4 +35,5 @@ export interface EntityProps extends ComponentPropsWithoutRef<'div'> {
   title: string;
   isLoading?: boolean;
   children: ReactNode;
+  titleClassName?: string;
 }

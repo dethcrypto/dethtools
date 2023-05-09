@@ -7,6 +7,7 @@ import { CopyIcon } from '../../src/components/icons/CopyIcon';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { OkIcon } from '../../src/components/icons/OkIcon';
 import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { Input } from '../../src/components/lib/Input';
 import { ToolContainer } from '../../src/components/ToolContainer';
@@ -100,34 +101,35 @@ export default function ConstructorEncoder(): ReactElement {
         icon={<DecodersIcon height={24} width={24} />}
         text={['Encoders', 'Constructor Encoder']}
       />
-
-      <label htmlFor="abi">
-        <span>ABI</span>
-      </label>
-      <section className="mb-3 w-full">
-        <textarea
-          id="abi"
-          aria-label="text area for constructor abi"
-          value={rawAbi || ''}
-          placeholder="e.g function transferFrom(address, ..)"
-          className={
-            'h-20 w-full break-words rounded-md border bg-gray-900 p-4' +
-            String(
-              error && rawAbi?.length !== 0
-                ? ' border-error/75'
-                : ' border-gray-600',
-            )
-          }
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            handleChangeAbi(event.target.value);
-          }}
-        />
-        {error && (
-          <p aria-label="abi decode error" className="text-error">
-            {error}
-          </p>
-        )}
-      </section>
+      <Entity title="bytecode representation source data" titleClassName="mb-6">
+        <label htmlFor="abi">
+          <span>ABI</span>
+        </label>
+        <section className="mb-3 w-full">
+          <textarea
+            id="abi"
+            aria-label="text area for constructor abi"
+            value={rawAbi || ''}
+            placeholder="e.g function transferFrom(address, ..)"
+            className={
+              'h-20 w-full break-words rounded-md border bg-gray-900 p-4' +
+              String(
+                error && rawAbi?.length !== 0
+                  ? ' border-error/75'
+                  : ' border-gray-600',
+              )
+            }
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+              handleChangeAbi(event.target.value);
+            }}
+          />
+          {error && (
+            <p aria-label="abi decode error" className="text-error">
+              {error}
+            </p>
+          )}
+        </section>
+      </Entity>
 
       <section>
         {iface &&

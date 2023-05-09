@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 
 import { CopyableConversionInput } from '../../src/components/CopyableConversionInput';
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { UnitType, unitType } from '../../src/lib/convertProperties';
@@ -80,24 +81,28 @@ export default function EthUnitConversion(): ReactElement {
           icon={<CalculatorIcon height={24} width={24} />}
           text={['Calculators', 'Eth Unit Conversion']}
         />
-        <section className="flex w-full flex-col gap-5">
-          {unitType.values.map((unit) => (
-            <CopyableConversionInput
-              key={unit}
-              name={unit.toUpperCase()}
-              {...state[unit]}
-              onChange={(event) => handleChangeValue(event.target.value, unit)}
-              extraLabel={
-                powers[unit] && (
-                  <span className="inline-block text-sm leading-none text-gray-300">
-                    10
-                    <sup className="-top-0.5">{powers[unit]}</sup>
-                  </span>
-                )
-              }
-            />
-          ))}
-        </section>
+        <Entity title="conversion inputs" titleClassName="mb-6">
+          <section className="flex w-full flex-col gap-5">
+            {unitType.values.map((unit) => (
+              <CopyableConversionInput
+                key={unit}
+                name={unit.toUpperCase()}
+                {...state[unit]}
+                onChange={(event) =>
+                  handleChangeValue(event.target.value, unit)
+                }
+                extraLabel={
+                  powers[unit] && (
+                    <span className="inline-block text-sm leading-none text-gray-300">
+                      10
+                      <sup className="-top-0.5">{powers[unit]}</sup>
+                    </span>
+                  )
+                }
+              />
+            ))}
+          </section>
+        </Entity>
       </form>
     </ToolContainer>
   );

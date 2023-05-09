@@ -11,6 +11,7 @@ import { DecodedCalldataTree } from '../../src/components/DecodedCalldataTree';
 import { DecodersIcon } from '../../src/components/icons/DecodersIcon';
 import { AbiSourceTabs } from '../../src/components/lib/AbiSourceTabs/AbiSourceTabs';
 import { Button } from '../../src/components/lib/Button';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { TextArea } from '../../src/components/lib/TextArea/TextArea';
 import { Spinner } from '../../src/components/Spinner';
@@ -155,30 +156,36 @@ export default function CalldataDecoder(): ReactElement {
         icon={<DecodersIcon height={24} width={24} />}
         text={['Decoders', 'Calldata Decoder']}
       />
-      <TextArea
-        name="Calldata"
-        error={encodedCalldata.error}
-        value={encodedCalldata.value}
-        placeholder="e.g 0x23b8..3b2"
-        onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-          handleChangeEncodedCalldata(event.target.value)
-        }
-        onPaste={async (event: ClipboardEvent<HTMLTextAreaElement>) => {
-          const encodedCalldata = event.clipboardData.getData('Text');
-          const sigHash = sigHashFromCalldata(encodedCalldata);
-          if (sigHash) {
-            await fetch4BytesBy.Signatures(sigHash);
+      <Entity title="configuration" titleClassName="mb-6">
+        <TextArea
+          name="Calldata"
+          error={encodedCalldata.error}
+          value={encodedCalldata.value}
+          placeholder="e.g 0x23b8..3b2"
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+            handleChangeEncodedCalldata(event.target.value)
           }
-        }}
-      />
-      <div className="mt-6 flex flex-col">
-        <AbiSourceTabs
-          rawAbi={rawAbi}
-          setDecodeResults={setDecodeResults}
-          handleChangeRawAbi={(event) => handleChangeRawAbi(event.target.value)}
-          tabState={{ tab, setTab }}
+          onPaste={async (event: ClipboardEvent<HTMLTextAreaElement>) => {
+            const encodedCalldata = event.clipboardData.getData('Text');
+            const sigHash = sigHashFromCalldata(encodedCalldata);
+            if (sigHash) {
+              await fetch4BytesBy.Signatures(sigHash);
+            }
+          }}
         />
-      </div>
+      </Entity>
+      <Entity title="bytecode representation source">
+        <div className="mt-6 flex flex-col">
+          <AbiSourceTabs
+            rawAbi={rawAbi}
+            setDecodeResults={setDecodeResults}
+            handleChangeRawAbi={(event) =>
+              handleChangeRawAbi(event.target.value)
+            }
+            tabState={{ tab, setTab }}
+          />
+        </div>
+      </Entity>
       <Button
         className="mt-6"
         disabled={decodeButtonDisabled}

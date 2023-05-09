@@ -4,6 +4,7 @@ import { CopyableConversionInput } from '../../src/components/CopyableConversion
 import { CalculatorIcon } from '../../src/components/icons/CalculatorIcon';
 import { CurrencyIcon } from '../../src/components/icons/Currency';
 import { InputWithPredefinedValues } from '../../src/components/InputWithPredefinedValues';
+import { Entity } from '../../src/components/lib/Entity';
 import { Header } from '../../src/components/lib/Header';
 import { ToolContainer } from '../../src/components/ToolContainer';
 import { convertUnit } from '../../src/lib/convertUnits';
@@ -109,30 +110,32 @@ export default function TokenUnitConversion(): ReactElement {
           text={['Calculators', 'Token Unit Conversion']}
         />
 
-        <section className="flex w-full flex-col gap-5">
-          <InputWithPredefinedValues
-            name="Decimals"
-            predefinedValues={predefinedDecimals}
-            icon={<CurrencyIcon height={18} width={18} color="black" />}
-            useExternalState={[decimals, setDecimals]}
-            onChange={(event) => {
-              const { validationMessage, valueAsNumber } =
-                event.target as HTMLInputElement;
+        <Entity title="conversion inputs" titleClassName="mb-6">
+          <section className="flex w-full flex-col gap-5">
+            <InputWithPredefinedValues
+              name="Decimals"
+              predefinedValues={predefinedDecimals}
+              icon={<CurrencyIcon height={18} width={18} color="black" />}
+              useExternalState={[decimals, setDecimals]}
+              onChange={(event) => {
+                const { validationMessage, valueAsNumber } =
+                  event.target as HTMLInputElement;
 
-              let error = validationMessage;
+                let error = validationMessage;
 
-              if (isNaN(valueAsNumber) || valueAsNumber < 0) {
-                error = 'The decimals must be a number greater than 0';
-              }
-              setDecimals({ value: valueAsNumber, error });
-            }}
-          />
+                if (isNaN(valueAsNumber) || valueAsNumber < 0) {
+                  error = 'The decimals must be a number greater than 0';
+                }
+                setDecimals({ value: valueAsNumber, error });
+              }}
+            />
 
-          <ConversionInputs
-            handleChangeValue={handleChangeValue}
-            state={state}
-          />
-        </section>
+            <ConversionInputs
+              handleChangeValue={handleChangeValue}
+              state={state}
+            />
+          </section>
+        </Entity>
       </form>
     </ToolContainer>
   );

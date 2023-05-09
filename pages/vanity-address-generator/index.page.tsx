@@ -165,7 +165,7 @@ export default function VanityAddressGenerator(): ReactElement {
         text={['Generators', 'Vanity Address Generator']}
       />
 
-      <Entity title="configuration">
+      <Entity title="configuration" titleClassName="mb-4">
         <section>
           <div className="flex gap-2">
             <ConversionInput
@@ -226,7 +226,7 @@ export default function VanityAddressGenerator(): ReactElement {
         </Button>
       </section>
 
-      <Entity className="mt-8" title="Desired address">
+      <Entity className="mt-8" title="Desired address" titleClassName="mb-2">
         <AddressPreview prefix={prefix.value} suffix={suffix.value} />
       </Entity>
 
@@ -284,7 +284,7 @@ function TimeEstimation({
   ...props
 }: TimeEstimationProps): ReactElement {
   return (
-    <Entity {...props} title="Estimated time">
+    <Entity {...props} title="Estimated time" titleClassName="mb-2">
       <div className="flex gap-2 text-xl">
         up to{' '}
         <p aria-label="estimated time" className="font-bold">
