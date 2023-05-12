@@ -91,7 +91,10 @@ export default function VanityAddressGenerator(): ReactElement {
   const handleChangeCpuCoreCount = (newValue: string): void =>
     handleChangeValidated({
       newValue,
-      validateFn: (newValue) => numberValidator(newValue),
+      validateFn: (newValue) =>
+        numberValidator(newValue, (schema) =>
+          schema.refine((n) => n >= 0 && n <= 128),
+        ),
       setState: setCpuCores,
       flushFn: flushResults,
     });
