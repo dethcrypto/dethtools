@@ -10,7 +10,7 @@ export function Entity({
 }: EntityProps): ReactElement {
   return (
     <div
-      className={`relative isolate h-auto w-full overflow-hidden rounded-md pb-4
+      className={`pb-4
       ${
         isLoading
           ? `before:absolute before:inset-0 before:h-full before:w-full 

@@ -10,6 +10,10 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    domains: ['defillama.com'],
+    formats: ['image/avif', 'image/webp'],
+  },
   pageExtensions: ['page.tsx'],
 };
 

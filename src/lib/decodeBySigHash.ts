@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi';
-import fetch from 'node-fetch';
 
+import { safeFetch } from '../../src/misc/safeFetch';
 import { hexSchema } from '../misc/validation/schemas/hexSchema';
 import { decodeCalldata, DecodeResult } from './decodeCalldata';
 import { DecodedEventResult, decodeEvent, EventProps } from './decodeEvent';
@@ -76,16 +76,6 @@ async function fetch4Bytes(
     }
   }
   return result;
-}
-
-async function safeFetch<T>(...args: Parameters<typeof fetch>): Promise<T> {
-  return fetch(...args).then(async (response) => {
-    if (response.status === 200) {
-      return response.json() as unknown as T;
-    } else {
-      throw new Error(`${response.status} ${response.statusText}`);
-    }
-  });
 }
 
 // @internal
