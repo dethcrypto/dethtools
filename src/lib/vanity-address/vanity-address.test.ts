@@ -88,6 +88,6 @@ describe('vanity-address', () => {
     };
     const generatedWallet = await searchForMatchingWallet(config, noop);
     const wallet = new Wallet(generatedWallet.privateKey);
-    expect(wallet.address === generatedWallet.address)
+    expect(wallet.address === generatedWallet.address);
   });
 });
