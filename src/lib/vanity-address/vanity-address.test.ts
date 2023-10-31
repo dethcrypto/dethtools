@@ -1,3 +1,4 @@
+import { Wallet } from '@ethersproject/wallet';
 import { expect } from 'earljs';
 import { noop } from 'lodash';
 
@@ -78,5 +79,15 @@ describe('vanity-address', () => {
     const result = await searchForMatchingWallet(config, noop);
 
     expect(isWallet(result)).toEqual(true);
+  });
+
+  it('generates address that matches generated private key', async () => {
+    const config = {
+      prefix: 'a',
+      suffix: '',
+    };
+    const generatedWallet = await searchForMatchingWallet(config, noop);
+    const wallet = new Wallet(generatedWallet.privateKey);
+    expect(wallet.address === generatedWallet.address);
   });
 });

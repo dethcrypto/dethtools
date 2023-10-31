@@ -105,7 +105,7 @@ export const searchForMatchingWallet: SearchForMatchingWallet<
 
       const privateKey = getPrivateKey();
       const publicKey = getPublicKey(privateKey);
-      const address = getAddress(publicKey);
+      const address = getAddress(privateKey);
 
       if (regex.test(address)) {
         return resolve({
